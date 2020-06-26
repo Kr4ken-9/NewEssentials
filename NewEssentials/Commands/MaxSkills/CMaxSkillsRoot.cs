@@ -30,18 +30,17 @@ namespace NewEssentials.Commands.MaxSkills
 
         protected override async Task OnExecuteAsync()
         {
-            await UniTask.SwitchToMainThread();
             if (Context.Actor is ConsoleActor)
             {
                 throw new CommandWrongUsageException(m_StringLocalizer["commands:playeronly"]);
             }
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, "newess.maxskills") ==
-                PermissionGrantResult.Deny)
+
+            string permission = "newess.maxskills";
+            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
             {
-                throw new NotEnoughPermissionException("newess.maxskills", m_StringLocalizer);
+                throw new NotEnoughPermissionException(Context, permission);
             }
 
             uPlayer.Player.skills.MaxAllSkills();

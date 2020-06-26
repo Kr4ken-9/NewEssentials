@@ -30,12 +30,10 @@ namespace NewEssentials.Commands.MaxSkills
 
         protected override async Task OnExecuteAsync()
         {
-            await UniTask.SwitchToMainThread();
-            
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, "newess.maxskills.all") ==
-                PermissionGrantResult.Deny)
+            string permission = "newess.maxskills.all";
+            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
             {
-                throw new NotEnoughPermissionException("newess.maxskills.all", m_StringLocalizer);
+                throw new NotEnoughPermissionException(Context, permission);
             }
 
             foreach(SteamPlayer player in Provider.clients)

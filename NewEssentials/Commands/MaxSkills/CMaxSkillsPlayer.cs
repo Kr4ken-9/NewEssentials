@@ -28,17 +28,15 @@ namespace NewEssentials.Commands.MaxSkills
 
         protected override async Task OnExecuteAsync()
         {
-            await UniTask.SwitchToMainThread();
-
             if (Context.Parameters.Length < 1)
             {
                 throw new CommandWrongUsageException(Context, m_StringLocalizer);
             }
 
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, "newess.maxskills.player") ==
-                PermissionGrantResult.Deny)
+            string permission = "newess.maxskills.player";
+            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
             {
-                throw new NotEnoughPermissionException("newess.maxskills.player", m_StringLocalizer);
+                throw new NotEnoughPermissionException(Context, permission);
             }
 
             string playersNotFound = "";

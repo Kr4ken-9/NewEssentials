@@ -1,1 +1,5 @@
 kits: true
+items:
+  enableamountlimit: true
+  silentamountlimit: true
+  maxspawnamount: 20

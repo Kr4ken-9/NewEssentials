@@ -8,3 +8,8 @@ maxskills:
   granted_other: "has been granted max skills"
   granted_all: "All players have been granted max skills"
   kunii: "Kunii is a god"
+item:
+  syntax: "/item [<id>/<item name>] <amount>"
+  invalid: "is not an item"
+  too_much: "The max item spawn limit is "
+  success: "Spawned "

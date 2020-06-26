@@ -1,4 +1,5 @@
-﻿using SDG.Unturned;
+﻿using System.Linq;
+using SDG.Unturned;
 
 namespace NewEssentials
 {
@@ -26,6 +27,21 @@ namespace NewEssentials
                 // No achievements lol
                 playerSkills.channel.send("tellSkills", playerSkills.channel.owner.playerID.steamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, speciality, newLevels);
             }
+        }
+
+        public static bool GetItem(string searchTerm, out ItemAsset item)
+        {
+            if (!ushort.TryParse(searchTerm, out ushort id))
+            {
+                item = Assets.find(EAssetType.ITEM).Cast<ItemAsset>().Where(i => !string.IsNullOrEmpty(i.itemName))
+                    .OrderBy(i => i.itemName.Length).FirstOrDefault(i =>
+                        i.itemName.ToUpperInvariant().Contains(searchTerm.ToUpperInvariant()));
+
+                return item != null;
+            }
+
+            item = (ItemAsset) Assets.find(EAssetType.ITEM, id);
+            return item != null;
         }
     }
 }
