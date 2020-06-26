@@ -168,9 +168,13 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Commands\CMaxSkills.cs" />
+        <Compile Include="Commands\MaxSkills\CMaxSkillsAll.cs" />
+        <Compile Include="Commands\MaxSkills\CMaxSkillsKunii.cs" />
+        <Compile Include="Commands\MaxSkills\CMaxSkillsPlayer.cs" />
+        <Compile Include="Commands\MaxSkills\CMaxSkillsRoot.cs" />
         <Compile Include="NewEssentials.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Utilities.cs" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="config.yaml" />

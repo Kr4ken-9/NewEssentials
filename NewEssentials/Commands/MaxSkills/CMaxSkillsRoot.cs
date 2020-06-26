@@ -10,17 +10,18 @@ using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using Command = OpenMod.Core.Commands.Command;
 
-namespace NewEssentials.Commands
+namespace NewEssentials.Commands.MaxSkills
 {
     [UsedImplicitly]
     [Command("maxskills")]
-    [CommandDescription("Gives a player max skills")]
-    public class CMaxSkills : Command
+    [CommandDescription("Grants maxskills")]
+    [CommandSyntax("<none/player/all/kunii>")]
+    public class CMaxSkillsRoot : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CMaxSkills(IPermissionChecker permissionChecker,
+        public CMaxSkillsRoot(IPermissionChecker permissionChecker,
             IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_PermissionChecker = permissionChecker;
@@ -43,26 +44,7 @@ namespace NewEssentials.Commands
                 throw new NotEnoughPermissionException("newess.maxskills", m_StringLocalizer);
             }
 
-            PlayerSkills playerSkills = uPlayer.Player.skills;
-
-            for (byte speciality = 0; speciality < playerSkills.skills.Length; speciality++)
-            {
-                Skill[] skills = playerSkills.skills[speciality];
-                byte[] newLevels = new byte[skills.Length];
-
-                for (byte index = 0; index < skills.Length; index++)
-                {
-                    Skill skill = skills[index];
-
-                    if (skill.level != skill.max)
-                        skill.setLevelToMax();
-
-                    newLevels[index] = skill.level;
-                }
-                
-                // No achievements lol
-                playerSkills.channel.send("tellSkills", uPlayer.SteamId, ESteamPacket.UPDATE_RELIABLE_BUFFER, speciality, newLevels);
-            }
+            uPlayer.Player.skills.MaxAllSkills();
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["maxskills:granted"]);
         }

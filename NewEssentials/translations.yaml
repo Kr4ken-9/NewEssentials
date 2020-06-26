@@ -5,3 +5,6 @@ kits:
   disabled: "New Essentials kits are disabled"
 maxskills:
   granted: "Your skills have been maxed out!"
+  granted_other: "has been granted max skills"
+  granted_all: "All players have been granted max skills"
+  kunii: "Kunii is a god"
