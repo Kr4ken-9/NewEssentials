@@ -16,6 +16,7 @@ namespace NewEssentials.Commands.MaxSkills
     [Command("kunii")]
     [CommandDescription("Grants yourself max skills")]
     [CommandParent(typeof(CMaxSkillsRoot))]
+    [CommandActor(typeof(UnturnedUser))]
     public class CMaxSkillsKunii : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;
@@ -29,20 +30,14 @@ namespace NewEssentials.Commands.MaxSkills
         }
 
         protected override async Task OnExecuteAsync()
-        {
-            if (Context.Actor is ConsoleActor)
-            {
-                throw new CommandWrongUsageException(m_StringLocalizer["commands:playeronly"]);
-            }
-
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-
+        { 
             string permission = "newess.maxskills.kunii";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
             {
                 throw new NotEnoughPermissionException(Context, permission);
             }
 
+            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             uPlayer.Player.skills.MaxAllSkills(true);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["maxskills:kunii"]);

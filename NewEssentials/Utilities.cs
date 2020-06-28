@@ -1,4 +1,8 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using OpenMod.API.Commands;
+using OpenMod.Core.Commands;
 using SDG.Unturned;
 
 namespace NewEssentials
@@ -42,6 +46,22 @@ namespace NewEssentials
 
             item = (ItemAsset) Assets.find(EAssetType.ITEM, id);
             return item != null;
+        }
+
+        public static bool GetItemAmount(byte inputAmount, IConfiguration configuration, out byte finalAmount)
+        {
+            finalAmount = inputAmount;
+
+            if (!configuration.GetValue<bool>("items:enableamountlimit"))
+                return true;
+            
+            byte maxAmount = configuration.GetValue<byte>("items:maxspawnamount");
+            if (finalAmount <= maxAmount)
+                return true;
+
+            finalAmount = maxAmount;
+            
+            return configuration.GetValue<bool>("items:silentamountlimit");
         }
     }
 }

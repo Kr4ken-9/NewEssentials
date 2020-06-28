@@ -1,5 +1,3 @@
-commands:
-  playeronly: "This command can only be used by players."
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"

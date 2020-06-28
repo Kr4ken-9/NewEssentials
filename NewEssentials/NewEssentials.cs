@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +27,7 @@ namespace NewEssentials
             m_Configuration = configuration;
         }
 
-        protected override async UniTask OnLoadAsync()
+        protected override async Task OnLoadAsync()
         {
             await UniTask.SwitchToThreadPool();
 
