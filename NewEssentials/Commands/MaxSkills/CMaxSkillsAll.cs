@@ -35,9 +35,9 @@ namespace NewEssentials.Commands.MaxSkills
             {
                 throw new NotEnoughPermissionException(Context, permission);
             }
-
+            
             foreach(SteamPlayer player in Provider.clients)
-                player.player.skills.MaxAllSkills();
+                await player.player.skills.MaxAllSkills();
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_all"]);
         }

@@ -38,7 +38,7 @@ namespace NewEssentials.Commands.MaxSkills
             }
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            uPlayer.Player.skills.MaxAllSkills(true);
+            await uPlayer.Player.skills.MaxAllSkills(true);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["maxskills:kunii"]);
         }

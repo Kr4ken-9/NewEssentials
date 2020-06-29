@@ -35,7 +35,7 @@ namespace NewEssentials.Commands.Items
         {
             // User either didn't provide an item and player or provided too much information
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
-                throw new CommandWrongUsageException(m_StringLocalizer["item:syntax"]);
+                throw new CommandWrongUsageException(m_StringLocalizer["item:give_syntax"]);
 
             string permission = "newess.item.give";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
@@ -44,19 +44,16 @@ namespace NewEssentials.Commands.Items
             string rawPlayer = await Context.Parameters.GetAsync<string>(0);
 
             if (!PlayerTool.tryGetSteamPlayer(rawPlayer, out SteamPlayer player))
-                throw new UserFriendlyException($"Player does not exist: {rawPlayer}");
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = rawPlayer}]);
 
             string rawItem = await Context.Parameters.GetAsync<string>(1);
-            
-            if (string.IsNullOrEmpty(rawItem.Trim()))
-                throw new CommandWrongUsageException($"{rawItem} " + m_StringLocalizer["item:invalid"]);
 
             if (!Utilities.GetItem(rawItem, out ItemAsset itemAsset))
-                throw new CommandWrongUsageException($"{rawItem} " + m_StringLocalizer["item:invalid"]);
+                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawItem}]);
 
             byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
             if (!Utilities.GetItemAmount(amount, m_Configuration, out amount))
-                throw new UserFriendlyException(m_StringLocalizer["items:too_much"] + amount);
+                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new {UpperLimit = amount}]);
 
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
             
@@ -64,7 +61,7 @@ namespace NewEssentials.Commands.Items
             for (byte b = 0; b < amount; b++)
                 player.player.inventory.forceAddItem(item, true);
 
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success"] + $"{amount} {itemAsset.itemName}");
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName}]);
         }
     }
 }

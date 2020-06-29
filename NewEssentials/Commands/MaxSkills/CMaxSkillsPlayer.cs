@@ -49,13 +49,13 @@ namespace NewEssentials.Commands.MaxSkills
                     continue;
                 }
                 
-                player.player.skills.MaxAllSkills();
-                await Context.Actor.PrintMessageAsync($"{player.playerID.playerName} " + m_StringLocalizer["maxskills:granted_other"]);
+                await player.player.skills.MaxAllSkills();
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_other", new {Player = player.playerID.playerName}]);
             }
 
             if (playersNotFound != "")
             {
-                throw new UserFriendlyException($"Players not found: {playersNotFound}");
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_players", new {Players = playersNotFound}]);
             }
         }
     }

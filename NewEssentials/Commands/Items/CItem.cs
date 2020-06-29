@@ -42,17 +42,14 @@ namespace NewEssentials.Commands.Items
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
                 throw new NotEnoughPermissionException(Context, permission);
 
-            string rawInput = await Context.Parameters.GetAsync<string>(1);
-            
-            if (string.IsNullOrEmpty(rawInput.Trim()))
-                throw new CommandWrongUsageException($"{rawInput} " + m_StringLocalizer["item:invalid"]);
+            string rawInput = await Context.Parameters.GetAsync<string>(0);
 
             if (!Utilities.GetItem(rawInput, out ItemAsset itemAsset))
-                throw new CommandWrongUsageException($"{rawInput} " + m_StringLocalizer["item:invalid"]);
+                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawInput}]);
 
             byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
             if (!Utilities.GetItemAmount(amount, m_Configuration, out amount))
-                throw new UserFriendlyException(m_StringLocalizer["items:too_much"] + amount);
+                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new {UpperLimit = amount}]);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
@@ -61,7 +58,7 @@ namespace NewEssentials.Commands.Items
             for (byte b = 0; b < amount; b++)
                 uPlayer.Player.inventory.forceAddItem(item, true);
 
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success"] + $"{amount} {itemAsset.itemName}");
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName}]);
         }
     }
 }

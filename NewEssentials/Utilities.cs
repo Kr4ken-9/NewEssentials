@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
@@ -9,7 +10,7 @@ namespace NewEssentials
 {
     public static class Utilities
     {
-        public static void MaxAllSkills(this PlayerSkills playerSkills, bool kunii = false)
+        public static async Task MaxAllSkills(this PlayerSkills playerSkills, bool kunii = false)
         {
             for (byte speciality = 0; speciality < playerSkills.skills.Length; speciality++)
             {
@@ -27,14 +28,22 @@ namespace NewEssentials
 
                     newLevels[index] = skill.level;
                 }
-                
+
+                await UniTask.SwitchToMainThread();
                 // No achievements lol
                 playerSkills.channel.send("tellSkills", playerSkills.channel.owner.playerID.steamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, speciality, newLevels);
+                await Task.Yield();
             }
         }
 
         public static bool GetItem(string searchTerm, out ItemAsset item)
         {
+            if (string.IsNullOrEmpty(searchTerm.Trim()))
+            {
+                item = null;
+                return false;
+            }
+            
             if (!ushort.TryParse(searchTerm, out ushort id))
             {
                 item = Assets.find(EAssetType.ITEM).Cast<ItemAsset>().Where(i => !string.IsNullOrEmpty(i.itemName))
