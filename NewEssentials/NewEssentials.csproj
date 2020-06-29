@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Home\CHome.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsAll.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsKunii.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsPlayer.cs" />
