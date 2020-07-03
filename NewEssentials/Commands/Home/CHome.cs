@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Models;
 using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
@@ -44,10 +46,11 @@ namespace NewEssentials.Commands.Home
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             if (Context.Parameters.Length == 0)
             {
+                await UniTask.SwitchToMainThread();
                 if (uPlayer.Player.teleportToBed())
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = "bed"}]);
                 else
-                    await uPlayer.PrintMessageAsync(m_StringLocalizer["home_failure"]);
+                    await uPlayer.PrintMessageAsync(m_StringLocalizer["home:no_bed"]);
             }
             else
             {
@@ -55,17 +58,19 @@ namespace NewEssentials.Commands.Home
                 if (!userData.Data.ContainsKey("homes"))
                     throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
 
-                Dictionary<string, Vector3> homes = (Dictionary<string, Vector3>) userData.Data["homes"];
+                var homes = (Dictionary<object, object>) userData.Data["homes"];
+                string homeName = Context.Parameters[0];
 
-                string home = Context.Parameters[0];
+                if (!homes.ContainsKey(homeName))
+                    throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", new {Home = homeName}]);
 
-                if (!homes.ContainsKey(home))
-                    throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", home]);
+                SerializableVector3 home = SerializableVector3.GetSerializableVector3FromUserData(homes, homeName);
 
-                if (uPlayer.Player.teleportToLocation(homes[home], uPlayer.Player.look.yaw))
-                    await uPlayer.PrintMessageAsync(m_StringLocalizer["home_success", new {Home = home}]);
+                await UniTask.SwitchToMainThread();
+                if (uPlayer.Player.teleportToLocation(home.ToUnityVector3(), uPlayer.Player.look.yaw))
+                    await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = homeName}]);
                 else
-                    throw new UserFriendlyException(m_StringLocalizer["home_failure", new {Home = home}]);
+                    throw new UserFriendlyException(m_StringLocalizer["home:failure", new {Home = homeName}]);
             }
         }
     }

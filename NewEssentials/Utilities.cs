@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using SDG.Unturned;
+using UnityEngine;
 
 namespace NewEssentials
 {
@@ -35,6 +37,8 @@ namespace NewEssentials
                 await Task.Yield();
             }
         }
+        
+        public static SerializableVector3 ToSerializableVector3(this Vector3 vector3) => new SerializableVector3(vector3.x, vector3.y, vector3.z);
 
         public static bool GetItem(string searchTerm, out ItemAsset item)
         {

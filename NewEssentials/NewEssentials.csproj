@@ -160,12 +160,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Home\CHome.cs" />
+    <Compile Include="Commands\Home\CSetHome.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsAll.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsKunii.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsPlayer.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsRoot.cs" />
     <Compile Include="Commands\Items\CItem.cs" />
     <Compile Include="Commands\Items\CGiveItem.cs" />
+    <Compile Include="Models\SerializableVector3.cs" />
     <Compile Include="NewEssentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
