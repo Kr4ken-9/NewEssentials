@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Home\CHome.cs" />
+    <Compile Include="Commands\Home\CHomes.cs" />
     <Compile Include="Commands\Home\CSetHome.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsAll.cs" />
     <Compile Include="Commands\MaxSkills\CMaxSkillsKunii.cs" />
