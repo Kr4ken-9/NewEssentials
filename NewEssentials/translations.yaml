@@ -23,3 +23,4 @@ home:
   invalid_home: "{Home} is not one of your homes"
   set: "{Home} set at this location"
   list: "Your homes include: {Homes}"
+  delete: "Deleted home: {Home}"

@@ -18,16 +18,18 @@ using Command = OpenMod.Core.Commands.Command;
 namespace NewEssentials.Commands.Home
 {
     [UsedImplicitly]
-    [Command("homes")]
-    [CommandDescription("List your saved homes")]
+    [Command("deletehome")]
+    [CommandAlias("delhome")]
+    [CommandDescription("Delete a saved home")]
+    [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CHomes : Command
+    public class CDeleteHome : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
 
-        public CHomes(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
+        public CDeleteHome(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
             IUserDataStore userDataStore, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_PermissionChecker = permissionChecker;
@@ -37,11 +39,11 @@ namespace NewEssentials.Commands.Home
 
         protected override async Task OnExecuteAsync()
         {
-            string permission = "newess.home.list";
+            string permission = "newess.home.delete";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
                 throw new NotEnoughPermissionException(Context, permission);
 
-            if (Context.Parameters.Length != 0)
+            if (Context.Parameters.Length != 1)
                 throw new CommandWrongUsageException(Context);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
@@ -49,14 +51,18 @@ namespace NewEssentials.Commands.Home
             
             if (!userData.Data.ContainsKey("homes"))
                 throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
-            
-            var stringBuilder = new StringBuilder();
-            foreach (var pair in (Dictionary<object, object>) userData.Data["homes"])
-                stringBuilder.Append($"{pair.Key}, ");
 
-            stringBuilder.Remove(stringBuilder.Length - 2, 1);
+            var homes = (Dictionary<object, object>) userData.Data["homes"];
+            string homeName = Context.Parameters[0];
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new {Homes = stringBuilder.ToString()}]);
+            if (!homes.ContainsKey(homeName))
+                throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", new {Home = homeName}]);
+
+            homes.Remove(homeName);
+            userData.Data["homes"] = homes;
+            await m_UserDataStore.SaveUserDataAsync(userData);
+
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:delete", new {Home = homeName}]);
         }
     }
 }
