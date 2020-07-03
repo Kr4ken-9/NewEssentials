@@ -174,7 +174,6 @@
     <Compile Include="Commands\TPA\CTPA.cs" />
     <Compile Include="Managers\TPAManager.cs" />
     <Compile Include="Models\SerializableVector3.cs" />
-    <Compile Include="Models\TPARequest.cs" />
     <Compile Include="NewEssentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />

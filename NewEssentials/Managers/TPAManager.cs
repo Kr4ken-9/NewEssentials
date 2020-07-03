@@ -1,47 +1,72 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NewEssentials.API;
-using NewEssentials.Models;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
+using SDG.Unturned;
+using UnityEngine;
 
 namespace NewEssentials.Managers
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
-    public class TPAManager : ITPAManager
+    public class TPAManager : ITPAManager, IAsyncDisposable
     {
-        private readonly Dictionary<ulong, HashSet<TPARequest>> m_OpenRequests = new Dictionary<ulong, HashSet<TPARequest>>();
+        private readonly Dictionary<ulong, HashSet<ulong>> m_OpenRequests = new Dictionary<ulong, HashSet<ulong>>();
+        private IStringLocalizer m_StringLocalizer;
 
         public TPAManager()
         {
-            
+            Provider.onEnemyConnected += AddPlayer;
+            Provider.onEnemyDisconnected += RemovePlayer;
+        }
+
+        public void SetLocalizer(IStringLocalizer stringLocalizer)
+        {
+            m_StringLocalizer = stringLocalizer;
         }
 
         public bool IsRequestOpen(ulong recipient, ulong requester)
         {
-            if (!m_OpenRequests.ContainsKey(recipient))
-                return false;
-
-            return m_OpenRequests[recipient].Any(x => x.Requester == requester);
+            return m_OpenRequests[recipient].Contains(requester);
         }
 
-        public void OpenNewRequest(ulong recipient, TPARequest request)
+        public void OpenNewRequest(ulong recipient, ulong requester, int requestLifetime)
         {
-            if (!m_OpenRequests.ContainsKey(recipient))
-                m_OpenRequests.Add(recipient, new HashSet<TPARequest>());
-
-            m_OpenRequests[recipient].Add(request);
+            m_OpenRequests[recipient].Add(requester);
             
-            var thread = new Thread(() => RequestExpirationThread(recipient, request));
+            var thread = new Thread(async () => await RequestExpirationThread(recipient, requester, requestLifetime));
             thread.Start();
         }
 
-        private void RequestExpirationThread(ulong recipient, TPARequest request)
+        private async Task RequestExpirationThread(ulong recipient, ulong requester, int lifetime)
         {
-            Thread.Sleep(request.RequestLifetime);
-            m_OpenRequests[recipient].Remove(request);
+            Thread.Sleep(lifetime);
+            m_OpenRequests[recipient].Remove(requester);
+
+            SteamPlayer player = PlayerTool.getSteamPlayer(requester);
+            if (player == null)
+                return;
+
+            await UniTask.SwitchToMainThread();
+            ChatManager.serverSendMessage(m_StringLocalizer["tpa:expired", new {Recipient = player.playerID.characterName}], Color.red, toPlayer: player);
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            Provider.onEnemyConnected -= AddPlayer;
+            Provider.onEnemyDisconnected -= RemovePlayer;
+            await Task.Yield();
+        }
+
+        private void AddPlayer(SteamPlayer newPlayer) =>
+            m_OpenRequests.Add(newPlayer.playerID.steamID.m_SteamID, new HashSet<ulong>());
+
+        private void RemovePlayer(SteamPlayer gonePlayer) =>
+            m_OpenRequests.Remove(gonePlayer.playerID.steamID.m_SteamID);
     }
 }

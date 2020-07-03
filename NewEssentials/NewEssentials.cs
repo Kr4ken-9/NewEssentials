@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using NewEssentials.API;
 using OpenMod.API.Users;
 using OpenMod.Core.Plugins;
 using OpenMod.Unturned.Plugins;
@@ -22,24 +23,26 @@ namespace NewEssentials
         private readonly ILogger<NewEssentials> m_Logger;
         private readonly IConfiguration m_Configuration;
         private readonly IUserDataStore m_UserDataStore;
+        private readonly ITPAManager m_TPAManager;
 
-        public NewEssentials(IStringLocalizer stringLocalizer, ILogger<NewEssentials> logger,
-            IConfiguration configuration, IUserDataStore userDataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        public NewEssentials(IStringLocalizer stringLocalizer, ILogger<NewEssentials> logger, IConfiguration configuration, IUserDataStore userDataStore, ITPAManager tpaManager, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_Logger = logger;
             m_Configuration = configuration;
             m_UserDataStore = userDataStore;
+            m_TPAManager = tpaManager;
         }
 
-        protected override async Task OnLoadAsync()
+        protected override async UniTask OnLoadAsync()
         {
             await UniTask.SwitchToThreadPool();
 
+            m_TPAManager.SetLocalizer(m_StringLocalizer);
             PlayerLife.onPlayerDied += SaveDeathLocation;
         }
 
-        protected override async Task OnUnloadAsync()
+        protected override async UniTask OnUnloadAsync()
         {
             PlayerLife.onPlayerDied -= SaveDeathLocation;
             await Task.Yield();

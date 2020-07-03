@@ -29,3 +29,7 @@ back:
   success: "Teleported to last death location."
 tpa:
   invalid_recipient: "{Recipient} is not a player."
+  already_requested: "You have already sent a TPA request to this player."
+  success: "Sent TPA request to {Recipient}."
+  self: "You may not TPA to yourself."
+  expired: "Your TPA request to {Recipient} has expired."

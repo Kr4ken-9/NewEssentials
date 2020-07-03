@@ -3,3 +3,5 @@ items:
   enableamountlimit: true
   silentamountlimit: true
   maxspawnamount: 20
+tpa:
+  expiration: 30

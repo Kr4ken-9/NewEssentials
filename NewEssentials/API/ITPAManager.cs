@@ -1,4 +1,4 @@
-﻿using NewEssentials.Models;
+﻿using Microsoft.Extensions.Localization;
 using OpenMod.API.Ioc;
 
 namespace NewEssentials.API
@@ -20,6 +20,10 @@ namespace NewEssentials.API
         /// Opens a new TPA request from the requester to the recipient
         /// </summary>
         /// <param name="recipient">SteamID of the recipient</param>
-        void OpenNewRequest(ulong recipient, TPARequest request);
+        /// <param name="requester">SteamID of the requester</param>
+        /// <param name="requestLifetime">Time, in milliseconds, before request expires</param>
+        void OpenNewRequest(ulong recipient, ulong requester, int requestLifetime);
+
+        void SetLocalizer(IStringLocalizer stringLocalizer);
     }
 }
