@@ -27,3 +27,5 @@ home:
 back:
   none: "You have no known death location."
   success: "Teleported to last death location."
+tpa:
+  invalid_recipient: "{Recipient} is not a player."
