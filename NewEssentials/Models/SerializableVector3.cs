@@ -22,13 +22,13 @@ namespace NewEssentials.Models
         public Vector3 ToUnityVector3() => new Vector3(X, Y, Z);
 
         // This whole thing is retarded.
-        public static SerializableVector3 GetSerializableVector3FromUserData(Dictionary<object, object> homes, string homeName)
+        public static SerializableVector3 GetSerializableVector3FromUserData(Dictionary<object, object> userData, string indexName = null)
         {
-            var home = (Dictionary<object, object>)homes[homeName];
+            Dictionary<object, object> vector = indexName != null ? (Dictionary<object, object>) userData[indexName] : userData;
 
-            float x = float.Parse((string) home["x"]);
-            float y = float.Parse((string) home["y"]);
-            float z = float.Parse((string) home["z"]);
+            float x = float.Parse((string) vector["x"]);
+            float y = float.Parse((string) vector["y"]);
+            float z = float.Parse((string) vector["z"]);
             
             return new SerializableVector3(x, y, z);
         }

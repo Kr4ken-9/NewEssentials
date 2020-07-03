@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CBack.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
     <Compile Include="Commands\Home\CHome.cs" />
     <Compile Include="Commands\Home\CHomes.cs" />

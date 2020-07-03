@@ -24,3 +24,6 @@ home:
   set: "{Home} set at this location"
   list: "Your homes include: {Homes}"
   delete: "Deleted home: {Home}"
+back:
+  none: "You have no known death location."
+  success: "Teleported to last death location."
