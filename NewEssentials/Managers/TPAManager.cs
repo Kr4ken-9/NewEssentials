@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -16,7 +18,7 @@ namespace NewEssentials.Managers
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class TPAManager : ITPAManager, IAsyncDisposable
     {
-        private readonly Dictionary<ulong, HashSet<ulong>> m_OpenRequests = new Dictionary<ulong, HashSet<ulong>>();
+        private readonly Dictionary<ulong, List<ulong>> m_OpenRequests = new Dictionary<ulong, List<ulong>>();
         private IStringLocalizer m_StringLocalizer;
 
         public TPAManager()
@@ -30,10 +32,9 @@ namespace NewEssentials.Managers
             m_StringLocalizer = stringLocalizer;
         }
 
-        public bool IsRequestOpen(ulong recipient, ulong requester)
-        {
-            return m_OpenRequests[recipient].Contains(requester);
-        }
+        public bool IsRequestOpen(ulong recipient) => m_OpenRequests[recipient].Count > 0;
+
+        public bool IsRequestOpen(ulong recipient, ulong requester) => m_OpenRequests[recipient].Contains(requester);
 
         public void OpenNewRequest(ulong recipient, ulong requester, int requestLifetime)
         {
@@ -43,9 +44,23 @@ namespace NewEssentials.Managers
             thread.Start();
         }
 
+        public ulong AcceptRequest(ulong recipient)
+        {
+            ulong requester = m_OpenRequests[recipient].First();
+            m_OpenRequests[recipient].Remove(requester);
+
+            return requester;
+        }
+
+        public void AcceptRequest(ulong recipient, ulong requester) => m_OpenRequests[recipient].Remove(requester);
+
         private async Task RequestExpirationThread(ulong recipient, ulong requester, int lifetime)
         {
             Thread.Sleep(lifetime);
+
+            if (!m_OpenRequests[recipient].Contains(requester))
+                return;
+            
             m_OpenRequests[recipient].Remove(requester);
 
             SteamPlayer player = PlayerTool.getSteamPlayer(requester);
@@ -64,7 +79,7 @@ namespace NewEssentials.Managers
         }
 
         private void AddPlayer(SteamPlayer newPlayer) =>
-            m_OpenRequests.Add(newPlayer.playerID.steamID.m_SteamID, new HashSet<ulong>());
+            m_OpenRequests.Add(newPlayer.playerID.steamID.m_SteamID, new List<ulong>());
 
         private void RemovePlayer(SteamPlayer gonePlayer) =>
             m_OpenRequests.Remove(gonePlayer.playerID.steamID.m_SteamID);
