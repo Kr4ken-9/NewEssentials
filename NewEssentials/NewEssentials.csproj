@@ -171,6 +171,7 @@
     <Compile Include="Commands\MaxSkills\CMaxSkillsRoot.cs" />
     <Compile Include="Commands\Items\CItem.cs" />
     <Compile Include="Commands\Items\CGiveItem.cs" />
+    <Compile Include="Commands\Messaging\CTell.cs" />
     <Compile Include="Commands\TPA\CTPA.cs" />
     <Compile Include="Commands\TPA\CTPAccept.cs" />
     <Compile Include="Commands\TPA\CTPADeny.cs" />

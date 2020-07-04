@@ -41,3 +41,6 @@ tpa:
   denied_self: "You denied {Requester}'s TPA request."
   denied_other: "Your TPA request to {Recipient} was denied."
   disconnected: "{Requester} disconnected before they could teleport to you."
+tell:
+  sent: "You > {Recipient}: {Message}"
+  received: "{Sender} > You: {Message}"
