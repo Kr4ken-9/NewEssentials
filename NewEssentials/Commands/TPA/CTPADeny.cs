@@ -2,46 +2,49 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using OpenMod.Core.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Permissions;
-using OpenMod.Core.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using UnityEngine;
 using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.TPA
 {
     [UsedImplicitly]
-    [Command("tpaccept")]
-    [CommandAlias("tpac")]
-    [CommandDescription("Accept a teleport request")]
+    [Command("tpadeny")]
+    [CommandAlias("tpad")]
+    [CommandDescription("Deny a teleport request")]
     [CommandSyntax("[player]")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CTPAccept : Command
+    public class CTPADeny : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IConfiguration m_Configuration;
         private readonly ITPAManager m_TpaManager;
 
-        public CTPAccept(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, ITPAManager tpaManager,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+        public CTPADeny(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
+            IConfiguration configuration, ITPAManager tpaManager, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
+            m_Configuration = configuration;
             m_TpaManager = tpaManager;
         }
 
         protected override async Task OnExecuteAsync()
         {
-            string permission = "newess.tpa.accept";
+            string permission = "newess.tpa.deny";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
                 throw new NotEnoughPermissionException(Context, permission);
 
             if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
-
+            
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             ulong recipientSteamID = uPlayer.SteamId.m_SteamID;
 
@@ -73,14 +76,15 @@ namespace NewEssentials.Commands.TPA
                     throw new UserFriendlyException("This is a placeholder so that we can reassure the compiler that requester will never be null.");
             }
             
-            await UniTask.SwitchToMainThread();
-            requester.player.teleportToLocation(uPlayer.Player.transform.position, requester.player.look.yaw);
+            //TODO: Change name to be less misleading.
+            m_TpaManager.AcceptRequest(recipientSteamID, requester.playerID.steamID.m_SteamID);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accepted_self",
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:denied_self",
                 new {Requester = requester.playerID.characterName}]);
 
-            ChatManager.serverSendMessage(m_StringLocalizer["tpa:accepted_other",
-                new {Recipient = uPlayer.DisplayName}], Palette.SERVER, toPlayer: requester);
+            await UniTask.SwitchToMainThread();
+            ChatManager.serverSendMessage(m_StringLocalizer["tpa:denied_other",
+                new {Recipient = uPlayer.DisplayName}], Color.red, toPlayer: requester);
         }
     }
 }
