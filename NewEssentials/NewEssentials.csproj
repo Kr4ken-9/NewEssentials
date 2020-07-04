@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IPrivateMessageManager.cs" />
     <Compile Include="API\ITPAManager.cs" />
     <Compile Include="Commands\CBack.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Commands\TPA\CTPA.cs" />
     <Compile Include="Commands\TPA\CTPAccept.cs" />
     <Compile Include="Commands\TPA\CTPADeny.cs" />
+    <Compile Include="Managers\PrivateMessageManager.cs" />
     <Compile Include="Managers\TPAManager.cs" />
     <Compile Include="Models\SerializableVector3.cs" />
     <Compile Include="NewEssentials.cs" />

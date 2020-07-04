@@ -18,11 +18,12 @@ namespace NewEssentials.Managers
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class TPAManager : ITPAManager, IAsyncDisposable
     {
-        private readonly Dictionary<ulong, List<ulong>> m_OpenRequests = new Dictionary<ulong, List<ulong>>();
+        private readonly Dictionary<ulong, List<ulong>> m_OpenRequests;
         private IStringLocalizer m_StringLocalizer;
 
         public TPAManager()
         {
+            m_OpenRequests = new Dictionary<ulong, List<ulong>>();
             Provider.onEnemyConnected += AddPlayer;
             Provider.onEnemyDisconnected += RemovePlayer;
         }
