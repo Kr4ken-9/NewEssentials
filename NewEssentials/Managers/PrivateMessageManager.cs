@@ -14,6 +14,7 @@ namespace NewEssentials.Managers
 
         public PrivateMessageManager()
         {
+            m_LastMessage = new Dictionary<ulong, ulong>();
             Provider.onEnemyDisconnected += RemovePlayer;
         }
         

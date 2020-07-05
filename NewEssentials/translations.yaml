@@ -44,3 +44,6 @@ tpa:
 tell:
   sent: "You > {Recipient}: {Message}"
   received: "{Sender} > You: {Message}"
+reply:
+  lonely: "You have nobody to reply to."
+  disconnected: "{Messager} disconnected before you could reply to them."
