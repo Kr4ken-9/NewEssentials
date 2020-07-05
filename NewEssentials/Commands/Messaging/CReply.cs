@@ -59,7 +59,7 @@ namespace NewEssentials.Commands.Messaging
             m_PrivateMessageManager.RecordLastMessager(lastMessagerSteamID.Value, originalRecipientSteamID);
             
             StringBuilder messageBuilder = new StringBuilder();
-            for(int i = 1; i < Context.Parameters.Length; i++)
+            for(int i = 0; i < Context.Parameters.Length; i++)
                 messageBuilder.Append(await Context.Parameters.GetAsync<string>(i) + " ");
 
             string completeMessage = messageBuilder.ToString();
