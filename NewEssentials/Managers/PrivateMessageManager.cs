@@ -42,7 +42,12 @@ namespace NewEssentials.Managers
             await Task.Yield();
         }
 
-        private void RemovePlayer(SteamPlayer gonePlayer) =>
-            m_LastMessage.Remove(gonePlayer.playerID.steamID.m_SteamID);
+        private void RemovePlayer(SteamPlayer gonePlayer)
+        {
+            ulong gonePlayerSteamID = gonePlayer.playerID.steamID.m_SteamID;
+
+            if (m_LastMessage.ContainsKey(gonePlayerSteamID))
+                m_LastMessage.Remove(gonePlayerSteamID);
+        }
     }
 }
