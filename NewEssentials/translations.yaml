@@ -62,3 +62,6 @@ explode:
   bad_damage: "{Damage} is not a valid damage."
   failure: "Failed to cause an explosion where you're looking."
   success: "Boom!"
+clear:
+  vehicles: "Successfully cleared all vehicles."
+  vehicles_empty: "Successfully cleared {Count} empty vehicles."

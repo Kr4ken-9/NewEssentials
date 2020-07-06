@@ -165,6 +165,8 @@
     <Compile Include="Commands\CBack.cs" />
     <Compile Include="Commands\CDescend.cs" />
     <Compile Include="Commands\CExplode.cs" />
+    <Compile Include="Commands\Clear\CClearRoot.cs" />
+    <Compile Include="Commands\Clear\CClearVehicles.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
     <Compile Include="Commands\Home\CHome.cs" />
     <Compile Include="Commands\Home\CHomes.cs" />
