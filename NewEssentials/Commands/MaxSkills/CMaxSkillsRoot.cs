@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
-using OpenMod.Core.Console;
 using OpenMod.Unturned.Users;
-using SDG.Unturned;
 using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills

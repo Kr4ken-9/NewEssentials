@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using SDG.Unturned;

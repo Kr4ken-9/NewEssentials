@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using OpenMod.API.Users;
 using UnityEngine;
 
 namespace NewEssentials.Models

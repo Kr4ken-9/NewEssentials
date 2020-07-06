@@ -6,6 +6,7 @@ using OpenMod.Core.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
+using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;

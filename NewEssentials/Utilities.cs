@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NewEssentials.Models;
-using OpenMod.API.Commands;
-using OpenMod.Core.Commands;
 using SDG.Unturned;
 using UnityEngine;
 
