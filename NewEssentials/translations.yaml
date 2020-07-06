@@ -53,3 +53,7 @@ tell:
 reply:
   lonely: "You have nobody to reply to."
   disconnected: "{Messager} disconnected before you could reply to them."
+ascend:
+  success: "Successfully ascended {Distance}m."
+descend:
+  success: "Successfully descended {Distance}m."

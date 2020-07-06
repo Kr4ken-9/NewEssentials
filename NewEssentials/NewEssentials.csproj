@@ -161,7 +161,9 @@
   <ItemGroup>
     <Compile Include="API\IPrivateMessageManager.cs" />
     <Compile Include="API\ITPAManager.cs" />
+    <Compile Include="Commands\CAscend.cs" />
     <Compile Include="Commands\CBack.cs" />
+    <Compile Include="Commands\CDescend.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
     <Compile Include="Commands\Home\CHome.cs" />
     <Compile Include="Commands\Home\CHomes.cs" />
