@@ -95,5 +95,48 @@ namespace NewEssentials
             
             return configuration.GetValue<bool>("items:silentamountlimit");
         }
+
+        public static void ClearInventory(this Player player)
+        {
+            Items[] items = player.inventory.items;
+            for (byte b = 0; b < PlayerInventory.PAGES; b++)
+            {
+                if (b == PlayerInventory.AREA)
+                    continue;
+                
+                items[b].Clear();
+
+                if (b < PlayerInventory.SLOTS)
+                    player.equipment.sendSlot(b);
+            }
+
+            PlayerClothing clothing = player.clothing;
+            clothing.sendSwapBackpack(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+            
+            clothing.sendSwapGlasses(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+            
+            clothing.sendSwapHat(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+            
+            clothing.sendSwapMask(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+            
+            clothing.sendSwapPants(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+            
+            clothing.sendSwapShirt(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+
+            clothing.sendSwapVest(255, 0, 0);
+            items[PlayerInventory.SLOTS].Clear();
+        }
+
+        public static void Clear(this Items item)
+        {
+            for (byte b = 0; b < item.getItemCount(); b++)
+                item.removeItem(b);
+        }
     }
 }

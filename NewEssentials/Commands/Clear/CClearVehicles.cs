@@ -15,6 +15,7 @@ namespace NewEssentials.Commands.Clear
     [UsedImplicitly]
     [Command("vehicles")]
     [CommandAlias("vehicle")]
+    [CommandAlias("v")]
     [CommandParent(typeof(CClearRoot))]
     [CommandDescription("Clears all vehicles or only empty vehicles")]
     [CommandSyntax("[empty]")]
@@ -31,7 +32,7 @@ namespace NewEssentials.Commands.Clear
 
         protected override async Task OnExecuteAsync()
         {
-            string permission = "command.permission";
+            string permission = "newess.clear.vehicles";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
                 throw new NotEnoughPermissionException(Context, permission);
 

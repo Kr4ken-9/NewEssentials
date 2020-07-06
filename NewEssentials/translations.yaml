@@ -1,3 +1,6 @@
+general:
+  invalid_player: "{Player} is not a player."
+  disconnected: "{Player} disconnected."
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"
@@ -65,3 +68,6 @@ explode:
 clear:
   vehicles: "Successfully cleared all vehicles."
   vehicles_empty: "Successfully cleared {Count} empty vehicles."
+  items: "Successfully cleared all items."
+  inventory: "Successfully cleared your inventory."
+  inventory_other: "Successfully cleared {Player}'s inventory."
