@@ -177,6 +177,8 @@
     <Compile Include="Commands\TPA\CTPA.cs" />
     <Compile Include="Commands\TPA\CTPAccept.cs" />
     <Compile Include="Commands\TPA\CTPADeny.cs" />
+    <Compile Include="Commands\Vehicles\CGiveVehicle.cs" />
+    <Compile Include="Commands\Vehicles\CVehicle.cs" />
     <Compile Include="Managers\PrivateMessageManager.cs" />
     <Compile Include="Managers\TPAManager.cs" />
     <Compile Include="Models\SerializableVector3.cs" />

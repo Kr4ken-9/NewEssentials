@@ -16,8 +16,8 @@ namespace NewEssentials.Commands.Items
     [UsedImplicitly]
     [Command("giveitem")]
     [CommandAlias("gi")]
-    [CommandDescription("Add an item to inventory")]
-    [CommandSyntax("<player> [<id>/<item name>] <amount>")]
+    [CommandDescription("Give another player an item")]
+    [CommandSyntax("<player> <id>/<item name> [amount]")]
     public class CGiveItem : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;

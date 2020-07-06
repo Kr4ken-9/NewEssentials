@@ -16,8 +16,8 @@ namespace NewEssentials.Commands.Items
     [UsedImplicitly]
     [Command("item")]
     [CommandAlias("i")]
-    [CommandDescription("Add an item to inventory")]
-    [CommandSyntax("[<id>/<item name>] <amount>")]
+    [CommandDescription("Spawn an item")]
+    [CommandSyntax("<id>/<item name> [amount]")]
     [CommandActor(typeof(UnturnedUser))]
     public class CItem : Command
     {

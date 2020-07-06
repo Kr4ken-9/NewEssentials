@@ -15,6 +15,12 @@ item:
   invalid: "{Item} is not an item"
   too_much: "The max item spawn limit is {UpperLimit}"
   success: "Spawned {Amount} {Item}"
+vehicle:
+  invalid: "{Vehicle} is not a vehicle."
+  failed: "Something is blocking the vehicle from spawning."
+  success: "Spawned {Vehicle} successfully."
+  success_given: "Spawned {Vehicle} for {Player} successfully."
+  invalid_player: "{Player} is not a player."
 home:
   success: "Teleported to {Home}"
   failure: "Could not teleport to {Home}"

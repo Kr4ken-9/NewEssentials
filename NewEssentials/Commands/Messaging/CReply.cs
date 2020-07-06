@@ -51,6 +51,7 @@ namespace NewEssentials.Commands.Messaging
             if (!lastMessagerSteamID.HasValue)
                 throw new UserFriendlyException(m_StringLocalizer["reply:lonely"]);
 
+            //TODO: Remove disconnected users from manager
             SteamPlayer lastMessager = PlayerTool.getSteamPlayer(lastMessagerSteamID.Value);
             if (lastMessager == null)
                 throw new UserFriendlyException(m_StringLocalizer["reply:disconnected",

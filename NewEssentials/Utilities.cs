@@ -61,6 +61,27 @@ namespace NewEssentials
             return item != null;
         }
 
+        public static bool GetVehicle(string searchTerm, out VehicleAsset vehicle)
+        {
+            if (string.IsNullOrEmpty(searchTerm.Trim()))
+            {
+                vehicle = null;
+                return false;
+            }
+
+            if (!ushort.TryParse(searchTerm, out ushort id))
+            {
+                vehicle = Assets.find(EAssetType.VEHICLE).Cast<VehicleAsset>()
+                    .Where(v => !string.IsNullOrEmpty(v.vehicleName)).OrderBy(v => v.vehicleName.Length)
+                    .FirstOrDefault(v => v.vehicleName.ToUpperInvariant().Contains(searchTerm.ToUpperInvariant()));
+
+                return vehicle != null;
+            }
+
+            vehicle = (VehicleAsset) Assets.find(EAssetType.VEHICLE, id);
+            return vehicle != null;
+        }
+
         public static bool GetItemAmount(byte inputAmount, IConfiguration configuration, out byte finalAmount)
         {
             finalAmount = inputAmount;
