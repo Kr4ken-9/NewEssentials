@@ -57,3 +57,8 @@ ascend:
   success: "Successfully ascended {Distance}m."
 descend:
   success: "Successfully descended {Distance}m."
+explode:
+  bad_radius: "{Radius} is not a valid radius."
+  bad_damage: "{Damage} is not a valid damage."
+  failure: "Failed to cause an explosion where you're looking."
+  success: "Boom!"
