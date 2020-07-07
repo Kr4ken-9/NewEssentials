@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IFreezeManager.cs" />
     <Compile Include="API\IPrivateMessageManager.cs" />
     <Compile Include="API\ITPAManager.cs" />
     <Compile Include="Commands\CAscend.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Commands\CDescend.cs" />
     <Compile Include="Commands\CExperience.cs" />
     <Compile Include="Commands\CExplode.cs" />
+    <Compile Include="Commands\CFreeze.cs" />
     <Compile Include="Commands\CHeal.cs" />
     <Compile Include="Commands\Clear\CClearInventory.cs" />
     <Compile Include="Commands\Clear\CClearItems.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Commands\TPA\CTPADeny.cs" />
     <Compile Include="Commands\Vehicles\CGiveVehicle.cs" />
     <Compile Include="Commands\Vehicles\CVehicle.cs" />
+    <Compile Include="Managers\FreezeManager.cs" />
     <Compile Include="Managers\PrivateMessageManager.cs" />
     <Compile Include="Managers\TPAManager.cs" />
     <Compile Include="Models\SerializableVector3.cs" />

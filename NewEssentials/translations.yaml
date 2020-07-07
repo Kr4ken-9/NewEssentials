@@ -80,3 +80,6 @@ reputation:
 heal:
   success: "Successfully healed yourself."
   success_other: "Successfully healed {Player}"
+freeze:
+  frozen: "Successfully froze {Player}."
+  unfrozen: "Successfully unfroze {Player}."
