@@ -68,7 +68,7 @@ explode:
 clear:
   vehicles: "Successfully cleared all vehicles."
   vehicles_empty: "Successfully cleared {Count} empty vehicles."
-  items: "Successfully cleared all items."
+  items: "Successfully cleared {Count} items."
   inventory: "Successfully cleared your inventory."
   inventory_other: "Successfully cleared {Player}'s inventory."
 experience:

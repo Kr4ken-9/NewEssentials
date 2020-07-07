@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using SDG.Unturned;
+using UnityEngine;
 using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Clear
@@ -42,7 +45,9 @@ namespace NewEssentials.Commands.Clear
             if (Context.Parameters.Length == 0)
             {
                 await UniTask.SwitchToMainThread();
-                VehicleManager.askVehicleDestroyAll();
+
+                byte counter = BombVehicles(VehicleManager.vehicles);
+
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["clear:vehicles"]);
             }
             else
@@ -53,19 +58,23 @@ namespace NewEssentials.Commands.Clear
                 
                 await UniTask.SwitchToMainThread();
 
-                byte counter = 0;
-                for (int index = VehicleManager.vehicles.Count - 1; index >= 0; index--)
-                {
-                    var vehicle = VehicleManager.vehicles[index];
-                    if (!vehicle.isEmpty)
-                        continue;
-                    
-                    VehicleManager.askVehicleDestroy(vehicle);
-                    counter++;
-                }
+                byte counter = BombVehicles(VehicleManager.vehicles.Where(v => v.isEmpty));
 
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["clear:vehicles_empty", new {Count = counter}]);
             }
+        }
+
+        private byte BombVehicles(IEnumerable<InteractableVehicle> vehicles)
+        {
+            byte counter = 0;
+            foreach (var vehicle in vehicles)
+            {
+                vehicle.transform.position = new Vector3(0, 0, 0);
+                VehicleManager.sendVehicleExploded(vehicle);
+                counter++;
+            }
+
+            return counter;
         }
     }
 }
