@@ -83,3 +83,5 @@ heal:
 freeze:
   frozen: "Successfully froze {Player}."
   unfrozen: "Successfully unfroze {Player}."
+repair:
+  inventory: "Successfully repaired all items in your inventory."

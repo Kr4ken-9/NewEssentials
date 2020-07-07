@@ -186,6 +186,8 @@
     <Compile Include="Commands\Items\CGiveItem.cs" />
     <Compile Include="Commands\Messaging\CReply.cs" />
     <Compile Include="Commands\Messaging\CTell.cs" />
+    <Compile Include="Commands\Repair\CRepairRoot.cs" />
+    <Compile Include="Commands\Repair\CRepairVehicle.cs" />
     <Compile Include="Commands\TPA\CTPA.cs" />
     <Compile Include="Commands\TPA\CTPAccept.cs" />
     <Compile Include="Commands\TPA\CTPADeny.cs" />
