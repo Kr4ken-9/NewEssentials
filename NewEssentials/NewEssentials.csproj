@@ -166,6 +166,7 @@
     <Compile Include="Commands\CDescend.cs" />
     <Compile Include="Commands\CExperience.cs" />
     <Compile Include="Commands\CExplode.cs" />
+    <Compile Include="Commands\CHeal.cs" />
     <Compile Include="Commands\Clear\CClearInventory.cs" />
     <Compile Include="Commands\Clear\CClearItems.cs" />
     <Compile Include="Commands\Clear\CClearRoot.cs" />

@@ -77,3 +77,6 @@ experience:
 reputation:
   success: "Successfully added {Reputation} reputation."
   gave: "Successfully gave {Player} {Reputation} reputation."
+heal:
+  success: "Successfully healed yourself."
+  success_other: "Successfully healed {Player}"
