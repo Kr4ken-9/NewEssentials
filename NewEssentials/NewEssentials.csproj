@@ -164,6 +164,7 @@
     <Compile Include="Commands\CAscend.cs" />
     <Compile Include="Commands\CBack.cs" />
     <Compile Include="Commands\CDescend.cs" />
+    <Compile Include="Commands\CExperience.cs" />
     <Compile Include="Commands\CExplode.cs" />
     <Compile Include="Commands\Clear\CClearInventory.cs" />
     <Compile Include="Commands\Clear\CClearItems.cs" />

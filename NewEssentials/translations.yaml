@@ -71,3 +71,6 @@ clear:
   items: "Successfully cleared all items."
   inventory: "Successfully cleared your inventory."
   inventory_other: "Successfully cleared {Player}'s inventory."
+experience:
+  success: "Successfully added {Experience} experience."
+  gave: "Successfully gave {Player} {Experience} experience."
