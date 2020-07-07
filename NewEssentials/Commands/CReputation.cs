@@ -15,16 +15,16 @@ using Command = OpenMod.Core.Commands.Command;
 namespace NewEssentials.Commands
 {
     [UsedImplicitly]
-    [Command("experience")]
-    [CommandAlias("exp")]
-    [CommandDescription("Give yourself or another player experience (must be positive)")]
+    [Command("reputation")]
+    [CommandAlias("rep")]
+    [CommandDescription("Give yourself or another player reputation (can be negative)")]
     [CommandSyntax("<amount> [player]")]
-    public class CExperience : Command
+    public class CReputation : Command
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CExperience(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CReputation(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
@@ -32,7 +32,7 @@ namespace NewEssentials.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            string permission = "newess.exp";
+            string permission = "newess.rep";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
                 throw new NotEnoughPermissionException(Context, permission);
 
@@ -40,7 +40,7 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
 
             //TODO: throw UserFriendlyException on bad input
-            uint additionalExperience = await Context.Parameters.GetAsync<uint>(0);
+            int additionReputation = await Context.Parameters.GetAsync<int>(0);
             if (Context.Parameters.Length == 1)
             {
                 if (Context.Actor.Type == KnownActorTypes.Console)
@@ -49,12 +49,12 @@ namespace NewEssentials.Commands
                 UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
 
                 await UniTask.SwitchToMainThread();
-                uPlayer.Player.skills.askAward(additionalExperience);
-                await uPlayer.PrintMessageAsync(m_StringLocalizer["experience:success", new {Experience = additionalExperience.ToString()}]);
+                uPlayer.Player.skills.askRep(additionReputation);
+                await uPlayer.PrintMessageAsync(m_StringLocalizer["reputation:success", new {Reputation = additionReputation.ToString()}]);
             }
             else
             {
-                string nestedPermission = "newess.exp.give";
+                string nestedPermission = "newess.rep.give";
                 if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, nestedPermission) == PermissionGrantResult.Deny)
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 
@@ -64,9 +64,9 @@ namespace NewEssentials.Commands
                         new {Player = searchTerm}]);
 
                 await UniTask.SwitchToMainThread();
-                player.player.skills.askAward(additionalExperience);
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["experience:gave",
-                    new {Player = player.playerID.characterName, Experience = additionalExperience.ToString()}]);
+                player.player.skills.askRep(additionReputation);
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["reputation:gave",
+                    new {Player = player.playerID.characterName, Reputation = additionReputation.ToString()}]);
             }
         }
     }

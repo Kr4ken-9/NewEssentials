@@ -170,6 +170,7 @@
     <Compile Include="Commands\Clear\CClearItems.cs" />
     <Compile Include="Commands\Clear\CClearRoot.cs" />
     <Compile Include="Commands\Clear\CClearVehicles.cs" />
+    <Compile Include="Commands\CReputation.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
     <Compile Include="Commands\Home\CHome.cs" />
     <Compile Include="Commands\Home\CHomes.cs" />

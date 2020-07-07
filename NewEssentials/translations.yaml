@@ -74,3 +74,6 @@ clear:
 experience:
   success: "Successfully added {Experience} experience."
   gave: "Successfully gave {Player} {Experience} experience."
+reputation:
+  success: "Successfully added {Reputation} reputation."
+  gave: "Successfully gave {Player} {Reputation} reputation."
