@@ -138,5 +138,11 @@ namespace NewEssentials
             for (byte b = 0; b < item.getItemCount(); b++)
                 item.removeItem(b);
         }
+
+        public static bool teleportToLocation(this Player player, Vector3 position) =>
+            player.teleportToLocation(position, player.transform.eulerAngles.y);
+
+        public static void teleportToLocationUnsafe(this Player player, Vector3 position) =>
+            player.teleportToLocationUnsafe(position, player.transform.eulerAngles.y);
     }
 }
