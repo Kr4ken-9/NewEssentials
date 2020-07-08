@@ -85,3 +85,7 @@ freeze:
   unfrozen: "Successfully unfroze {Player}."
 repair:
   inventory: "Successfully repaired all items in your inventory."
+  vehicle:
+    current: "Successfully repaired your current vehicle."
+    none: "You are not in or looking at a vehicle."
+    looking: "Successfully repaired the vehicle you are looking at."
