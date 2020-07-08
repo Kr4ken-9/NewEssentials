@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewEssentials.Models
 {
+    [Serializable]
     public class SerializableVector3
     {
         public float X { get; set; }
@@ -10,6 +12,12 @@ namespace NewEssentials.Models
         public float Y { get; set; }
         
         public float Z { get; set; }
+        
+        // just don't use this bro
+        public SerializableVector3()
+        {
+            //throw new NotSupportedException("This default constructor is here so that YAML.NET doesn't throw a fit. Just use the other constructor bro.");
+        }
 
         public SerializableVector3(float x, float y, float z)
         {

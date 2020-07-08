@@ -89,3 +89,11 @@ repair:
     current: "Successfully repaired your current vehicle."
     none: "You are not in or looking at a vehicle."
     looking: "Successfully repaired the vehicle you are looking at."
+warps:
+  none: "{Warp} is not a warp."
+  success: "Warped to {Warp} successfully."
+  deleted: "Deleted {Warp} successfully."
+  list: "Warps include: {Warps}"
+  set:
+    exists: "{Warp} already exists."
+    success: "Saved new warp: {Warp} at your location."

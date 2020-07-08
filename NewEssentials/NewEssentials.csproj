@@ -193,10 +193,15 @@
     <Compile Include="Commands\TPA\CTPADeny.cs" />
     <Compile Include="Commands\Vehicles\CGiveVehicle.cs" />
     <Compile Include="Commands\Vehicles\CVehicle.cs" />
+    <Compile Include="Commands\Warps\CWarpDelete.cs" />
+    <Compile Include="Commands\Warps\CWarpRoot.cs" />
+    <Compile Include="Commands\Warps\CWarps.cs" />
+    <Compile Include="Commands\Warps\CWarpSet.cs" />
     <Compile Include="Managers\FreezeManager.cs" />
     <Compile Include="Managers\PrivateMessageManager.cs" />
     <Compile Include="Managers\TPAManager.cs" />
     <Compile Include="Models\SerializableVector3.cs" />
+    <Compile Include="Models\WarpsData.cs" />
     <Compile Include="NewEssentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
