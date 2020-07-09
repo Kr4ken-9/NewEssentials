@@ -97,3 +97,17 @@ warps:
   set:
     exists: "{Warp} already exists."
     success: "Saved new warp: {Warp} at your location."
+position: "You are at: x: {X} y: {Y} z: {Z}"
+jump:
+  none: "You are not looking at anything to jump to."
+  success: "Successfully jumped to where you're looking."
+refuel:
+  none: "You are not in a vehicle or looking at a refuelable object."
+  vehicle:
+    no_fuel: "Current vehicle doesn't use fuel or is full."
+    success: "Successfully refueled current vehicle."
+  object:
+    no_fuel: "{Object} is not refuelable."
+    generator: "Refueled the generator you are looking at."
+    oil: "Refueled the oil object you are looking at."
+    tank: "Refueled the tank you are looking at."

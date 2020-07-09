@@ -169,10 +169,13 @@
     <Compile Include="Commands\CExplode.cs" />
     <Compile Include="Commands\CFreeze.cs" />
     <Compile Include="Commands\CHeal.cs" />
+    <Compile Include="Commands\CJump.cs" />
     <Compile Include="Commands\Clear\CClearInventory.cs" />
     <Compile Include="Commands\Clear\CClearItems.cs" />
     <Compile Include="Commands\Clear\CClearRoot.cs" />
     <Compile Include="Commands\Clear\CClearVehicles.cs" />
+    <Compile Include="Commands\CPosition.cs" />
+    <Compile Include="Commands\CRefuel.cs" />
     <Compile Include="Commands\CReputation.cs" />
     <Compile Include="Commands\Home\CDeleteHome.cs" />
     <Compile Include="Commands\Home\CHome.cs" />

@@ -139,9 +139,13 @@ namespace NewEssentials
                 item.removeItem(b);
         }
 
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once IdentifierTypo
         public static bool teleportToLocation(this Player player, Vector3 position) =>
             player.teleportToLocation(position, player.transform.eulerAngles.y);
 
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once IdentifierTypo
         public static void teleportToLocationUnsafe(this Player player, Vector3 position) =>
             player.teleportToLocationUnsafe(position, player.transform.eulerAngles.y);
     }
