@@ -65,7 +65,7 @@ namespace NewEssentials.Commands.Home
                 SerializableVector3 home = SerializableVector3.GetSerializableVector3FromUserData(homes, homeName);
 
                 await UniTask.SwitchToMainThread();
-                if (uPlayer.Player.teleportToLocation(home.ToUnityVector3(), uPlayer.Player.look.yaw))
+                if (uPlayer.Player.teleportToLocation(home.ToUnityVector3()))
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = homeName}]);
                 else
                     throw new UserFriendlyException(m_StringLocalizer["home:failure", new {Home = homeName}]);

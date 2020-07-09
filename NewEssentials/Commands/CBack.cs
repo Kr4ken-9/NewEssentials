@@ -52,7 +52,7 @@ namespace NewEssentials.Commands
                     (Dictionary<object, object>) userData.Data["deathLocation"]);
 
             await UniTask.SwitchToMainThread();
-            uPlayer.Player.teleportToLocation(backLocation.ToUnityVector3(), uPlayer.Player.look.yaw);
+            uPlayer.Player.teleportToLocation(backLocation.ToUnityVector3());
             await uPlayer.PrintMessageAsync(m_StringLocalizer["back:success"]);
         }
     }

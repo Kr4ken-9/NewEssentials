@@ -56,7 +56,7 @@ namespace NewEssentials.Managers
                             continue;
                         }
 
-                        player.player.teleportToLocationUnsafe(m_FrozenPlayers[frozenPlayers[i]], player.player.look.yaw);
+                        player.player.teleportToLocationUnsafe(m_FrozenPlayers[frozenPlayers[i]]);
                     }
                 }
 

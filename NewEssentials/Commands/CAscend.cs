@@ -44,7 +44,7 @@ namespace NewEssentials.Commands
             newPosition.y += upDistance;
 
             await UniTask.SwitchToMainThread();
-            uPlayer.Player.teleportToLocationUnsafe(newPosition, uPlayer.Player.look.yaw);
+            uPlayer.Player.teleportToLocationUnsafe(newPosition);
             await uPlayer.PrintMessageAsync(m_StringLocalizer["ascend:success",
                 new {Distance = upDistance.ToString()}]);
         }

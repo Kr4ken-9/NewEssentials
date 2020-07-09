@@ -74,7 +74,7 @@ namespace NewEssentials.Commands.TPA
             }
             
             await UniTask.SwitchToMainThread();
-            requester.player.teleportToLocation(uPlayer.Player.transform.position, requester.player.look.yaw);
+            requester.player.teleportToLocation(uPlayer.Player.transform.position);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accepted_self",
                 new {Requester = requester.playerID.characterName}]);
