@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
     [Command("all")]
     [CommandDescription("Grants all players max skills")]
     [CommandParent(typeof(CMaxSkillsRoot))]
-    public class CMaxSkillsAll : Command
+    public class CMaxSkillsAll : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -24,7 +24,7 @@ namespace NewEssentials.Commands.MaxSkills
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.maxskills.all";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

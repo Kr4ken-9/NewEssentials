@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
@@ -17,7 +17,7 @@ namespace NewEssentials.Commands.Home
     [CommandDescription("Delete a saved home")]
     [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CDeleteHome : Command
+    public class CDeleteHome : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -31,7 +31,7 @@ namespace NewEssentials.Commands.Home
             m_UserDataStore = userDataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.home.delete";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

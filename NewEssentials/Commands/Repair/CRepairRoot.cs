@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Repair
 {
@@ -17,7 +14,7 @@ namespace NewEssentials.Commands.Repair
     [CommandDescription("Repair items in your inventory or a vehicle")]
     [CommandSyntax("[vehicle]")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CRepairRoot : Command
+    public class CRepairRoot : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -28,7 +25,7 @@ namespace NewEssentials.Commands.Repair
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.repair";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

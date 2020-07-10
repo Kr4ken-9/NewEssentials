@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
     [Command("back")]
     [CommandDescription("Teleport back to where you died")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CBack : Command
+    public class CBack : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -31,7 +30,7 @@ namespace NewEssentials.Commands
             m_UserDataStore = userDataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.back";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

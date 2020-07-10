@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Items
 {
@@ -18,7 +17,7 @@ namespace NewEssentials.Commands.Items
     [CommandDescription("Spawn an item")]
     [CommandSyntax("<id>/<item name> [amount]")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CItem : Command
+    public class CItem : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -31,7 +30,7 @@ namespace NewEssentials.Commands.Items
             m_Configuration = configuration;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             // User either didn't provide an item or provided too much information
             if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)

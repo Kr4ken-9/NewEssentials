@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
@@ -13,7 +13,7 @@ namespace NewEssentials.Commands.MaxSkills
     [CommandDescription("Grants yourself max skills")]
     [CommandParent(typeof(CMaxSkillsRoot))]
     [CommandActor(typeof(UnturnedUser))]
-    public class CMaxSkillsKunii : Command
+    public class CMaxSkillsKunii : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -25,7 +25,7 @@ namespace NewEssentials.Commands.MaxSkills
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         { 
             string permission = "newess.maxskills.kunii";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

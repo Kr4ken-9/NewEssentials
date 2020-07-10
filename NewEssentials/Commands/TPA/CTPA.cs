@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.TPA
 {
@@ -19,7 +18,7 @@ namespace NewEssentials.Commands.TPA
     [CommandDescription("Send a teleport request to another player")]
     [CommandSyntax("<player>")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CTPA : Command
+    public class CTPA : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -36,7 +35,7 @@ namespace NewEssentials.Commands.TPA
             m_TpaManager = tpaManager;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.tpa";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

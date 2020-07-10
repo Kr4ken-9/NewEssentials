@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Users;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
@@ -18,7 +16,7 @@ namespace NewEssentials.Commands
     [CommandAlias("exp")]
     [CommandDescription("Give yourself or another player experience (must be positive)")]
     [CommandSyntax("<amount> [player]")]
-    public class CExperience : Command
+    public class CExperience : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -29,7 +27,7 @@ namespace NewEssentials.Commands
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.exp";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

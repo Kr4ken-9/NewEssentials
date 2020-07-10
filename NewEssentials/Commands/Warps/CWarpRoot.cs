@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Warps
@@ -17,7 +16,7 @@ namespace NewEssentials.Commands.Warps
     [CommandDescription("Warp to a saved warp")]
     [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CWarpRoot : Command
+    public class CWarpRoot : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -32,7 +31,7 @@ namespace NewEssentials.Commands.Warps
             m_DataStore = dataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.warp";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

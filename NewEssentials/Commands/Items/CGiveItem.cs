@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Items
 {
@@ -16,7 +15,7 @@ namespace NewEssentials.Commands.Items
     [CommandAlias("gi")]
     [CommandDescription("Give another player an item")]
     [CommandSyntax("<player> <id>/<item name> [amount]")]
-    public class CGiveItem : Command
+    public class CGiveItem : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -29,7 +28,7 @@ namespace NewEssentials.Commands.Items
             m_Configuration = configuration;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             // User either didn't provide an item and player or provided too much information
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)

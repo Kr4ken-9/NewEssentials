@@ -2,16 +2,15 @@
 using System.Text;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Users;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using UnityEngine;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Messaging
 {
@@ -19,7 +18,7 @@ namespace NewEssentials.Commands.Messaging
     [CommandAlias("pm")]
     [CommandDescription("Send a player a private message")]
     [CommandSyntax("<player> <message>")]
-    public class CTell : Command
+    public class CTell : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -33,7 +32,7 @@ namespace NewEssentials.Commands.Messaging
             m_PrivateMessageManager = privateMessageManager;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.tell";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

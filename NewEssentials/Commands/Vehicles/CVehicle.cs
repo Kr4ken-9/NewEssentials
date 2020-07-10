@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Vehicles
 {
@@ -17,7 +16,7 @@ namespace NewEssentials.Commands.Vehicles
     [CommandDescription("Spawn a vehicle")]
     [CommandSyntax("<name>/<id>")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CVehicle : Command
+    public class CVehicle : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -28,7 +27,7 @@ namespace NewEssentials.Commands.Vehicles
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.vehicle";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
@@ -19,7 +17,7 @@ namespace NewEssentials.Commands
     [CommandAlias("jmp")]
     [CommandDescription("Jump to where you're looking")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CJump : Command
+    public class CJump : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -30,7 +28,7 @@ namespace NewEssentials.Commands
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.jump";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

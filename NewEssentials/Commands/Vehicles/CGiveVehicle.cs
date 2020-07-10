@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Vehicles
 {
@@ -15,7 +14,7 @@ namespace NewEssentials.Commands.Vehicles
     [CommandAlias("gv")]
     [CommandDescription("Spawn a vehicle for another player")]
     [CommandSyntax("<player> <name>/<id>")]
-    public class CGiveVehicle : Command
+    public class CGiveVehicle : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -26,7 +25,7 @@ namespace NewEssentials.Commands.Vehicles
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.vehicle.give";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

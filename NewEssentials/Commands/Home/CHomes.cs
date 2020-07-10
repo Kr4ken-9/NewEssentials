@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
     [Command("homes")]
     [CommandDescription("List your saved homes")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CHomes : Command
+    public class CHomes : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -30,7 +30,7 @@ namespace NewEssentials.Commands.Home
             m_UserDataStore = userDataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.home.list";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

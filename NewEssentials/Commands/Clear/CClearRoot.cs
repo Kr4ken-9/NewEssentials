@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 
 namespace NewEssentials.Commands.Clear
 {
     [Command("clear")]
     [CommandDescription("description")]
     [CommandSyntax("<items/vehicles/inventory>")]
-    public class CClearRoot : Command
+    public class CClearRoot : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
 
@@ -19,7 +19,7 @@ namespace NewEssentials.Commands.Clear
             m_PermissionChecker = permissionChecker;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.clear";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

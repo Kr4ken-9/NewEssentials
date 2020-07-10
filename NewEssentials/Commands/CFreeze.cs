@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
     [Command("freeze")]
     [CommandDescription("Freeze or unfreeze a player")]
     [CommandSyntax("<player>")]
-    public class CFreeze : Command
+    public class CFreeze : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -29,7 +28,7 @@ namespace NewEssentials.Commands
             m_FreezeManager = freezeManager;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.freeze";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

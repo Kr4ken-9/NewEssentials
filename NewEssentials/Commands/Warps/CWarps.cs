@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
+using OpenMod.Unturned.Commands;
 
 namespace NewEssentials.Commands.Warps
 {
     [Command("warps")]
     [CommandDescription("List all saved warps")]
-    public class CWarps : Command
+    public class CWarps : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -28,7 +28,7 @@ namespace NewEssentials.Commands.Warps
             m_DataStore = dataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.warp.list";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

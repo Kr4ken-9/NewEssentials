@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ namespace NewEssentials.Commands
     [CommandAlias("pos")]
     [CommandDescription("Print the coordinates of your current position.")]
     [CommandActor(typeof(UnturnedUser))]
-    public class CPosition : Command
+    public class CPosition : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -25,7 +25,7 @@ namespace NewEssentials.Commands
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.pos";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

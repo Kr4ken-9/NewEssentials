@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using UnityEngine;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Clear
 {
@@ -21,7 +18,7 @@ namespace NewEssentials.Commands.Clear
     [CommandParent(typeof(CClearRoot))]
     [CommandDescription("Clears all vehicles or only empty vehicles")]
     [CommandSyntax("[empty]")]
-    public class CClearVehicles : Command
+    public class CClearVehicles : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -32,7 +29,7 @@ namespace NewEssentials.Commands.Clear
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.clear.vehicles";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)

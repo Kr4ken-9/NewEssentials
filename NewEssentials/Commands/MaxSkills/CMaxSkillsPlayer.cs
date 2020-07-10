@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
@@ -14,7 +14,7 @@ namespace NewEssentials.Commands.MaxSkills
     [CommandDescription("Grants a player max skills")]
     [CommandSyntax("[<player>/<players>]")]
     [CommandParent(typeof(CMaxSkillsRoot))]
-    public class CMaxSkillsPlayer : Command
+    public class CMaxSkillsPlayer : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -25,7 +25,7 @@ namespace NewEssentials.Commands.MaxSkills
             m_StringLocalizer = stringLocalizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             if (Context.Parameters.Length < 1)
             {

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
+using OpenMod.Unturned.Commands;
 
 namespace NewEssentials.Commands.Warps
 {
@@ -16,7 +16,7 @@ namespace NewEssentials.Commands.Warps
     [CommandParent(typeof(CWarpRoot))]
     [CommandDescription("Delete a saved warp")]
     [CommandSyntax("<name>")]
-    public class CWarpDelete : Command
+    public class CWarpDelete : UnturnedCommand
     {
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
@@ -31,7 +31,7 @@ namespace NewEssentials.Commands.Warps
             m_DataStore = dataStore;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             string permission = "newess.warps.del";
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
