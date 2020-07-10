@@ -32,12 +32,6 @@ namespace NewEssentials.Commands.MaxSkills
                 throw new CommandWrongUsageException(Context, m_StringLocalizer);
             }
 
-            string permission = "newess.maxskills.player";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-            {
-                throw new NotEnoughPermissionException(Context, permission);
-            }
-
             string playersNotFound = "";
             for (int i = 0; i < Context.Parameters.Length; i++)
             {

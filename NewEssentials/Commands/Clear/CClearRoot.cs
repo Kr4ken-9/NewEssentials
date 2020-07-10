@@ -19,12 +19,8 @@ namespace NewEssentials.Commands.Clear
             m_PermissionChecker = permissionChecker;
         }
 
-        protected override async UniTask OnExecuteAsync()
+        protected override UniTask OnExecuteAsync()
         {
-            string permission = "newess.clear";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-                throw new NotEnoughPermissionException(Context, permission);
-
             throw new CommandWrongUsageException(Context);
         }
     }

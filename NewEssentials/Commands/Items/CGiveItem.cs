@@ -34,10 +34,6 @@ namespace NewEssentials.Commands.Items
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
                 throw new CommandWrongUsageException(m_StringLocalizer["item:give_syntax"]);
 
-            string permission = "newess.item.give";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-                throw new NotEnoughPermissionException(Context, permission);
-
             string rawPlayer = await Context.Parameters.GetAsync<string>(0);
 
             if (!PlayerTool.tryGetSteamPlayer(rawPlayer, out SteamPlayer player))

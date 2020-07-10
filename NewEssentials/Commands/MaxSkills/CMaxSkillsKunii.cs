@@ -27,12 +27,6 @@ namespace NewEssentials.Commands.MaxSkills
 
         protected override async UniTask OnExecuteAsync()
         { 
-            string permission = "newess.maxskills.kunii";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-            {
-                throw new NotEnoughPermissionException(Context, permission);
-            }
-
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             await uPlayer.Player.skills.MaxAllSkills(true);
 

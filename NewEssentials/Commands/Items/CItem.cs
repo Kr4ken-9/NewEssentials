@@ -36,10 +36,6 @@ namespace NewEssentials.Commands.Items
             if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
                 throw new CommandWrongUsageException(m_StringLocalizer["item:syntax"]);
 
-            string permission = "newess.item";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-                throw new NotEnoughPermissionException(Context, permission);
-
             string rawInput = await Context.Parameters.GetAsync<string>(0);
 
             if (!Utilities.GetItem(rawInput, out ItemAsset itemAsset))

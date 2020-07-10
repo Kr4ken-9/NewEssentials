@@ -28,10 +28,6 @@ namespace NewEssentials.Commands
 
         protected override async UniTask OnExecuteAsync()
         {
-            string permission = "newess.descend";
-            if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, permission) == PermissionGrantResult.Deny)
-                throw new NotEnoughPermissionException(Context, permission);
-
             if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
 
