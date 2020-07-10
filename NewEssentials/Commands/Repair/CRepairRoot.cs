@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -16,12 +15,10 @@ namespace NewEssentials.Commands.Repair
     [CommandActor(typeof(UnturnedUser))]
     public class CRepairRoot : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CRepairRoot(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CRepairRoot(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 

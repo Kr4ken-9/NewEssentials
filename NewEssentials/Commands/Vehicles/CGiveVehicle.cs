@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 
@@ -16,12 +15,10 @@ namespace NewEssentials.Commands.Vehicles
     [CommandSyntax("<player> <name>/<id>")]
     public class CGiveVehicle : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CGiveVehicle(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CGiveVehicle(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 

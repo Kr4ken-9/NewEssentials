@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -15,13 +14,10 @@ namespace NewEssentials.Commands.MaxSkills
     [CommandActor(typeof(UnturnedUser))]
     public class CMaxSkillsKunii : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CMaxSkillsKunii(IPermissionChecker permissionChecker,
-            IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CMaxSkillsKunii(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 

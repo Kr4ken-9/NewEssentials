@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using UnityEngine;
@@ -17,12 +16,10 @@ namespace NewEssentials.Commands
     [CommandActor(typeof(UnturnedUser))]
     public class CDescend : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CDescend(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CDescend(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 

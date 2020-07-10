@@ -5,7 +5,6 @@ using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.Unturned.Commands;
 
@@ -18,15 +17,13 @@ namespace NewEssentials.Commands.Warps
     [CommandSyntax("<name>")]
     public class CWarpDelete : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IDataStore m_DataStore;
         private const string WarpsKey = "warps";
 
-        public CWarpDelete(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IDataStore dataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CWarpDelete(IStringLocalizer stringLocalizer, IDataStore dataStore, IServiceProvider serviceProvider) :
+            base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_DataStore = dataStore;
         }

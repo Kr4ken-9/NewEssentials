@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using UnityEngine;
@@ -20,12 +19,10 @@ namespace NewEssentials.Commands.Clear
     [CommandSyntax("[empty]")]
     public class CClearVehicles : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CClearVehicles(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CClearVehicles(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 

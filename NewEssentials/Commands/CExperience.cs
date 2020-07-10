@@ -18,12 +18,10 @@ namespace NewEssentials.Commands
     [CommandSyntax("<amount> [player]")]
     public class CExperience : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CExperience(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CExperience(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
         }
 
@@ -48,7 +46,7 @@ namespace NewEssentials.Commands
             else
             {
                 string nestedPermission = "newess.exp.give";
-                if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, nestedPermission) == PermissionGrantResult.Deny)
+                if (await CheckPermissionAsync(nestedPermission) == PermissionGrantResult.Deny)
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 
                 string searchTerm = Context.Parameters[1];

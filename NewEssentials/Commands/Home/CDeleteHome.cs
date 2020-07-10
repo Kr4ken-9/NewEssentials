@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -19,14 +18,12 @@ namespace NewEssentials.Commands.Home
     [CommandActor(typeof(UnturnedUser))]
     public class CDeleteHome : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
 
-        public CDeleteHome(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IUserDataStore userDataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CDeleteHome(IStringLocalizer stringLocalizer, IUserDataStore userDataStore,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
         }

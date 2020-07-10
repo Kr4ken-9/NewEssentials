@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using UnityEngine;
@@ -17,16 +15,11 @@ namespace NewEssentials.Commands.Clear
     [CommandDescription("Clears all items")]
     public class CClearItems : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IConfiguration m_Configuration;
 
-        public CClearItems(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IConfiguration configuration, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CClearItems(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
-            m_Configuration = configuration;
         }
 
         protected override async UniTask OnExecuteAsync()

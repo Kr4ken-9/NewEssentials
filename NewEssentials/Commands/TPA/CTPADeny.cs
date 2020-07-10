@@ -2,11 +2,9 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -21,17 +19,13 @@ namespace NewEssentials.Commands.TPA
     [CommandActor(typeof(UnturnedUser))]
     public class CTPADeny : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IConfiguration m_Configuration;
         private readonly ITPAManager m_TpaManager;
 
-        public CTPADeny(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IConfiguration configuration, ITPAManager tpaManager, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CTPADeny(IStringLocalizer stringLocalizer, ITPAManager tpaManager, IServiceProvider serviceProvider) :
+            base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
-            m_Configuration = configuration;
             m_TpaManager = tpaManager;
         }
 

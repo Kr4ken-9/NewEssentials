@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
-using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.Unturned.Commands;
 
@@ -15,15 +14,13 @@ namespace NewEssentials.Commands.Warps
     [CommandDescription("List all saved warps")]
     public class CWarps : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IDataStore m_DataStore;
         private const string WarpsKey = "warps";
 
-        public CWarps(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IDataStore dataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CWarps(IStringLocalizer stringLocalizer, IDataStore dataStore, IServiceProvider serviceProvider) : base(
+            serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_DataStore = dataStore;
         }

@@ -5,7 +5,6 @@ using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 
@@ -16,14 +15,12 @@ namespace NewEssentials.Commands
     [CommandSyntax("<player>")]
     public class CFreeze : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IFreezeManager m_FreezeManager;
 
-        public CFreeze(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IFreezeManager freezeManager, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CFreeze(IStringLocalizer stringLocalizer, IFreezeManager freezeManager,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_FreezeManager = freezeManager;
         }

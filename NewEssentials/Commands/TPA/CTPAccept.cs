@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -19,14 +18,12 @@ namespace NewEssentials.Commands.TPA
     [CommandActor(typeof(UnturnedUser))]
     public class CTPAccept : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly ITPAManager m_TpaManager;
 
-        public CTPAccept(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer, ITPAManager tpaManager,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+        public CTPAccept(IStringLocalizer stringLocalizer, ITPAManager tpaManager, IServiceProvider serviceProvider) :
+            base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_TpaManager = tpaManager;
         }

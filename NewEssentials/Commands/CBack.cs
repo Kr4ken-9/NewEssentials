@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -18,14 +17,12 @@ namespace NewEssentials.Commands
     [CommandActor(typeof(UnturnedUser))]
     public class CBack : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
-        
-        public CBack(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IUserDataStore userDataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+
+        public CBack(IStringLocalizer stringLocalizer, IUserDataStore userDataStore, IServiceProvider serviceProvider) :
+            base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
         }

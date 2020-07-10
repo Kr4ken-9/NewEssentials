@@ -6,7 +6,6 @@ using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
@@ -20,14 +19,12 @@ namespace NewEssentials.Commands.Messaging
     [CommandSyntax("<mesage>")]
     public class CReply : UnturnedCommand
     {
-        private readonly IPermissionChecker m_PermissionChecker;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IPrivateMessageManager m_PrivateMessageManager;
 
-        public CReply(IPermissionChecker permissionChecker, IStringLocalizer stringLocalizer,
-            IPrivateMessageManager privateMessageManager, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CReply(IStringLocalizer stringLocalizer, IPrivateMessageManager privateMessageManager,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            m_PermissionChecker = permissionChecker;
             m_StringLocalizer = stringLocalizer;
             m_PrivateMessageManager = privateMessageManager;
         }
