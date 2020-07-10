@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
-    [UsedImplicitly]
     [Command("sethome")]
     [CommandDescription("Save location as a home")]
     [CommandSyntax("<name>")]

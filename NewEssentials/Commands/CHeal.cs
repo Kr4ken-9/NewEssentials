@@ -13,7 +13,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("heal")]
     [CommandDescription("Heal yourself or another player")]
     [CommandSyntax("[player]")]

@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Clear
 {
-    [UsedImplicitly]
     [Command("items")]
     [CommandAlias("item")]
     [CommandParent(typeof(CClearRoot))]

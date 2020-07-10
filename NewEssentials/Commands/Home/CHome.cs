@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
-    [UsedImplicitly]
     [Command("home")]
     [CommandDescription("Teleport to your bed or one set with /sethome")]
     [CommandSyntax("<name>")]

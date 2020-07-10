@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.TPA
 {
-    [UsedImplicitly]
     [Command("tpa")]
     [CommandDescription("Send a teleport request to another player")]
     [CommandSyntax("<player>")]

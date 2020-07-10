@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.TPA
 {
-    [UsedImplicitly]
     [Command("tpadeny")]
     [CommandAlias("tpad")]
     [CommandDescription("Deny a teleport request")]

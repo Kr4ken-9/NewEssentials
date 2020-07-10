@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("experience")]
     [CommandAlias("exp")]
     [CommandDescription("Give yourself or another player experience (must be positive)")]

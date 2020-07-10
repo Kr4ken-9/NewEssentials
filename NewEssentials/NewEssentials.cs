@@ -19,7 +19,6 @@ using Steamworks;
 
 namespace NewEssentials
 {
-    [UsedImplicitly]
     public class NewEssentials : OpenModUnturnedPlugin
     {
         private readonly IStringLocalizer m_StringLocalizer;

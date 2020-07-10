@@ -11,7 +11,6 @@ using OpenMod.API.Persistence;
 
 namespace NewEssentials.Commands.Warps
 {
-    [UsedImplicitly]
     [Command("warps")]
     [CommandDescription("List all saved warps")]
     public class CWarps : Command

@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("refuel")]
     [CommandDescription("Refuel the object you're looking at or current vehicle")]
     [CommandActor(typeof(UnturnedUser))]

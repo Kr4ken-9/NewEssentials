@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
-    [UsedImplicitly]
     [Command("deletehome")]
     [CommandAlias("delhome")]
     [CommandDescription("Delete a saved home")]

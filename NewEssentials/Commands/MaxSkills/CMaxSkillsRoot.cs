@@ -9,7 +9,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
-    [UsedImplicitly]
     [Command("maxskills")]
     [CommandDescription("Grants maxskills")]
     [CommandSyntax("<none/player/all/kunii>")]

@@ -12,7 +12,6 @@ using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Warps
 {
-    [UsedImplicitly]
     [Command("set")]
     [CommandParent(typeof(CWarpRoot))]
     [CommandDescription("Save a warp at your location")]

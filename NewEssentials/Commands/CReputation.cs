@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("reputation")]
     [CommandAlias("rep")]
     [CommandDescription("Give yourself or another player reputation (can be negative)")]

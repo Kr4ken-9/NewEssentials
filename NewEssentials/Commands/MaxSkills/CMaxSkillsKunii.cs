@@ -9,7 +9,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
-    [UsedImplicitly]
     [Command("kunii")]
     [CommandDescription("Grants yourself max skills")]
     [CommandParent(typeof(CMaxSkillsRoot))]

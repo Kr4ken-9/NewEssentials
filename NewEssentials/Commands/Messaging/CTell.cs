@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Messaging
 {
-    [UsedImplicitly]
     [Command("tell")]
     [CommandAlias("pm")]
     [CommandDescription("Send a player a private message")]

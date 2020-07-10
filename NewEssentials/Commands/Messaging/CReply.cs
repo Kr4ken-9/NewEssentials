@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Messaging
 {
-    [UsedImplicitly]
     [Command("reply")]
     [CommandAlias("r")]
     [CommandDescription("Reply to the last user to private message you")]

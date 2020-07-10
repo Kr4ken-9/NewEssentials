@@ -13,7 +13,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.TPA
 {
-    [UsedImplicitly]
     [Command("tpaccept")]
     [CommandAlias("tpac")]
     [CommandDescription("Accept a teleport request")]

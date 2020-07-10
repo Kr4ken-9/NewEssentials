@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Clear
 {
-    [UsedImplicitly]
     [Command("inventory")]
     [CommandParent(typeof(CClearRoot))]
     [CommandDescription("Clears inventory of all items")]

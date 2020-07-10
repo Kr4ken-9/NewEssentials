@@ -13,7 +13,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Home
 {
-    [UsedImplicitly]
     [Command("homes")]
     [CommandDescription("List your saved homes")]
     [CommandActor(typeof(UnturnedUser))]

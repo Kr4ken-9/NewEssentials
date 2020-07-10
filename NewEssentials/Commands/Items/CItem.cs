@@ -13,7 +13,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Items
 {
-    [UsedImplicitly]
     [Command("item")]
     [CommandAlias("i")]
     [CommandDescription("Spawn an item")]

@@ -9,7 +9,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
-    [UsedImplicitly]
     [Command("all")]
     [CommandDescription("Grants all players max skills")]
     [CommandParent(typeof(CMaxSkillsRoot))]

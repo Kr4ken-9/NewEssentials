@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Items
 {
-    [UsedImplicitly]
     [Command("giveitem")]
     [CommandAlias("gi")]
     [CommandDescription("Give another player an item")]

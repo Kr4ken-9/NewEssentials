@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Repair
 {
-    [UsedImplicitly]
     [Command("vehicle")]
     [CommandAlias("v")]
     [CommandParent(typeof(CRepairRoot))]

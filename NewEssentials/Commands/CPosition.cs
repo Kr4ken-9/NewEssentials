@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("position")]
     [CommandAlias("pos")]
     [CommandDescription("Print the coordinates of your current position.")]

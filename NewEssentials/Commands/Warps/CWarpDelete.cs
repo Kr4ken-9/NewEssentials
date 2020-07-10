@@ -11,7 +11,6 @@ using OpenMod.API.Persistence;
 
 namespace NewEssentials.Commands.Warps
 {
-    [UsedImplicitly]
     [Command("delete")]
     [CommandAlias("del")]
     [CommandParent(typeof(CWarpRoot))]

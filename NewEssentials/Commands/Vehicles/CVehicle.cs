@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Vehicles
 {
-    [UsedImplicitly]
     [Command("vehicle")]
     [CommandAlias("v")]
     [CommandDescription("Spawn a vehicle")]

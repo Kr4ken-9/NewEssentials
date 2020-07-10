@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Clear
 {
-    [UsedImplicitly]
     [Command("vehicles")]
     [CommandAlias("vehicle")]
     [CommandAlias("v")]

@@ -7,7 +7,6 @@ using OpenMod.API.Permissions;
 
 namespace NewEssentials.Commands.Clear
 {
-    [UsedImplicitly]
     [Command("clear")]
     [CommandDescription("description")]
     [CommandSyntax("<items/vehicles/inventory>")]

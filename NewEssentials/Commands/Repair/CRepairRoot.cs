@@ -13,7 +13,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Repair
 {
-    [UsedImplicitly]
     [Command("repair")]
     [CommandDescription("Repair items in your inventory or a vehicle")]
     [CommandSyntax("[vehicle]")]

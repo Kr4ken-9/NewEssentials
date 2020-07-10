@@ -13,7 +13,6 @@ using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Warps
 {
-    [UsedImplicitly]
     [Command("warp")]
     [CommandDescription("Warp to a saved warp")]
     [CommandSyntax("<name>")]

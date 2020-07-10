@@ -14,7 +14,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("back")]
     [CommandDescription("Teleport back to where you died")]
     [CommandActor(typeof(UnturnedUser))]

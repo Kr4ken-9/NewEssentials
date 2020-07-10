@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("explode")]
     [CommandAlias("boom")]
     [CommandDescription("Create an explosion where you are looking")]

@@ -15,7 +15,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("jump")]
     [CommandAlias("jmp")]
     [CommandDescription("Jump to where you're looking")]

@@ -12,7 +12,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("freeze")]
     [CommandDescription("Freeze or unfreeze a player")]
     [CommandSyntax("<player>")]

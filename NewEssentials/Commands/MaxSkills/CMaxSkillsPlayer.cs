@@ -10,7 +10,6 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.MaxSkills
 {
-    [UsedImplicitly]
     [Command("player")]
     [CommandDescription("Grants a player max skills")]
     [CommandSyntax("[<player>/<players>]")]

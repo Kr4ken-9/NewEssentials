@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace NewEssentials.Commands
 {
-    [UsedImplicitly]
     [Command("descend")]
     [CommandAlias("down")]
     [CommandDescription("Teleport down")]
