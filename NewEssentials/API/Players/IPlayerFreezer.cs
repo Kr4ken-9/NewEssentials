@@ -1,13 +1,13 @@
 ﻿using OpenMod.API.Ioc;
 using UnityEngine;
 
-namespace NewEssentials.API
+namespace NewEssentials.API.Players
 {
     /// <summary>
     /// Manages freezed players
     /// </summary>
     [Service]
-    public interface IFreezeManager
+    public interface IPlayerFreezer
     {
         /// <summary>
         /// Freeze a player in place

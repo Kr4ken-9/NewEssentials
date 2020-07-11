@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
+using NewEssentials.Helpers;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -38,11 +39,11 @@ namespace NewEssentials.Commands.Items
 
             string rawItem = await Context.Parameters.GetAsync<string>(1);
 
-            if (!Utilities.GetItem(rawItem, out ItemAsset itemAsset))
+            if (!UnturnedAssetHelper.GetItem(rawItem, out ItemAsset itemAsset))
                 throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawItem}]);
 
             byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
-            if (!Utilities.GetItemAmount(amount, m_Configuration, out amount))
+            if (!m_Configuration.GetItemAmount(amount, out amount))
                 throw new UserFriendlyException(m_StringLocalizer["items:too_much", new {UpperLimit = amount}]);
 
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);

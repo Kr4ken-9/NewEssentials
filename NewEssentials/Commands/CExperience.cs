@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
@@ -45,7 +44,7 @@ namespace NewEssentials.Commands
             }
             else
             {
-                string nestedPermission = "newess.exp.give";
+                string nestedPermission = "exp.give";
                 if (await CheckPermissionAsync(nestedPermission) == PermissionGrantResult.Deny)
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 

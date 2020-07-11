@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
@@ -23,7 +23,7 @@ namespace NewEssentials.Commands.MaxSkills
         protected override async UniTask OnExecuteAsync()
         {
             foreach(SteamPlayer player in Provider.clients)
-                await player.player.skills.MaxAllSkills();
+                await player.player.skills.MaxAllSkillsAsync();
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_all"]);
         }

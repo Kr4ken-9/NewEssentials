@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
+using NewEssentials.Helpers;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -36,21 +37,21 @@ namespace NewEssentials.Commands.Items
 
             string rawInput = await Context.Parameters.GetAsync<string>(0);
 
-            if (!Utilities.GetItem(rawInput, out ItemAsset itemAsset))
-                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawInput}]);
+            if (!UnturnedAssetHelper.GetItem(rawInput, out ItemAsset itemAsset))
+                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new { Item = rawInput }]);
 
             byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
-            if (!Utilities.GetItemAmount(amount, m_Configuration, out amount))
-                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new {UpperLimit = amount}]);
+            if (!m_Configuration.GetItemAmount(amount, out amount))
+                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new { UpperLimit = amount }]);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
+            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
 
             await UniTask.SwitchToMainThread();
             for (byte b = 0; b < amount; b++)
                 uPlayer.Player.inventory.forceAddItem(item, true);
 
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName}]);
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = itemAsset.itemName }]);
         }
     }
 }

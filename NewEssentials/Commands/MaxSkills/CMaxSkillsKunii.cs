@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -24,7 +24,7 @@ namespace NewEssentials.Commands.MaxSkills
         protected override async UniTask OnExecuteAsync()
         { 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            await uPlayer.Player.skills.MaxAllSkills(true);
+            await uPlayer.Player.skills.MaxAllSkillsAsync(true);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["maxskills:kunii"]);
         }

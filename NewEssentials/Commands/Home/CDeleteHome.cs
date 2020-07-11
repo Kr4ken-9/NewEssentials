@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
@@ -11,11 +10,13 @@ using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Home
 {
-    [Command("deletehome")]
-    [CommandAlias("delhome")]
+    [Command("delete")]
+    [CommandAlias("-")]
+    [CommandAlias("remove")]
     [CommandDescription("Delete a saved home")]
     [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
+    [CommandParent(typeof(CHome))]
     public class CDeleteHome : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
@@ -47,8 +48,8 @@ namespace NewEssentials.Commands.Home
 
             homes.Remove(homeName);
             userData.Data["homes"] = homes;
-            await m_UserDataStore.SaveUserDataAsync(userData);
 
+            await m_UserDataStore.SaveUserDataAsync(userData);
             await uPlayer.PrintMessageAsync(m_StringLocalizer["home:delete", new {Home = homeName}]);
         }
     }

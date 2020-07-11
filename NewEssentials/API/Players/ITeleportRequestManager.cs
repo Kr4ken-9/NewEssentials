@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Localization;
 using OpenMod.API.Ioc;
 
-namespace NewEssentials.API
+namespace NewEssentials.API.Players
 {
     /// <summary>
     /// Manages TPA requests
     /// </summary>
     [Service]
-    public interface ITPAManager
+    public interface ITeleportRequestManager
     {
         /// <summary>
         /// Checks if any requests to the recipient are pending

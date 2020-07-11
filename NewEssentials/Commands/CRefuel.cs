@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -30,12 +28,11 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            
-            //TODO: Not working lmao
+            await UniTask.SwitchToMainThread();
+
             var currentVehicle = uPlayer.Player.movement.getVehicle();
             if (currentVehicle != null)
             {
-                await UniTask.SwitchToMainThread();
                 if (!RefuelVehicle(currentVehicle))
                     throw new UserFriendlyException(m_StringLocalizer["refuel:vehicle:no_fuel"]);
 
@@ -49,7 +46,6 @@ namespace NewEssentials.Commands
 
             if (raycast.vehicle != null)
             {
-                await UniTask.SwitchToMainThread();
                 if (!RefuelVehicle(raycast.vehicle))
                     throw new UserFriendlyException(m_StringLocalizer["refuel:vehicle:no_fuel"]);
 
@@ -68,7 +64,6 @@ namespace NewEssentials.Commands
                         new {Object = generator.name}]);
                 
                 generator.askFill(generator.capacity);
-                await UniTask.SwitchToMainThread();
                 
                 BarricadeManager.sendFuel(raycast.transform, generator.fuel);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["refuel:object:generator"]);
@@ -83,7 +78,6 @@ namespace NewEssentials.Commands
                         new {Object = oil.name}]);
                 
                 oil.askFill(oil.capacity);
-                await UniTask.SwitchToMainThread();
                 
                 BarricadeManager.sendFuel(raycast.transform, oil.fuel);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["refuel:object:oil"]);
@@ -97,7 +91,6 @@ namespace NewEssentials.Commands
                     throw new UserFriendlyException(
                         m_StringLocalizer["refuel:object:no_fuel", new {Object = tank.name}]);
 
-                await UniTask.SwitchToMainThread();
                 BarricadeManager.updateTank(raycast.transform, tank.capacity);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["refuel:object:tank"]);
                 return;

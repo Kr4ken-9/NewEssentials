@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using NewEssentials.API;
+using NewEssentials.API.Players;
+using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
@@ -21,24 +22,22 @@ namespace NewEssentials
     public class NewEssentials : OpenModUnturnedPlugin
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly ILogger<NewEssentials> m_Logger;
-        private readonly IConfiguration m_Configuration;
         private readonly IUserDataStore m_UserDataStore;
         private readonly IDataStore m_DataStore;
-        private readonly ITPAManager m_TPAManager;
+        private readonly ITeleportRequestManager m_TpaRequestManager;
 
         private const string WarpsKey = "warps";
 
-        public NewEssentials(IStringLocalizer stringLocalizer, ILogger<NewEssentials> logger,
-            IConfiguration configuration, IUserDataStore userDataStore, ITPAManager tpaManager,
-            IDataStore dataStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        public NewEssentials(IStringLocalizer stringLocalizer,
+            IUserDataStore userDataStore, 
+            ITeleportRequestManager tpaRequestManager,
+            IDataStore dataStore, 
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_Logger = logger;
-            m_Configuration = configuration;
             m_UserDataStore = userDataStore;
             m_DataStore = dataStore;
-            m_TPAManager = tpaManager;
+            m_TpaRequestManager = tpaRequestManager;
         }
 
         protected override async UniTask OnLoadAsync()
@@ -53,14 +52,13 @@ namespace NewEssentials
                 });
             }
 
-            m_TPAManager.SetLocalizer(m_StringLocalizer);
+            m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
             PlayerLife.onPlayerDied += SaveDeathLocation;
         }
 
         protected override async UniTask OnUnloadAsync()
         {
             PlayerLife.onPlayerDied -= SaveDeathLocation;
-            await Task.Yield();
         }
 
         private async void SaveDeathLocation(PlayerLife sender, EDeathCause cause, ELimb limb, CSteamID instigator)

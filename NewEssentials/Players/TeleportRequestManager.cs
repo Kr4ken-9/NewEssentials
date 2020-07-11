@@ -7,20 +7,21 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
+using NewEssentials.API.Players;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
 using SDG.Unturned;
 using UnityEngine;
 
-namespace NewEssentials.Managers
+namespace NewEssentials.Players
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
-    public class TPAManager : ITPAManager, IAsyncDisposable
+    public class TeleportRequestManager : ITeleportRequestManager, IAsyncDisposable
     {
         private readonly Dictionary<ulong, List<ulong>> m_OpenRequests;
         private IStringLocalizer m_StringLocalizer;
 
-        public TPAManager()
+        public TeleportRequestManager()
         {
             m_OpenRequests = new Dictionary<ulong, List<ulong>>();
             Provider.onEnemyConnected += AddPlayer;
@@ -75,7 +76,6 @@ namespace NewEssentials.Managers
         {
             Provider.onEnemyConnected -= AddPlayer;
             Provider.onEnemyDisconnected -= RemovePlayer;
-            await Task.Yield();
         }
 
         private void AddPlayer(SteamPlayer newPlayer) =>

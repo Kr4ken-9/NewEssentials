@@ -7,14 +7,14 @@ using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
 using SDG.Unturned;
 
-namespace NewEssentials.Managers
+namespace NewEssentials.Players
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
-    public class PrivateMessageManager : IPrivateMessageManager, IAsyncDisposable
+    public class PrivateMessageStore : IPrivateMessageStore, IAsyncDisposable
     {
         private readonly Dictionary<ulong, ulong> m_LastMessage;
 
-        public PrivateMessageManager()
+        public PrivateMessageStore()
         {
             m_LastMessage = new Dictionary<ulong, ulong>();
             Provider.onEnemyDisconnected += RemovePlayer;
@@ -39,7 +39,6 @@ namespace NewEssentials.Managers
         public async ValueTask DisposeAsync()
         {
             Provider.onEnemyDisconnected -= RemovePlayer;
-            await Task.Yield();
         }
 
         private void RemovePlayer(SteamPlayer gonePlayer)

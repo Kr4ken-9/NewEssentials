@@ -51,6 +51,7 @@ tpa:
   denied_other: "Your TPA request to {Recipient} was denied."
   disconnected: "{Requester} disconnected before they could teleport to you."
 tell:
+  invalid_recipient: "{Recipient} is not a player."
   sent: "You > {Recipient}: {Message}"
   received: "{Sender} > You: {Message}"
 reply:

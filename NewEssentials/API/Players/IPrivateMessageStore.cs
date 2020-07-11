@@ -6,7 +6,7 @@ namespace NewEssentials.API
     /// Manages Private Messages
     /// </summary>
     [Service]
-    public interface IPrivateMessageManager
+    public interface IPrivateMessageStore
     {
         /// <summary>
         /// Records the last user to message another user

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Framework.Utilities;
@@ -30,7 +29,8 @@ namespace NewEssentials.Commands
         {
             if (Context.Parameters.Length != 0)
                 throw new CommandWrongUsageException(Context);
-            
+
+            await UniTask.SwitchToMainThread();
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             Transform aim = uPlayer.Player.look.aim;
             if (!PhysicsUtility.raycast(new Ray(aim.position, aim.forward), out RaycastHit hit, 1024f,
@@ -40,9 +40,7 @@ namespace NewEssentials.Commands
             if (hit.transform == null)
                 throw new UserFriendlyException(m_StringLocalizer["jump:none"]);
 
-            await UniTask.SwitchToMainThread();
-            //TODO: Not working lmao
-            uPlayer.Player.teleportToLocation(hit.transform.position);
+            await uPlayer.Player.TeleportToLocationAsync(hit.transform.position);
             await uPlayer.PrintMessageAsync(m_StringLocalizer["jump:success"]);
         }
     }

@@ -5,21 +5,23 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API;
+using NewEssentials.API.Players;
+using NewEssentials.Extensions;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
 using OpenMod.Core.Helpers;
 using SDG.Unturned;
 using UnityEngine;
 
-namespace NewEssentials.Managers
+namespace NewEssentials.Players
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
-    public class FreezeManager : IFreezeManager, IAsyncDisposable
+    public class PlayerFreezer : IPlayerFreezer, IAsyncDisposable
     {
         private readonly Dictionary<ulong, Vector3> m_FrozenPlayers;
         private bool m_ServiceRunning;
         
-        public FreezeManager()
+        public PlayerFreezer()
         {
             m_FrozenPlayers = new Dictionary<ulong, Vector3>();
             m_ServiceRunning = true;
@@ -35,12 +37,10 @@ namespace NewEssentials.Managers
         {
             Provider.onEnemyDisconnected -= RemovePlayer;
             m_ServiceRunning = false;
-            await Task.Yield();
         }
 
         private async UniTask FreezeUpdate()
         {
-            await UniTask.SwitchToMainThread();
             while (m_ServiceRunning)
             {
                 if (m_FrozenPlayers.Count > 0)
@@ -56,7 +56,7 @@ namespace NewEssentials.Managers
                             continue;
                         }
 
-                        player.player.teleportToLocationUnsafe(m_FrozenPlayers[frozenPlayers[i]]);
+                        await player.player.TeleportToLocationUnsafeAsync(m_FrozenPlayers[frozenPlayers[i]]);
                     }
                 }
 

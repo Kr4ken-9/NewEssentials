@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API;
+using NewEssentials.API.Players;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -21,14 +21,14 @@ namespace NewEssentials.Commands.TPA
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IConfiguration m_Configuration;
-        private readonly ITPAManager m_TpaManager;
+        private readonly ITeleportRequestManager m_TpaRequestManager;
 
-        public CTPA(IStringLocalizer stringLocalizer, IConfiguration configuration, ITPAManager tpaManager,
+        public CTPA(IStringLocalizer stringLocalizer, IConfiguration configuration, ITeleportRequestManager tpaRequestManager,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_Configuration = configuration;
-            m_TpaManager = tpaManager;
+            m_TpaRequestManager = tpaRequestManager;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -48,12 +48,12 @@ namespace NewEssentials.Commands.TPA
             if (requesterSteamID == recipientSteamID)
                 throw new UserFriendlyException(m_StringLocalizer["tpa:self"]);
 
-            if (m_TpaManager.IsRequestOpen(recipientSteamID, requesterSteamID))
+            if (m_TpaRequestManager.IsRequestOpen(recipientSteamID, requesterSteamID))
                 throw new UserFriendlyException(m_StringLocalizer["already_requested"]);
 
             int requestLifetime = m_Configuration.GetValue<int>("tpa:expiration") * 1000;
             
-            m_TpaManager.OpenNewRequest(recipientSteamID, requesterSteamID, requestLifetime);
+            m_TpaRequestManager.OpenNewRequest(recipientSteamID, requesterSteamID, requestLifetime);
 
             await UniTask.SwitchToMainThread();
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:success", new {Recipient = recipient.playerID.characterName}]);

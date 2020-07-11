@@ -13,10 +13,8 @@ namespace NewEssentials.Models
         
         public float Z { get; set; }
         
-        // just don't use this bro
-        public SerializableVector3()
+        private SerializableVector3()
         {
-            //throw new NotSupportedException("This default constructor is here so that YAML.NET doesn't throw a fit. Just use the other constructor bro.");
         }
 
         public SerializableVector3(float x, float y, float z)

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Users;
@@ -42,8 +42,7 @@ namespace NewEssentials.Commands
                 SerializableVector3.GetSerializableVector3FromUserData(
                     (Dictionary<object, object>) userData.Data["deathLocation"]);
 
-            await UniTask.SwitchToMainThread();
-            uPlayer.Player.teleportToLocation(backLocation.ToUnityVector3());
+            await uPlayer.Player.TeleportToLocationAsync(backLocation.ToUnityVector3());
             await uPlayer.PrintMessageAsync(m_StringLocalizer["back:success"]);
         }
     }

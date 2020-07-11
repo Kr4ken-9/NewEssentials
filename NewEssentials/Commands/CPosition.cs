@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using UnityEngine;
@@ -28,6 +26,7 @@ namespace NewEssentials.Commands
             if (Context.Parameters.Length != 0)
                 throw new CommandWrongUsageException(Context);
 
+            await UniTask.SwitchToMainThread();
             UnturnedUser user = (UnturnedUser) Context.Actor;
             Vector3 position = user.Player.transform.position;
 

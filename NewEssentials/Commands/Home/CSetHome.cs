@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
@@ -11,10 +11,11 @@ using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Home
 {
-    [Command("sethome")]
+    [Command("set")]
     [CommandDescription("Save location as a home")]
     [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
+    [CommandParent(typeof(CHome))]
     public class CSetHome : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;

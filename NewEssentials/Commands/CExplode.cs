@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
@@ -31,6 +30,8 @@ namespace NewEssentials.Commands
         {
             if (Context.Parameters.Length > 2)
                 throw new CommandWrongUsageException(Context);
+
+            await UniTask.SwitchToMainThread();
 
             float radius = 10f;
             if (Context.Parameters.Length > 0)

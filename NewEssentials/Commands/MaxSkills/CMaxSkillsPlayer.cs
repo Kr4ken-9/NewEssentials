@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Extensions;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -39,7 +39,7 @@ namespace NewEssentials.Commands.MaxSkills
                     continue;
                 }
                 
-                await player.player.skills.MaxAllSkills();
+                await player.player.skills.MaxAllSkillsAsync();
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_other", new {Player = player.playerID.playerName}]);
             }
 

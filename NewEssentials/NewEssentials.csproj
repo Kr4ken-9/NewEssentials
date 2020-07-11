@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-	<PackageTags>openmod openmod-plugin unturned</PackageTags>
-	<RootNamespace>MyOpenModPlugin</RootNamespace>
+    <PackageTags>openmod openmod-plugin unturned</PackageTags>
+    <RootNamespace>NewEssentials</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>New Essentials</Product>
@@ -12,8 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="OpenMod.Unturned" Version="1.0.4" />
-	<PackageReference Include="OpenMod.Unturned.Redist" Version="3.20.5.6" />
-	<PackageReference Include="OpenMod.UnityEngine.Redist" Version="2018.4.23" />
+    <PackageReference Include="OpenMod.Unturned.Redist" Version="3.20.5.6" />
+    <PackageReference Include="OpenMod.UnityEngine.Redist" Version="2018.4.23" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

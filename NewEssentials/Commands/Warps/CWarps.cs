@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;

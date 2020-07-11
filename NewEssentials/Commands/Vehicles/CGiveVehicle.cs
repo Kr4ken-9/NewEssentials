@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using NewEssentials.Helpers;
 using OpenMod.API.Commands;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
@@ -32,7 +32,7 @@ namespace NewEssentials.Commands.Vehicles
                 throw new UserFriendlyException(m_StringLocalizer["vehicle:invalid_player", new {Player = playerSearchTerm}]);
 
             string vehicleSearchTerm = Context.Parameters[1];
-            if (!Utilities.GetVehicle(vehicleSearchTerm, out VehicleAsset vehicle))
+            if (!UnturnedAssetHelper.GetVehicle(vehicleSearchTerm, out VehicleAsset vehicle))
                 throw new UserFriendlyException(m_StringLocalizer["vehicle:invalid",
                     new {Vehicle = vehicleSearchTerm}]);
 

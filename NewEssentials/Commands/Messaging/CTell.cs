@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
@@ -20,9 +18,9 @@ namespace NewEssentials.Commands.Messaging
     public class CTell : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IPrivateMessageManager m_PrivateMessageManager;
+        private readonly IPrivateMessageStore m_PrivateMessageManager;
 
-        public CTell(IStringLocalizer stringLocalizer, IPrivateMessageManager privateMessageManager,
+        public CTell(IStringLocalizer stringLocalizer, IPrivateMessageStore privateMessageManager,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
@@ -36,27 +34,22 @@ namespace NewEssentials.Commands.Messaging
 
             string recipientName = Context.Parameters[0];
             if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient))
-                throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient",
-                    new {Recipient = recipientName}]);
+                throw new UserFriendlyException(m_StringLocalizer["tell:invalid_recipient",
+                    new { Recipient = recipientName }]);
 
             ulong senderSteamID = 1337;
-            if (Context.Actor.Type == KnownActorTypes.Player) 
+            if (Context.Actor.Type == KnownActorTypes.Player)
                 senderSteamID = ulong.Parse(Context.Actor.Id);
 
             m_PrivateMessageManager.RecordLastMessager(recipient.playerID.steamID.m_SteamID, senderSteamID);
-            
-            StringBuilder messageBuilder = new StringBuilder();
-            for(int i = 1; i < Context.Parameters.Length; i++)
-                messageBuilder.Append(await Context.Parameters.GetAsync<string>(i) + " ");
-
-            string completeMessage = messageBuilder.ToString();
-            await UniTask.SwitchToMainThread();
+            var message = string.Join(" ", Context.Parameters);
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["tell:sent",
-                new {Recipient = recipient.playerID.characterName, Message = completeMessage}]);
-            
+                new { Recipient = recipient.playerID.characterName, Message = message }]);
+
+            await UniTask.SwitchToMainThread();
             ChatManager.serverSendMessage(
-                m_StringLocalizer["tell:received", new {Sender = Context.Actor.DisplayName, Message = completeMessage}],
+                m_StringLocalizer["tell:received", new { Sender = Context.Actor.DisplayName, Message = message }],
                 Color.white,
                 toPlayer: recipient);
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
@@ -30,6 +29,7 @@ namespace NewEssentials.Commands
             if (Context.Parameters.Length > 2 || Context.Parameters.Length < 1)
                 throw new CommandWrongUsageException(Context);
 
+
             //TODO: throw UserFriendlyException on bad input
             int additionReputation = await Context.Parameters.GetAsync<int>(0);
             if (Context.Parameters.Length == 1)
@@ -45,7 +45,7 @@ namespace NewEssentials.Commands
             }
             else
             {
-                string nestedPermission = "newess.rep.give";
+                string nestedPermission = "rep.give";
                 if (await CheckPermissionAsync(nestedPermission) == PermissionGrantResult.Deny)
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 
@@ -57,7 +57,10 @@ namespace NewEssentials.Commands
                 await UniTask.SwitchToMainThread();
                 player.player.skills.askRep(additionReputation);
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["reputation:gave",
-                    new {Player = player.playerID.characterName, Reputation = additionReputation.ToString()}]);
+                    new
+                    {
+                        Player = player.playerID.characterName, Reputation = additionReputation.ToString()
+                    }]);
             }
         }
     }
