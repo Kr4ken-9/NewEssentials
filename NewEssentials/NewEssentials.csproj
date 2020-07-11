@@ -2,16 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
+	<PackageId>Kr4ken.NewEssentials</PackageId>	
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageTags>openmod openmod-plugin unturned</PackageTags>
     <RootNamespace>NewEssentials</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>New Essentials</Product>
+	<Version>0.0.0</Version> <!-- set by GitHub deployment workflow -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenMod.Unturned" Version="1.0.4" />
+    <PackageReference Include="OpenMod.Unturned" Version="1.0.6" />
     <PackageReference Include="OpenMod.Unturned.Redist" Version="3.20.5.6" />
     <PackageReference Include="OpenMod.UnityEngine.Redist" Version="2018.4.23" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
