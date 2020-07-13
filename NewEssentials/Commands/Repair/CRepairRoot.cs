@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -30,6 +31,8 @@ namespace NewEssentials.Commands.Repair
             PlayerInventory inventory = uPlayer.Player.inventory;
 
             await UniTask.SwitchToMainThread();
+            
+            //TODO: NRE's on empty inventory
             foreach (SDG.Unturned.Items itemContainer in inventory.items)
             {
                 foreach (ItemJar itemJar in itemContainer.items)

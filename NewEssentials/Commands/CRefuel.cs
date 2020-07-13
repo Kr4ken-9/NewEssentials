@@ -101,7 +101,8 @@ namespace NewEssentials.Commands
 
         private bool RefuelVehicle(InteractableVehicle vehicle)
         {
-            if (!vehicle.isRefillable)
+            // vehicle.isRefillable returns false if the vehicle is driven
+            if (!vehicle.usesFuel || vehicle.fuel >= vehicle.asset.fuel || vehicle.isExploded)
                 return false;
 
             vehicle.fuel = vehicle.asset.fuel;
