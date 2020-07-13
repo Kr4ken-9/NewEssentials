@@ -31,13 +31,15 @@ namespace NewEssentials.Commands.Repair
             PlayerInventory inventory = uPlayer.Player.inventory;
 
             await UniTask.SwitchToMainThread();
-            
-            //TODO: NRE's on empty inventory
             foreach (SDG.Unturned.Items itemContainer in inventory.items)
             {
+                if (itemContainer == null)
+                    continue;
+
                 foreach (ItemJar itemJar in itemContainer.items)
                 {
                     Item item = itemJar.item;
+                    
                     if (item.quality != 100)
                         inventory.sendUpdateQuality(itemContainer.page, itemJar.x, itemJar.y, 100);
 
