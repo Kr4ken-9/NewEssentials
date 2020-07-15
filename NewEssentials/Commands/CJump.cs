@@ -27,6 +27,8 @@ namespace NewEssentials.Commands
 
         protected override async UniTask OnExecuteAsync()
         {
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["general:experimental"]);
+            
             if (Context.Parameters.Length != 0)
                 throw new CommandWrongUsageException(Context);
 
@@ -34,7 +36,7 @@ namespace NewEssentials.Commands
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             Transform aim = uPlayer.Player.look.aim;
             if (!PhysicsUtility.raycast(new Ray(aim.position, aim.forward), out RaycastHit hit, 1024f,
-                RayMasks.DAMAGE_SERVER))
+                RayMasks.BLOCK_COLLISION))
                 throw new UserFriendlyException(m_StringLocalizer["jump:none"]);
 
             if (hit.transform == null)

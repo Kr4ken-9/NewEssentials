@@ -1,6 +1,7 @@
 general:
   invalid_player: "{Player} is not a player."
   disconnected: "{Player} disconnected."
+  experimental: "This feature is experimental and may not work correctly."
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"
@@ -112,3 +113,7 @@ refuel:
     generator: "Refueled the generator you are looking at."
     oil: "Refueled the oil object you are looking at."
     tank: "Refueled the tank you are looking at."
+respawn:
+  vehicles: "Successfully respawned all vehicles."
+  animals: "Successfully respawned {Count} dead animals."
+  zombies: "Successfully respawned {Count} dead zombies."
