@@ -1,9 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Chat;
 using OpenMod.Core.Commands;
+using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 using UnityEngine;
 using Color = System.Drawing.Color;
@@ -11,7 +13,10 @@ using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Chat
 {
-    public class CSuperBroadcast : Command
+    [Command("superbroadcast")] 
+    [CommandAlias("sb")] 
+    [CommandDescription("")]
+    public class CSuperBroadcast : UnturnedCommand
     {
 
         private readonly IBroadcastingService m_Broadcasting;
@@ -25,7 +30,7 @@ namespace NewEssentials.Commands.Chat
             m_Localizer = localizer;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async UniTask OnExecuteAsync()
         {
             if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
                 throw new CommandWrongUsageException("/superbroadcast \"your text here\" <time>");
@@ -44,11 +49,12 @@ namespace NewEssentials.Commands.Chat
                     break;
                 case 2:
                 {
-                    if (!float.TryParse(Context.Parameters[1], out float time))
-                        throw new CommandParameterParseException("Incorrect parameter", "time", typeof(float));
+                    /*if (!float.TryParse(Context.Parameters[1], out float time))
+                        throw new CommandParameterParseException("Incorrect parameter", "time", typeof(float)); */
                     
                     float limit = m_Configuration.GetValue<float>("broadcasting:broadcastTimeLimit");
-
+                    float.TryParse(Context.Parameters[1], out float time);
+                    
                     if (limit > 0 && time > limit)
                     {
                         await Context.Actor.PrintMessageAsync(m_Localizer["broadcasting:too_long"], Color.Red);

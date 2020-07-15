@@ -16,14 +16,14 @@ namespace NewEssentials.Chat
     {
         public bool IsActive { get; set; }
 
-        private IConfiguration m_Configuration;
+        private readonly IConfiguration m_Configuration;
         private int m_BroadcastIndex;
-        private IOpenModPlugin _plugin;
+        private readonly IOpenModPlugin m_Plugin;
 
-        public BroadcastingService(IConfiguration config, IOpenModPlugin plugin)
+        public BroadcastingService(IConfiguration config, IPluginAccessor<NewEssentials> plugin)
         {
             m_Configuration = config;
-            _plugin = plugin;
+            m_Plugin = plugin.Instance;
             if (m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval") > 0)
                 AsyncHelper.Schedule("NewEssentials::Broadcasting", async ()  => await Broadcast(m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval")));
         }
@@ -31,7 +31,9 @@ namespace NewEssentials.Chat
         
         private async UniTask ClearEffectCoroutine(float time)
         {
-            await Task.Delay((int) time);
+            await UniTask.Delay((int) time);
+
+            await UniTask.SwitchToMainThread();
 
             foreach (SteamPlayer player in Provider.clients.Where(x => x != null))
                 EffectManager.askEffectClearByID(m_Configuration.GetValue<ushort>("broadcasting:effectId"), player.playerID.steamID);
@@ -39,8 +41,10 @@ namespace NewEssentials.Chat
             IsActive = false;
         }
         
-        public async Task StartBroadcast(int duration, string msg)
+        public async UniTask StartBroadcast(int duration, string msg)
         {
+            await UniTask.SwitchToMainThread();
+            
             foreach (var player in Provider.clients.Where(x => x != null))
                 EffectManager.sendUIEffect(m_Configuration.GetValue<ushort>("broadcasting:effectId"), 4205, player.playerID.steamID, true, msg);
 
@@ -51,12 +55,12 @@ namespace NewEssentials.Chat
 
         private async UniTask Broadcast(float time)
         {
-            while (_plugin.IsComponentAlive)
+            while (m_Plugin.IsComponentAlive)
             {
-                await Task.Delay( (int) time);
+                await UniTask.Delay( (int) time);
 
                 if (IsActive)
-                    await Task.Delay((int) time);
+                    await UniTask.Delay((int) time);
 
                 List<string> messages = m_Configuration.GetValue<List<string>>("broadcasting:broadcastMessages");
 

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using OpenMod.API.Ioc;
 
 namespace NewEssentials.Chat
@@ -7,6 +8,6 @@ namespace NewEssentials.Chat
     public interface IBroadcastingService
     {
         public bool IsActive { get; set; }
-        public Task StartBroadcast(int duration, string msg);
+        public UniTask StartBroadcast(int duration, string msg);
     }
 }
