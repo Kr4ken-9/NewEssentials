@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using System.Text;
+using Cysharp.Threading.Tasks;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -6,6 +8,8 @@ namespace NewEssentials.Extensions
 {
     public static class UnturnedExtensions
     {
+        private static readonly byte[] PlaceholderArray = Array.Empty<byte>();
+        
         public static async UniTask MaxAllSkillsAsync(this PlayerSkills playerSkills, bool kunii = false)
         {
             await UniTask.SwitchToMainThread();
@@ -46,26 +50,50 @@ namespace NewEssentials.Extensions
             }
 
             PlayerClothing clothing = player.clothing;
-            clothing.sendSwapBackpack(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            
+            // I like sendSwap better but it can only be receieved from owner I think
+            // I also really hate everything past this point
+            if (clothing.backpack != 0)
+            {
+                clothing.askWearBackpack(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapGlasses(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.glasses != 0)
+            {
+                clothing.askWearGlasses(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapHat(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.hat != 0)
+            {
+                clothing.askWearHat(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapMask(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.mask != 0)
+            {
+                clothing.askWearMask(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapPants(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.pants != 0)
+            {
+                clothing.askWearPants(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapShirt(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.shirt != 0)
+            {
+                clothing.askWearShirt(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
 
-            clothing.sendSwapVest(255, 0, 0);
-            items[PlayerInventory.SLOTS].Clear();
+            if (clothing.vest != 0)
+            {
+                clothing.askWearVest(0, 0, PlaceholderArray, true);
+                items[PlayerInventory.SLOTS].Clear();
+            }
         }
 
         public static void Clear(this Items item)
