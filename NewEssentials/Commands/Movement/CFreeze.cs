@@ -1,14 +1,13 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using NewEssentials.API;
 using NewEssentials.API.Players;
 using OpenMod.API.Commands;
+using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
 
-namespace NewEssentials.Commands
+namespace NewEssentials.Commands.Movement
 {
     [Command("freeze")]
     [CommandDescription("Freeze or unfreeze a player")]

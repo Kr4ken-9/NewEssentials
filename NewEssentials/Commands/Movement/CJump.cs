@@ -1,16 +1,16 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using OpenMod.API.Commands;
+using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using UnityEngine;
 
-namespace NewEssentials.Commands
+namespace NewEssentials.Commands.Movement
 {
     [Command("jump")]
     [CommandAlias("jmp")]

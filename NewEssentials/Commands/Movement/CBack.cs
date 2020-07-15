@@ -10,7 +10,7 @@ using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 
-namespace NewEssentials.Commands
+namespace NewEssentials.Commands.Movement
 {
     [Command("back")]
     [CommandDescription("Teleport back to where you died")]
