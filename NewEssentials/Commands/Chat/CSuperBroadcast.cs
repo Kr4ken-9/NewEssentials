@@ -1,21 +1,19 @@
 using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Chat;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
-using SDG.Unturned;
-using UnityEngine;
 using Color = System.Drawing.Color;
-using Command = OpenMod.Core.Commands.Command;
 
 namespace NewEssentials.Commands.Chat
 {
     [Command("superbroadcast")] 
     [CommandAlias("sb")] 
-    [CommandDescription("")]
+    [CommandAlias("sbroadcast")] 
+    [CommandDescription("Broadcasts via a UI effect")]
+    [CommandSyntax("<\"message\"> <time>")]
     public class CSuperBroadcast : UnturnedCommand
     {
 
@@ -32,8 +30,8 @@ namespace NewEssentials.Commands.Chat
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
-                throw new CommandWrongUsageException("/superbroadcast \"your text here\" <time>");
+            /*if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
+                throw new CommandWrongUsageException("/superbroadcast \"your text here\" <time>"); */
             
 
             if (m_Broadcasting.IsActive)
@@ -45,7 +43,7 @@ namespace NewEssentials.Commands.Chat
             switch (Context.Parameters.Length)
             {
                 case 1:
-                    await m_Broadcasting.StartBroadcast(m_Configuration.GetValue<int>("broadcasting:defaultBroadcastDuration"), Context.Parameters[0]);
+                    await m_Broadcasting.StartBroadcast(m_Configuration.GetValue<int>("broadcasting:defaultBroadcastDuration"), await Context.Parameters.GetAsync<string>(0));
                     break;
                 case 2:
                 {
@@ -53,7 +51,7 @@ namespace NewEssentials.Commands.Chat
                         throw new CommandParameterParseException("Incorrect parameter", "time", typeof(float)); */
                     
                     float limit = m_Configuration.GetValue<float>("broadcasting:broadcastTimeLimit");
-                    float.TryParse(Context.Parameters[1], out float time);
+                    float time = await Context.Parameters.GetAsync<float>(1);
                     
                     if (limit > 0 && time > limit)
                     {
