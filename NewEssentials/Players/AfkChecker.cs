@@ -30,19 +30,19 @@ namespace NewEssentials.Players
         private readonly NewEssentials m_Plugin;
         private readonly IUserManager m_UserManager;
 
-        public AfkChecker(IEventBus bus, IConfiguration config, IPluginAccessor<NewEssentials> plugin, IUserManager users)
+        public AfkChecker(IEventBus bus, IConfiguration config, NewEssentials plugin, IUserManager users)
         {
             if (!config.GetValue<bool>("afkchecker:enabled"))
                 return;
             m_Users = new Dictionary<IUser, TimeSpan>();
             
-            bus.Subscribe<UserConnectedEvent>(plugin.Instance, (provider, sender, @event) => PlayerJoin(@event));
-            bus.Subscribe<UserConnectedEvent>(plugin.Instance, (provider, sender, @event) => PlayerLeave(@event));
+            bus.Subscribe<UserConnectedEvent>(plugin, (provider, sender, @event) => PlayerJoin(@event));
+            bus.Subscribe<UserConnectedEvent>(plugin, (provider, sender, @event) => PlayerLeave(@event));
             
             
             AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
             m_Config = config;
-            m_Plugin = plugin.Instance;
+            m_Plugin = plugin;
             m_UserManager = users;
         }
 
