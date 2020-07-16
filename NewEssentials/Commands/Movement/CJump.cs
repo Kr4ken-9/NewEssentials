@@ -19,6 +19,9 @@ namespace NewEssentials.Commands.Movement
     public class CJump : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        
+        // Works better but still can't teleport to the ground... Very strange
+        private readonly int COLLISION_NO_SKY = RayMasks.BLOCK_COLLISION - RayMasks.SKY;
 
         public CJump(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -36,13 +39,13 @@ namespace NewEssentials.Commands.Movement
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             Transform aim = uPlayer.Player.look.aim;
             if (!PhysicsUtility.raycast(new Ray(aim.position, aim.forward), out RaycastHit hit, 1024f,
-                RayMasks.BLOCK_COLLISION))
+                COLLISION_NO_SKY))
                 throw new UserFriendlyException(m_StringLocalizer["jump:none"]);
 
             if (hit.transform == null)
                 throw new UserFriendlyException(m_StringLocalizer["jump:none"]);
 
-            await uPlayer.Player.TeleportToLocationAsync(hit.transform.position);
+            await uPlayer.Player.TeleportToLocationUnsafeAsync(hit.transform.position + new Vector3(0f, 2f, 0f));
             await uPlayer.PrintMessageAsync(m_StringLocalizer["jump:success"]);
         }
     }

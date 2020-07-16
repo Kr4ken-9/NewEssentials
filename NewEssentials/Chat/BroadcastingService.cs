@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NewEssentials.API.Chat;
@@ -10,9 +12,8 @@ using SDG.Unturned;
 
 namespace NewEssentials.Chat
 {
-    //TODO: Document and stuff
     [ServiceImplementation]
-    public class BroadcastingService : IBroadcastingService
+    public class BroadcastingService : IBroadcastingService, IAsyncDisposable
     {
         public bool IsActive { get; set; }
 
@@ -20,6 +21,7 @@ namespace NewEssentials.Chat
         private int m_BroadcastIndex;
         private readonly IOpenModPlugin m_Plugin;
 
+        //TODO: Autofac error for constructor
         public BroadcastingService(IConfiguration config, IPluginAccessor<NewEssentials> plugin)
         {
             m_Configuration = config;
@@ -53,14 +55,14 @@ namespace NewEssentials.Chat
             await ClearEffectCoroutine(duration);
         }
 
-        private async UniTask Broadcast(float time)
+        private async UniTask Broadcast(int time)
         {
             while (m_Plugin.IsComponentAlive)
             {
-                await UniTask.Delay( (int) time);
+                await UniTask.Delay(time);
 
                 if (IsActive)
-                    await UniTask.Delay((int) time);
+                    await UniTask.Delay(time);
 
                 List<string> messages = m_Configuration.GetValue<List<string>>("broadcasting:broadcastMessages");
 
@@ -72,6 +74,14 @@ namespace NewEssentials.Chat
                     m_BroadcastIndex = 0;
             }
         }
-        
+
+        public async ValueTask DisposeAsync()
+        {
+            if (IsActive)
+            {
+                await ClearEffectCoroutine(0);
+                IsActive = false;
+            }
+        }
     }
 }

@@ -102,10 +102,12 @@ namespace NewEssentials.Players
                 m_Users[user] = DateTime.Now.TimeOfDay;
         }
 
+        // Maybe switch to steam IDs in the future
         public async UniTask UpdatePlayer(Player player)
         {
             IUser user = m_UserManager.FindUserAsync(KnownActorTypes.Player, player.channel.owner.playerID.playerName,
                 UserSearchMode.Name).Result;
+            
             await UpdateUser(user);
         }
 

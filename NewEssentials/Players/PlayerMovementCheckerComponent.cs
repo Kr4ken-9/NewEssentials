@@ -30,6 +30,7 @@ namespace NewEssentials.Players
         {
             if (m_LastLocation != m_Player.transform.position)
                AsyncHelper.RunSync(async () => await m_Checker.UpdatePlayer(m_Player));
+            
             m_LastLocation = m_Player.transform.position;
         }
         
