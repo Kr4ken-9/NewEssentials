@@ -65,7 +65,7 @@ namespace NewEssentials.Players
         {
             while (m_Plugin.IsComponentAlive)
             {
-                UniTask.Delay(3000);
+                await UniTask.Delay(3000);
 
                 IUser user;
                 
@@ -73,7 +73,7 @@ namespace NewEssentials.Players
                 for (int i = 0; i < Provider.clients.Count; i++)
                 {
                     user = await m_UserManager.FindUserAsync(KnownActorTypes.Player,
-                        Provider.clients[i].playerID.playerName, UserSearchMode.Name);
+                        Provider.clients[i].playerID.steamID.ToString(), UserSearchMode.Id);
                     if (DateTime.Now.TimeOfDay.TotalSeconds - m_Users[user].TotalSeconds >=
                         m_Config.GetValue<float>("afkchecker:totalseconds"))
                         await ((UnturnedUser) user).KickAsync("You were kicked for being afk!");
@@ -94,17 +94,17 @@ namespace NewEssentials.Players
                 m_Users[user] = DateTime.Now.TimeOfDay;
         }
 
-        public void UpdatePlayer(Player player)
+        public async Task UpdatePlayer(Player player)
         {
             IUser user = m_UserManager.FindUserAsync(KnownActorTypes.Player, player.channel.owner.playerID.playerName,
                 UserSearchMode.Name).Result;
-            UpdateUser(user);
+            await UpdateUser(user);
         }
 
         public async ValueTask DisposeAsync()
         {
-            m_Events.Unsubscribe(m_Plugin, typeof(UserConnectedEvent));
-            m_Events.Unsubscribe(m_Plugin, typeof(UserDisconnectedEvent));
+            m_Events.Unsubscribe<UserConnectedEvent>(m_Plugin);
+            m_Events.Unsubscribe<UserDisconnectedEvent>(m_Plugin);
         }
     }
 }
