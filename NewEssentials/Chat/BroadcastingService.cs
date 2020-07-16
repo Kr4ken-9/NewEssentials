@@ -12,7 +12,7 @@ using SDG.Unturned;
 
 namespace NewEssentials.Chat
 {
-    [ServiceImplementation]
+    [PluginServiceImplementation]
     public class BroadcastingService : IBroadcastingService, IAsyncDisposable
     {
         public bool IsActive { get; set; }
@@ -22,10 +22,10 @@ namespace NewEssentials.Chat
         private readonly IOpenModPlugin m_Plugin;
 
         //TODO: Autofac error for constructor
-        public BroadcastingService(IConfiguration config, IPluginAccessor<NewEssentials> plugin)
+        public BroadcastingService(IConfiguration config, NewEssentials plugin)
         {
             m_Configuration = config;
-            m_Plugin = plugin.Instance;
+            m_Plugin = plugin;
             if (m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval") > 0)
                 AsyncHelper.Schedule("NewEssentials::Broadcasting", async ()  => await Broadcast(m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval")));
         }
