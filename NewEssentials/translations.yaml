@@ -117,3 +117,8 @@ respawn:
   vehicles: "Successfully respawned all vehicles."
   animals: "Successfully respawned {Count} dead animals."
   zombies: "Successfully respawned {Count} dead zombies."
+broadcasting:
+  is_active: "There is an active broadcast. Please wait for it to end before creating another one."
+  broadcast_sent: "You have successfully sent your broadcast!"
+  too_long: "The duration that you specified on your broadcast is above this server's max broadcast time limit."
+  success: "You have successfully created a superbroadcast."
