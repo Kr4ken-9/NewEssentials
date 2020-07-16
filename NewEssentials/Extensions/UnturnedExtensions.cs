@@ -46,6 +46,7 @@ namespace NewEssentials.Extensions
         {
             await KickAsync(player.Player, reason);
         }
+
  
         public static void ClearInventory(this Player player)
         {

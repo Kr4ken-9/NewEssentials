@@ -5,5 +5,15 @@ items:
   maxspawnamount: 20
 tpa:
   expiration: 30
+broadcasting:
+  effectId: 42069
+  defaultBroadcastDuration: 5
+  broadcastTimeLimit: 25
+  repeatingBroadcastInterval: 300
+  repeatingBroadcastStayTime: 6
+  broadcastMessages:
+    - SupahBroadcasto
+    - This is bla b
+    - a a a 
 afkchecker:
   timeout: 600
