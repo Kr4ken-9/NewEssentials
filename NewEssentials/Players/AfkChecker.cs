@@ -8,6 +8,7 @@ using NewEssentials.Extensions;
 using OpenMod.API;
 using OpenMod.API.Eventing;
 using OpenMod.API.Ioc;
+using OpenMod.API.Permissions;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
 using OpenMod.Core.Helpers;
@@ -29,8 +30,10 @@ namespace NewEssentials.Players
         private readonly IConfiguration m_Config;
         private readonly NewEssentials m_Plugin;
         private readonly IUserManager m_UserManager;
+        private readonly IPermissionChecker m_PermissionChecker;
+        
 
-        public AfkChecker(IEventBus bus, IConfiguration config, NewEssentials plugin, IUserManager users)
+        public AfkChecker(IEventBus bus, IConfiguration config, NewEssentials plugin, IUserManager users, IPermissionChecker checker)
         {
             if (!config.GetValue<bool>("afkchecker:enabled"))
                 return;
@@ -44,6 +47,7 @@ namespace NewEssentials.Players
             m_Config = config;
             m_Plugin = plugin;
             m_UserManager = users;
+            m_PermissionChecker = checker;
         }
 
         private async Task PlayerJoin(UserConnectedEvent @event)
@@ -73,11 +77,16 @@ namespace NewEssentials.Players
                 {
                     user = await m_UserManager.FindUserAsync(KnownActorTypes.Player,
                         Provider.clients[i].playerID.steamID.ToString(), UserSearchMode.Id);
-                    if (DateTime.Now.TimeOfDay.TotalSeconds - m_Users[user].TotalSeconds >=
-                        m_Config.GetValue<float>("afkchecker:totalseconds"))
+                    if (await ShouldBeKicked(user))
                         await ((UnturnedUser) user).KickAsync("You were kicked for being afk!");
                 }
             }
+        }
+
+        private async Task<bool> ShouldBeKicked(IUser user)
+        {
+            return DateTime.Now.TimeOfDay.TotalSeconds - m_Users[user].TotalSeconds >=
+                m_Config.GetValue<float>("afkchecker:timeout") && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") != PermissionGrantResult.Grant;
         }
         
         private async Task PlayerLeave(UserConnectedEvent @event)
@@ -93,7 +102,7 @@ namespace NewEssentials.Players
                 m_Users[user] = DateTime.Now.TimeOfDay;
         }
 
-        public async Task UpdatePlayer(Player player)
+        public async UniTask UpdatePlayer(Player player)
         {
             IUser user = m_UserManager.FindUserAsync(KnownActorTypes.Player, player.channel.owner.playerID.playerName,
                 UserSearchMode.Name).Result;

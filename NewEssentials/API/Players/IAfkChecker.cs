@@ -6,11 +6,12 @@ using SDG.Unturned;
 
 namespace NewEssentials.API.Players
 {
+    //TODO: Documentation
     
     [Service]
     public interface IAfkChecker
     {
         public UniTask UpdateUser(IUser user);
-        public Task UpdatePlayer(Player player);
+        public UniTask UpdatePlayer(Player player);
     }
 }

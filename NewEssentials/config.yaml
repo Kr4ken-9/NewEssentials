@@ -5,3 +5,5 @@ items:
   maxspawnamount: 20
 tpa:
   expiration: 30
+afkchecker:
+  timeout: 600
