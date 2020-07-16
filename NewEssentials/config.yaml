@@ -11,7 +11,9 @@ broadcasting:
   broadcastTimeLimit: 25
   repeatingBroadcastInterval: 300
   repeatingBroadcastStayTime: 6
-  broadcastMessages: {"SupahBroadcasto!!!!", "This is a SUPER broadcast!", "set repeatingBroadcastInterval to -1 to disable this!"}
-  #Is this right ^^ I haven't used yaml since like 2015 lol
+  broadcastMessages:
+    - SupahBroadcasto
+    - This is bla b
+    - a a a 
   
   
