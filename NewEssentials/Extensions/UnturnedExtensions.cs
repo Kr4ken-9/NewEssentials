@@ -34,6 +34,7 @@ namespace NewEssentials.Extensions
                 playerSkills.channel.send("tellSkills", playerSkills.channel.owner.playerID.steamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, speciality, newLevels);
             }
         }
+        
  
         public static void ClearInventory(this Player player)
         {
