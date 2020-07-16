@@ -9,7 +9,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>New Essentials</Product>
-	<Version>0.0.0</Version> <!-- set by GitHub deployment workflow -->
+	<Version>0.0.0</Version>
+	<LangVersion>latest</LangVersion> <!-- set by GitHub deployment workflow -->
   </PropertyGroup>
 
   <ItemGroup>

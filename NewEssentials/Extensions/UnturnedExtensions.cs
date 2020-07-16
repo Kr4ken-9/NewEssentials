@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Cysharp.Threading.Tasks;
+using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -33,6 +34,17 @@ namespace NewEssentials.Extensions
                 // No achievements lol
                 playerSkills.channel.send("tellSkills", playerSkills.channel.owner.playerID.steamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, speciality, newLevels);
             }
+        }
+
+        public static async UniTask KickAsync(this Player player, string reason)
+        {
+            await UniTask.SwitchToMainThread();
+            Provider.kick(player.channel.owner.playerID.steamID, reason);
+        }
+        
+        public static async UniTask KickAsync(this UnturnedUser player, string reason)
+        {
+            await KickAsync(player.Player, reason);
         }
  
         public static void ClearInventory(this Player player)
