@@ -1,8 +1,7 @@
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.API.Ioc;
 
-namespace NewEssentials.Chat
+namespace NewEssentials.API.Chat
 {
     [Service]
     public interface IBroadcastingService

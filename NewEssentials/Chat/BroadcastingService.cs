@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using NewEssentials.API.Chat;
 using OpenMod.API.Ioc;
 using OpenMod.API.Plugins;
 using OpenMod.Core.Helpers;

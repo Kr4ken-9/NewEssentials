@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.Chat;
 using NewEssentials.Chat;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
