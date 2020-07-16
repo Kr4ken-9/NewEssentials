@@ -18,36 +18,32 @@ using SDG.Unturned;
 
 namespace NewEssentials.Players
 {
-    [ServiceImplementation]
-    public class AfkChecker : IAfkChecker, IAsyncDisposable
+    [PluginServiceImplementation]
+    public class AfkChecker : IAfkChecker
     {
         
         //TODO: Add translations
 
         private Dictionary<IUser, TimeSpan> m_Users;
-
-        private readonly IEventBus m_Events;
+        
         private readonly IConfiguration m_Config;
         private readonly NewEssentials m_Plugin;
         private readonly IUserManager m_UserManager;
-        private readonly IRuntime m_Runtime;
-        
-        public AfkChecker(IEventBus bus, IConfiguration config, IPluginAccessor<NewEssentials> plugin, IUserManager users, IRuntime runtime)
+
+        public AfkChecker(IEventBus bus, IConfiguration config, IPluginAccessor<NewEssentials> plugin, IUserManager users)
         {
             if (!config.GetValue<bool>("afkchecker:enabled"))
                 return;
             m_Users = new Dictionary<IUser, TimeSpan>();
             
-            bus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
-            bus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerLeave(@event));
+            bus.Subscribe<UserConnectedEvent>(plugin.Instance, (provider, sender, @event) => PlayerJoin(@event));
+            bus.Subscribe<UserConnectedEvent>(plugin.Instance, (provider, sender, @event) => PlayerLeave(@event));
             
             
             AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
-            m_Events = bus;
             m_Config = config;
             m_Plugin = plugin.Instance;
             m_UserManager = users;
-            m_Runtime = runtime;
         }
 
         private async Task PlayerJoin(UserConnectedEvent @event)
@@ -104,10 +100,6 @@ namespace NewEssentials.Players
             await UpdateUser(user);
         }
 
-        public async ValueTask DisposeAsync()
-        {
-            m_Events.Unsubscribe<UserConnectedEvent>(m_Runtime);
-            m_Events.Unsubscribe<UserDisconnectedEvent>(m_Runtime);
-        }
+        
     }
 }
