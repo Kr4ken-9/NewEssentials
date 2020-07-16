@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using NewEssentials.API;
 using NewEssentials.API.Players;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;

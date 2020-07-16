@@ -15,5 +15,5 @@ broadcasting:
     - SupahBroadcasto
     - This is bla b
     - a a a 
-  
-  
+afkchecker:
+  timeout: 600
