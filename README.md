@@ -16,5 +16,5 @@ See the [issue tracker](https://github.com/Kr4ken-9/NewEssentials/issues) and [m
 
 ## Special Thanks
 
-- [Trojaner](https://github.com/Trojaner) OpenMod, NuGet workflow, Refactoring
-- [hiilikewiki56](https://github.com/archie426) Bug fixes
+- [Trojaner](https://github.com/Trojaner) Maintainer
+- [hiilikewiki56](https://github.com/archie426) Maintainer
