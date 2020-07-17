@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using NewEssentials.API;
+using NewEssentials.API.Chat;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
 using NewEssentials.Models;
@@ -22,22 +23,28 @@ namespace NewEssentials
     public class NewEssentials : OpenModUnturnedPlugin
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IConfiguration m_Configuration;
         private readonly IUserDataStore m_UserDataStore;
         private readonly IDataStore m_DataStore;
         private readonly ITeleportRequestManager m_TpaRequestManager;
+        private readonly IBroadcastingService m_BroadcastingService;
 
         private const string WarpsKey = "warps";
 
         public NewEssentials(IStringLocalizer stringLocalizer,
+            IConfiguration configuration,
             IUserDataStore userDataStore, 
             ITeleportRequestManager tpaRequestManager,
             IDataStore dataStore, 
+            IBroadcastingService broadcastingService,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_Configuration = configuration;
             m_UserDataStore = userDataStore;
             m_DataStore = dataStore;
             m_TpaRequestManager = tpaRequestManager;
+            m_BroadcastingService = broadcastingService;
         }
 
         protected override async UniTask OnLoadAsync()
@@ -53,6 +60,13 @@ namespace NewEssentials
             }
 
             m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
+            
+            // https://github.com/aspnet/Configuration/issues/451
+           m_BroadcastingService.Configure(m_Configuration.GetValue<ushort>("broadcasting:effectId"),
+                m_Configuration.GetSection("broadcasting:repeatingMessages").Get<string[]>(),
+                m_Configuration.GetValue<int>("broadcasting:repeatingInterval"),
+                m_Configuration.GetValue<int>("broadcasting:repeatingDuration"));
+           
             PlayerLife.onPlayerDied += SaveDeathLocation;
         }
 

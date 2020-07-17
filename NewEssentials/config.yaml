@@ -7,11 +7,12 @@ tpa:
   expiration: 30
 broadcasting:
   effectId: 42069
-  defaultBroadcastDuration: 5
-  broadcastTimeLimit: 25
-  repeatingBroadcastInterval: 300
-  repeatingBroadcastStayTime: 6
-  broadcastMessages:
+  # In Milliseconds (1000 for 1 second)
+  defaultBroadcastDuration: 5000
+  timeLimit: 25000
+  repeatingInterval: 30000
+  repeatingDuration: 6000
+  repeatingMessages:
     - SupahBroadcasto
     - This is bla b
     - a a a 

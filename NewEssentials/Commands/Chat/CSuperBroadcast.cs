@@ -14,7 +14,7 @@ namespace NewEssentials.Commands.Chat
     [CommandAlias("sb")] 
     [CommandAlias("sbroadcast")] 
     [CommandDescription("Broadcasts via a UI effect")]
-    [CommandSyntax("<\"message\"> <time>")]
+    [CommandSyntax("<\"message\"> <seconds>")]
     public class CSuperBroadcast : UnturnedCommand
     {
 
@@ -41,18 +41,19 @@ namespace NewEssentials.Commands.Chat
                 return;
             }
 
+            //TODO: Input sanitization
             switch (Context.Parameters.Length)
             {
                 case 1:
-                    await m_Broadcasting.StartBroadcast(m_Configuration.GetValue<int>("broadcasting:defaultBroadcastDuration"), await Context.Parameters.GetAsync<string>(0));
+                    await m_Broadcasting.StartBroadcast(m_Configuration.GetValue<int>("broadcasting:defaultBroadcastDuration") * 1000, await Context.Parameters.GetAsync<string>(0));
                     break;
                 case 2:
                 {
                     /*if (!float.TryParse(Context.Parameters[1], out float time))
                         throw new CommandParameterParseException("Incorrect parameter", "time", typeof(float)); */
                     
-                    float limit = m_Configuration.GetValue<float>("broadcasting:broadcastTimeLimit");
-                    float time = await Context.Parameters.GetAsync<float>(1);
+                    int limit = m_Configuration.GetValue<int>("broadcasting:broadcastTimeLimit");
+                    int time = await Context.Parameters.GetAsync<int>(1) * 1000;
                     
                     if (limit > 0 && time > limit)
                     {
@@ -61,7 +62,7 @@ namespace NewEssentials.Commands.Chat
                     }
 
                     await Context.Actor.PrintMessageAsync(m_Localizer["broadcasting:success"], Color.Green);
-                    await m_Broadcasting.StartBroadcast( (int) time, Context.Parameters[0]);
+                    await m_Broadcasting.StartBroadcast(time, Context.Parameters[0]);
                     break;
                 }
             }

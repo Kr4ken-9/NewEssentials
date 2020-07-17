@@ -1,44 +1,56 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.Chat;
 using OpenMod.API.Ioc;
-using OpenMod.API.Plugins;
+using OpenMod.API.Prioritization;
 using OpenMod.Core.Helpers;
 using SDG.Unturned;
 
 namespace NewEssentials.Chat
 {
-    [PluginServiceImplementation]
+    [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class BroadcastingService : IBroadcastingService, IAsyncDisposable
     {
         public bool IsActive { get; set; }
-
-        private readonly IConfiguration m_Configuration;
+        private bool m_ServiceRunning;
         private int m_BroadcastIndex;
-        private readonly IOpenModPlugin m_Plugin;
 
-        //TODO: Autofac error for constructor
-        public BroadcastingService(IConfiguration config, NewEssentials plugin)
+        private ushort m_EffectID;
+        private string[] m_RepeatingMessages;
+        private int m_RepeatingInterval;
+        private int m_RepeatingDuration;
+        
+        public BroadcastingService()
         {
-            m_Configuration = config;
-            m_Plugin = plugin;
-            if (m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval") > 0)
-                AsyncHelper.Schedule("NewEssentials::Broadcasting", async ()  => await Broadcast(m_Configuration.GetValue<int>("broadcast:repeatingBroadcastInterval")));
+            m_ServiceRunning = true;
+            IsActive = false;
         }
-        
-        
-        private async UniTask ClearEffectCoroutine(float time)
+
+        public void Configure(ushort effectID, string[] repeatingMessages, int repeatingInterval, int repeatingDuration)
         {
-            await UniTask.Delay((int) time);
+            m_EffectID = effectID;
+            
+            if (repeatingInterval <= 0)
+                return;
+
+            m_RepeatingInterval = repeatingInterval;
+            m_RepeatingMessages = repeatingMessages;
+            m_RepeatingDuration = repeatingDuration;
+
+            AsyncHelper.Schedule("NewEssentials::Broadcasting", () => RepeatingBroadcast().AsTask());
+        }
+
+        private async UniTask ClearEffectCoroutine(int time)
+        {
+            await UniTask.Delay(time);
 
             await UniTask.SwitchToMainThread();
 
             foreach (SteamPlayer player in Provider.clients.Where(x => x != null))
-                EffectManager.askEffectClearByID(m_Configuration.GetValue<ushort>("broadcasting:effectId"), player.playerID.steamID);
+                EffectManager.askEffectClearByID(m_EffectID, player.playerID.steamID);
 
             IsActive = false;
         }
@@ -46,37 +58,40 @@ namespace NewEssentials.Chat
         public async UniTask StartBroadcast(int duration, string msg)
         {
             await UniTask.SwitchToMainThread();
+
+            if (Provider.clients.Count < 1)
+                return;
             
-            foreach (var player in Provider.clients.Where(x => x != null))
-                EffectManager.sendUIEffect(m_Configuration.GetValue<ushort>("broadcasting:effectId"), 4205, player.playerID.steamID, true, msg);
+            foreach (var player in Provider.clients)
+                EffectManager.sendUIEffect(m_EffectID, 4205, player.playerID.steamID, true, msg);
 
             IsActive = true;
 
             await ClearEffectCoroutine(duration);
         }
 
-        private async UniTask Broadcast(int time)
+        private async UniTask RepeatingBroadcast()
         {
-            while (m_Plugin.IsComponentAlive)
+            while (m_ServiceRunning)
             {
-                await UniTask.Delay(time);
+                await UniTask.Delay(m_RepeatingInterval);
 
-                if (IsActive)
-                    await UniTask.Delay(time);
+                while (IsActive || Provider.clients.Count < 1)
+                    await UniTask.Delay(m_RepeatingInterval);
+                
+                string message = m_RepeatingMessages[m_BroadcastIndex];
 
-                List<string> messages = m_Configuration.GetValue<List<string>>("broadcasting:broadcastMessages");
-
-                string message = messages[m_BroadcastIndex];
-
-                await StartBroadcast(m_Configuration.GetValue<int>("broadcasting:repeatingBroadcastStayTime"), message);
-
-                if (++m_BroadcastIndex >= messages.Count)
+                await StartBroadcast(m_RepeatingDuration, message);
+                await UniTask.Delay(m_RepeatingDuration);
+                
+                if (++m_BroadcastIndex >= m_RepeatingMessages.Length)
                     m_BroadcastIndex = 0;
             }
         }
 
         public async ValueTask DisposeAsync()
         {
+            m_ServiceRunning = false;
             if (IsActive)
             {
                 await ClearEffectCoroutine(0);
