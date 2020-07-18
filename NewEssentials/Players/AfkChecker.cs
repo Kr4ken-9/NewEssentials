@@ -37,6 +37,7 @@ namespace NewEssentials.Players
         {
             if (!config.GetValue<bool>("afkchecker:enabled"))
                 return;
+            
             m_Users = new Dictionary<IUser, TimeSpan>();
             
             bus.Subscribe<UserConnectedEvent>(plugin, (provider, sender, @event) => PlayerJoin(@event));
@@ -102,7 +103,7 @@ namespace NewEssentials.Players
                 m_Users[user] = DateTime.Now.TimeOfDay;
         }
 
-        // Maybe switch to steam IDs in the future
+        //TODO: Maybe switch to steam IDs in the future
         public async UniTask UpdatePlayer(Player player)
         {
             IUser user = m_UserManager.FindUserAsync(KnownActorTypes.Player, player.channel.owner.playerID.playerName,

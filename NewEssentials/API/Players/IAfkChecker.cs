@@ -6,8 +6,6 @@ using SDG.Unturned;
 
 namespace NewEssentials.API.Players
 {
-    //TODO: Documentation
-    
     [Service]
     public interface IAfkChecker
     {
