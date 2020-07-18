@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
+using OpenMod.Core.Helpers;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -23,6 +23,11 @@ namespace NewEssentials.Players
         public TeleportRequestManager()
         {
             m_OpenRequests = new Dictionary<ulong, List<ulong>>();
+
+            if (Level.isLoaded)
+                foreach (var player in Provider.clients)
+                    m_OpenRequests.Add(player.playerID.steamID.m_SteamID, new List<ulong>());
+
             Provider.onEnemyConnected += AddPlayer;
             Provider.onEnemyDisconnected += RemovePlayer;
         }
@@ -40,8 +45,7 @@ namespace NewEssentials.Players
         {
             m_OpenRequests[recipient].Add(requester);
             
-            var thread = new Thread(async () => await RequestExpirationThread(recipient, requester, requestLifetime));
-            thread.Start();
+            AsyncHelper.Schedule("NewEssentials::TPARequestExpiration", () => RequestExpirationThread(recipient, requester, requestLifetime).AsTask());
         }
 
         public ulong AcceptRequest(ulong recipient)
@@ -54,9 +58,9 @@ namespace NewEssentials.Players
 
         public void AcceptRequest(ulong recipient, ulong requester) => m_OpenRequests[recipient].Remove(requester);
 
-        private async Task RequestExpirationThread(ulong recipient, ulong requester, int lifetime)
+        private async UniTask RequestExpirationThread(ulong recipient, ulong requester, int lifetime)
         {
-            Thread.Sleep(lifetime);
+            await UniTask.Delay(TimeSpan.FromMilliseconds(lifetime));
 
             if (!m_OpenRequests[recipient].Contains(requester))
                 return;
