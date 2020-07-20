@@ -67,8 +67,10 @@ namespace NewEssentials
                 m_Configuration.GetSection("broadcasting:repeatingMessages").Get<string[]>(),
                 m_Configuration.GetValue<int>("broadcasting:repeatingInterval"),
                 m_Configuration.GetValue<int>("broadcasting:repeatingDuration"));
-           
-           m_AfkChecker.Configure(m_Configuration.GetValue<int>("afkchecker:timeout"));
+
+           m_AfkChecker.Configure(m_Configuration.GetValue<int>("afkchecker:timeout"),
+               m_Configuration.GetValue<bool>("afkchecker:announceAFK"),
+               m_Configuration.GetValue<bool>("afkchecker:kickAFK"), m_StringLocalizer);
            
             PlayerLife.onPlayerDied += SaveDeathLocation;
         }

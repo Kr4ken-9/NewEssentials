@@ -17,4 +17,8 @@ broadcasting:
     - This is bla b
     - a a a 
 afkchecker:
+  # Set to a negative number to disable
   timeout: 600
+  # announceAFK will just tell everyone when someone goes afk. kickAFK will get kick players that go afk.
+  announceAFK: true
+  kickAFK: false

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
 using OpenMod.API;
@@ -16,6 +17,7 @@ using OpenMod.Core.Users;
 using OpenMod.Core.Users.Events;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using UnityEngine;
 
 namespace NewEssentials.Players
 {
@@ -25,7 +27,10 @@ namespace NewEssentials.Players
         private readonly IEventBus m_EventEventBus;
         private readonly IUserManager m_UserManager;
         private readonly IPermissionChecker m_PermissionChecker;
+        private IStringLocalizer m_StringLocalizer;
         private int m_Timeout;
+        private bool m_AnnounceAFK;
+        private bool m_KickAFK;
         private bool m_ServiceRunning;
 
         public AfkChecker(IEventBus eventBus, IRuntime runtime, IUserManager users, IPermissionChecker permissionChecker)
@@ -43,9 +48,15 @@ namespace NewEssentials.Players
             AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
         }
 
-        public void Configure(int timeout)
+        public void Configure(int timeout, bool announceAFK, bool kickAFK, IStringLocalizer stringLocalizer)
         {
+            m_StringLocalizer = stringLocalizer;
             m_Timeout = timeout;
+            m_AnnounceAFK = announceAFK;
+            m_KickAFK = kickAFK;
+
+            if (m_Timeout < 0)
+                DisposeAsync();
         }
 
         private async UniTask CheckAfkPlayers()
@@ -61,17 +72,28 @@ namespace NewEssentials.Players
                     if (!(user is UnturnedUser unturnedUser))
                         continue;
 
-                    if (await ShouldBeKicked(unturnedUser))
-                        await unturnedUser.Player.KickAsync("You were kicked for being afk!");
+                    bool afk = (DateTime.Now.TimeOfDay - (TimeSpan) user.Session.SessionData["lastMovement"])
+                                .TotalSeconds >=
+                                m_Timeout &&
+                                await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") !=
+                                PermissionGrantResult.Grant;
+
+                    if (!afk)
+                        continue;
+
+                    if (m_AnnounceAFK)
+                        await Announce(m_StringLocalizer["afk:announcement", new {Player = unturnedUser.DisplayName}], Color.white);
+                    
+                    if (m_KickAFK)
+                        await unturnedUser.Player.KickAsync(m_StringLocalizer["afk:kicked"]);
                 }
             }
         }
 
-        private async Task<bool> ShouldBeKicked(UnturnedUser user)
+        private async UniTask Announce(string text, Color color)
         {
-            return (DateTime.Now.TimeOfDay - (TimeSpan) user.Session.SessionData["lastMovement"]).TotalSeconds >=
-                m_Timeout && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") !=
-                PermissionGrantResult.Grant;
+            await UniTask.SwitchToMainThread();
+            ChatManager.serverSendMessage(text, color);
         }
         
         #region Dictionary Population

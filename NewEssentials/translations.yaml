@@ -122,3 +122,6 @@ broadcasting:
   broadcast_sent: "You have successfully sent your broadcast!"
   too_long: "The duration that you specified on your broadcast is above this server's max broadcast time limit."
   success: "You have successfully created a superbroadcast."
+afk:
+  kicked: "You were kicked for being afk!"
+  announcement: "{Player} is now afk!"
