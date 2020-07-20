@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using NewEssentials.API;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
 using OpenMod.API.Ioc;

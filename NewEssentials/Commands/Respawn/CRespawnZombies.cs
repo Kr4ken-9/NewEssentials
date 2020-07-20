@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;

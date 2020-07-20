@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
 using OpenMod.API;
 using OpenMod.API.Eventing;
 using OpenMod.API.Ioc;
 using OpenMod.API.Permissions;
-using OpenMod.API.Plugins;
+using OpenMod.API.Prioritization;
 using OpenMod.API.Users;
 using OpenMod.Core.Helpers;
 using OpenMod.Core.Users;
@@ -19,99 +19,85 @@ using SDG.Unturned;
 
 namespace NewEssentials.Players
 {
-    [PluginServiceImplementation]
-    public class AfkChecker : IAfkChecker
+    [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
+    public class AfkChecker : IAfkChecker, IAsyncDisposable
     {
-        
-        //TODO: Add translations
-
-        private Dictionary<IUser, TimeSpan> m_Users;
-        
-        private readonly IConfiguration m_Config;
-        private readonly NewEssentials m_Plugin;
+        private readonly IEventBus m_EventEventBus;
         private readonly IUserManager m_UserManager;
         private readonly IPermissionChecker m_PermissionChecker;
-        
+        private int m_Timeout;
+        private bool m_ServiceRunning;
 
-        public AfkChecker(IEventBus bus, IConfiguration config, NewEssentials plugin, IUserManager users, IPermissionChecker checker)
+        public AfkChecker(IEventBus eventBus, IRuntime runtime, IUserManager users, IPermissionChecker permissionChecker)
         {
-            if (!config.GetValue<bool>("afkchecker:enabled"))
-                return;
-            
-            m_Users = new Dictionary<IUser, TimeSpan>();
-            
-            bus.Subscribe<UserConnectedEvent>(plugin, (provider, sender, @event) => PlayerJoin(@event));
-            bus.Subscribe<UserConnectedEvent>(plugin, (provider, sender, @event) => PlayerLeave(@event));
-            
-            
-            AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
-            m_Config = config;
-            m_Plugin = plugin;
+            m_EventEventBus = eventBus;
             m_UserManager = users;
-            m_PermissionChecker = checker;
+            m_PermissionChecker = permissionChecker;
+            m_ServiceRunning = true;
+
+            if (Level.isLoaded)
+                GetCurrentPlayers();
+            
+            m_EventEventBus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
+
+            AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
         }
 
-        private async Task PlayerJoin(UserConnectedEvent @event)
+        public void Configure(int timeout)
         {
-            if (m_Users.ContainsKey((UnturnedUser)@event.User))
-            {
-                m_Users[(UnturnedUser)@event.User] = DateTime.Now.TimeOfDay;
-                return;
-            }
-            
-            m_Users.Add((UnturnedUser)@event.User, DateTime.Now.TimeOfDay);
-            PlayerMovementCheckerComponent component = ((UnturnedUser) @event.User).Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();
-            component.Resolve(this);
-
+            m_Timeout = timeout;
         }
 
         private async UniTask CheckAfkPlayers()
         {
-            while (m_Plugin.IsComponentAlive)
+            while (m_ServiceRunning)
             {
-                await UniTask.Delay(3000);
+                await UniTask.Delay(10000);
 
-                IUser user;
+                var users = await m_UserManager.GetUsersAsync(KnownActorTypes.Player);
                 
-                // ReSharper disable once ForCanBeConvertedToForeach
-                for (int i = 0; i < Provider.clients.Count; i++)
+                foreach (var user in users)
                 {
-                    user = await m_UserManager.FindUserAsync(KnownActorTypes.Player,
-                        Provider.clients[i].playerID.steamID.ToString(), UserSearchMode.Id);
-                    if (await ShouldBeKicked(user))
-                        await ((UnturnedUser) user).KickAsync("You were kicked for being afk!");
+                    if (!(user is UnturnedUser unturnedUser))
+                        continue;
+
+                    if (await ShouldBeKicked(unturnedUser))
+                        await unturnedUser.Player.KickAsync("You were kicked for being afk!");
                 }
             }
         }
 
-        private async Task<bool> ShouldBeKicked(IUser user)
+        private async Task<bool> ShouldBeKicked(UnturnedUser user)
         {
-            return DateTime.Now.TimeOfDay.TotalSeconds - m_Users[user].TotalSeconds >=
-                m_Config.GetValue<float>("afkchecker:timeout") && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") != PermissionGrantResult.Grant;
+            return (DateTime.Now.TimeOfDay - (TimeSpan) user.Session.SessionData["lastMovement"]).TotalSeconds >=
+                m_Timeout && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") !=
+                PermissionGrantResult.Grant;
         }
         
-        private async Task PlayerLeave(UserConnectedEvent @event)
-        {
-            if (m_Users.ContainsKey((UnturnedUser)@event.User))
-                m_Users.Remove((UnturnedUser)@event.User);
-        }
-
-
-        public async UniTask UpdateUser(IUser user)
-        {
-            if (m_Users.ContainsKey(user))
-                m_Users[user] = DateTime.Now.TimeOfDay;
-        }
-
-        //TODO: Maybe switch to steam IDs in the future
-        public async UniTask UpdatePlayer(Player player)
-        {
-            IUser user = m_UserManager.FindUserAsync(KnownActorTypes.Player, player.channel.owner.playerID.playerName,
-                UserSearchMode.Name).Result;
-            
-            await UpdateUser(user);
-        }
-
+        #region Dictionary Population
         
+        private async Task GetCurrentPlayers()
+        {
+            foreach (var user in (await m_UserManager.GetUsersAsync(KnownActorTypes.Player)).Cast<UnturnedUser>())
+                if (!user.Session.SessionData.ContainsKey("lastMovement"))
+                    user.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
+        }
+
+        private async Task PlayerJoin(UserConnectedEvent @event)
+        {
+            UnturnedUser newUser = (UnturnedUser) @event.User;
+            newUser.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
+
+            PlayerMovementCheckerComponent component = newUser.Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();
+            component.Resolve(newUser);
+
+        }
+        
+        #endregion
+
+        public async ValueTask DisposeAsync()
+        {
+            m_ServiceRunning = false;
+        }
     }
 }

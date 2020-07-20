@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using OpenMod.API.Ioc;
 using OpenMod.API.Users;
+using OpenMod.Unturned.Users;
 using SDG.Unturned;
 
 namespace NewEssentials.API.Players
@@ -10,15 +10,9 @@ namespace NewEssentials.API.Players
     public interface IAfkChecker
     {
         /// <summary>
-        /// Updates the last time a user moved
+        /// Service must be configured with this property to work properly.
         /// </summary>
-        /// <param name="user">User that moved</param>
-        public UniTask UpdateUser(IUser user);
-        
-        /// <summary>
-        /// Updates the last time an Unturned player moved
-        /// </summary>
-        /// <param name="player">Unturned Player that moved</param>
-        public UniTask UpdatePlayer(Player player);
+        /// <param name="timeout">Time, in seconds, an Unturned player can be AFK before being kicked</param>
+        public void Configure(int timeout);
     }
 }

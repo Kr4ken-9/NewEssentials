@@ -1,6 +1,7 @@
 using System;
 using NewEssentials.API.Players;
 using OpenMod.Core.Helpers;
+using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -11,8 +12,7 @@ namespace NewEssentials.Players
     {
         private Vector3 m_LastLocation;
         private Player m_Player;
-
-        private IAfkChecker m_Checker;
+        private UnturnedUser m_User;
 
         private void Awake()
         {
@@ -21,19 +21,19 @@ namespace NewEssentials.Players
         }
 
         //Unity you are trash
-        public void Resolve(IAfkChecker checker)
+        public void Resolve(UnturnedUser user)
         {
-            m_Checker = checker;
+            m_User = user;
         }
 
         private void FixedUpdate()
         {
-            if (m_LastLocation != m_Player.transform.position)
-               AsyncHelper.RunSync(async () => await m_Checker.UpdatePlayer(m_Player));
+            Vector3 newPosition = m_Player.transform.position;
             
-            m_LastLocation = m_Player.transform.position;
+            if (m_LastLocation != newPosition)
+                m_User.Session.SessionData["lastMovement"] = DateTime.Now.TimeOfDay;
+            
+            m_LastLocation = newPosition;
         }
-        
-        
     }
 }

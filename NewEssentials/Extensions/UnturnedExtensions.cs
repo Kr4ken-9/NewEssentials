@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
@@ -40,11 +39,6 @@ namespace NewEssentials.Extensions
         {
             await UniTask.SwitchToMainThread();
             Provider.kick(player.channel.owner.playerID.steamID, reason);
-        }
-        
-        public static async UniTask KickAsync(this UnturnedUser player, string reason)
-        {
-            await KickAsync(player.Player, reason);
         }
 
  

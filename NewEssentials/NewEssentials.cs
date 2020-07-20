@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using NewEssentials.API;
 using NewEssentials.API.Chat;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
@@ -28,6 +26,7 @@ namespace NewEssentials
         private readonly IDataStore m_DataStore;
         private readonly ITeleportRequestManager m_TpaRequestManager;
         private readonly IBroadcastingService m_BroadcastingService;
+        private readonly IAfkChecker m_AfkChecker;
 
         private const string WarpsKey = "warps";
 
@@ -37,6 +36,7 @@ namespace NewEssentials
             ITeleportRequestManager tpaRequestManager,
             IDataStore dataStore, 
             IBroadcastingService broadcastingService,
+            IAfkChecker afkChecker,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
@@ -45,6 +45,7 @@ namespace NewEssentials
             m_DataStore = dataStore;
             m_TpaRequestManager = tpaRequestManager;
             m_BroadcastingService = broadcastingService;
+            m_AfkChecker = afkChecker;
         }
 
         protected override async UniTask OnLoadAsync()
@@ -66,6 +67,8 @@ namespace NewEssentials
                 m_Configuration.GetSection("broadcasting:repeatingMessages").Get<string[]>(),
                 m_Configuration.GetValue<int>("broadcasting:repeatingInterval"),
                 m_Configuration.GetValue<int>("broadcasting:repeatingDuration"));
+           
+           m_AfkChecker.Configure(m_Configuration.GetValue<int>("afkchecker:timeout"));
            
             PlayerLife.onPlayerDied += SaveDeathLocation;
         }

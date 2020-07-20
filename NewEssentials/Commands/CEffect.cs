@@ -6,7 +6,6 @@ using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using Steamworks;
 
 namespace NewEssentials.Commands
 {
