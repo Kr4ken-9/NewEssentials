@@ -40,7 +40,7 @@ namespace NewEssentials.Commands.Home
                 if (uPlayer.Player.teleportToBed())
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = "bed"}]);
                 else
-                    await uPlayer.PrintMessageAsync(m_StringLocalizer["home:no_bed"]);
+                    throw new UserFriendlyException(m_StringLocalizer["home:no_bed"]);
             }
             else
             {

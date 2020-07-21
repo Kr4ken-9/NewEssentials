@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace NewEssentials.Models
@@ -8,12 +9,12 @@ namespace NewEssentials.Models
     public class SerializableVector3
     {
         public float X { get; set; }
-        
+
         public float Y { get; set; }
-        
+
         public float Z { get; set; }
-        
-        private SerializableVector3()
+
+        public SerializableVector3()
         {
         }
 
@@ -29,12 +30,12 @@ namespace NewEssentials.Models
         // This whole thing is retarded.
         public static SerializableVector3 GetSerializableVector3FromUserData(Dictionary<object, object> userData, string indexName = null)
         {
-            Dictionary<object, object> vector = indexName != null ? (Dictionary<object, object>) userData[indexName] : userData;
+            Dictionary<object, object> vector = indexName != null ? (Dictionary<object, object>)userData[indexName] : userData;
 
-            float x = float.Parse((string) vector["x"]);
-            float y = float.Parse((string) vector["y"]);
-            float z = float.Parse((string) vector["z"]);
-            
+            float x = float.Parse(vector["x"].ToString(), CultureInfo.InvariantCulture);
+            float y = float.Parse(vector["y"].ToString(), CultureInfo.InvariantCulture);
+            float z = float.Parse(vector["z"].ToString(), CultureInfo.InvariantCulture);
+
             return new SerializableVector3(x, y, z);
         }
     }
