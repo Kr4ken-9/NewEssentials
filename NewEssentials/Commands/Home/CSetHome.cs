@@ -32,7 +32,7 @@ namespace NewEssentials.Commands.Home
         {
             if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
-            
+
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             UserData userData = await m_UserDataStore.GetUserDataAsync(uPlayer.Id, uPlayer.Type);
             if (!userData.Data.ContainsKey("homes"))
@@ -41,7 +41,6 @@ namespace NewEssentials.Commands.Home
             var homes = (Dictionary<object, object>) userData.Data["homes"];
             if (Context.Parameters.Length == 0)
             {
-                Console.WriteLine("test");
                 homes["home"] = uPlayer.Player.transform.position.ToSerializableVector3();
                 userData.Data["homes"] = homes;
 
