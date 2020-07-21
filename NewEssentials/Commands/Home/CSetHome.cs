@@ -13,7 +13,7 @@ namespace NewEssentials.Commands.Home
 {
     [Command("set")]
     [CommandDescription("Save location as a home")]
-    [CommandSyntax("<name>")]
+    [CommandSyntax("[name]")]
     [CommandActor(typeof(UnturnedUser))]
     [CommandParent(typeof(CHome))]
     public class CSetHome : UnturnedCommand
@@ -38,9 +38,10 @@ namespace NewEssentials.Commands.Home
             if (!userData.Data.ContainsKey("homes"))
                 userData.Data.Add("homes", new Dictionary<string, SerializableVector3>());
 
-            var homes = (Dictionary<object, object>)userData.Data["homes"];
+            var homes = (Dictionary<object, object>) userData.Data["homes"];
             if (Context.Parameters.Length == 0)
             {
+                Console.WriteLine("test");
                 homes["home"] = uPlayer.Player.transform.position.ToSerializableVector3();
                 userData.Data["homes"] = homes;
 
@@ -51,7 +52,7 @@ namespace NewEssentials.Commands.Home
             {
                 string home = Context.Parameters[0];
                 homes[home] = uPlayer.Player.transform.position.ToSerializableVector3();
-                userData.Data[home] = homes;
+                userData.Data["homes"] = homes;
 
                 await m_UserDataStore.SaveUserDataAsync(userData);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["home:set", new {Home = home}]);
