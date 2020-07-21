@@ -18,3 +18,4 @@ See the [issue tracker](https://github.com/Kr4ken-9/NewEssentials/issues) and [m
 
 - [Trojaner](https://github.com/Trojaner) Maintainer
 - [hiilikewiki56](https://github.com/archie426) Maintainer
+- [DiFFoZ](https://github.com/DiFFoZ) Bug Fixes
