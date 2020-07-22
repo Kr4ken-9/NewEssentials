@@ -26,9 +26,6 @@ namespace NewEssentials.Commands
         protected override async UniTask OnExecuteAsync()
         {
             //TODO: Add support for configurable allowed effects?
-            
-            if (await _permission.CheckPermissionAsync(Context.Actor, "effect") != PermissionGrantResult.Grant)
-                throw new NotEnoughPermissionException(Context, "You do not have permission to execute this command!");
 
             UnturnedUser usr = (UnturnedUser) Context.Actor;
             Player target;

@@ -41,7 +41,6 @@ namespace NewEssentials.Extensions
             Provider.kick(player.channel.owner.playerID.steamID, reason);
         }
 
- 
         public static void ClearInventory(this Player player)
         {
             Items[] items = player.inventory.items;

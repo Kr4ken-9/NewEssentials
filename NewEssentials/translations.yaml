@@ -125,3 +125,13 @@ broadcasting:
 afk:
   kicked: "You were kicked for being afk!"
   announcement: "{Player} is now afk!"
+vanish:
+  vanished: "You have vanished! Poof!"
+  vanished_other: "{Player} has vanished! Poof!"
+  unvanished: "You have reappeared!"
+  unvanished_other: "{Player} has reappeared!"
+god:
+  god: "You are now a God!"
+  god_other: "{Player} is now a God!"
+  mortal: "You are now a mortal!"
+  mortal_other: "{Player} has reappeared!"
