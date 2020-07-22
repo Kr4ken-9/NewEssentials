@@ -5,6 +5,8 @@ The new essential plugin for Unturned. This project aims to be a replacement for
 ## Current Features
 
 - Lots of Commands
+- AFK Announcer/Kicker
+- [SuperBroadcaster](https://github.com/IcePlugins/SuperBroadcaster)
 
 ## Planned Features
 
@@ -18,3 +20,4 @@ See the [issue tracker](https://github.com/Kr4ken-9/NewEssentials/issues) and [m
 
 - [Trojaner](https://github.com/Trojaner) Maintainer
 - [hiilikewiki56](https://github.com/archie426) Maintainer
+- [DiFFoZ](https://github.com/DiFFoZ) Bug Fixes

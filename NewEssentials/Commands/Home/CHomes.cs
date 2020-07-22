@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace NewEssentials.Commands.Home
 {
@@ -31,19 +31,19 @@ namespace NewEssentials.Commands.Home
             if (Context.Parameters.Length != 0)
                 throw new CommandWrongUsageException(Context);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
+            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             UserData userData = await m_UserDataStore.GetUserDataAsync(uPlayer.Id, uPlayer.Type);
-            
+
             if (!userData.Data.ContainsKey("homes"))
                 throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
-            
+
             var stringBuilder = new StringBuilder();
-            foreach (var pair in (Dictionary<object, object>) userData.Data["homes"])
+            foreach (var pair in (Dictionary<object, object>)userData.Data["homes"])
                 stringBuilder.Append($"{pair.Key}, ");
 
             stringBuilder.Remove(stringBuilder.Length - 2, 1);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new {Homes = stringBuilder.ToString()}]);
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { Homes = stringBuilder.ToString() }]);
         }
     }
 }
