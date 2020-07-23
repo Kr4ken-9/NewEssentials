@@ -134,7 +134,7 @@ god:
   god: "You are now a God!"
   god_other: "{Player} is now a God!"
   mortal: "You are now a mortal!"
-  mortal_other: "{Player} has reappeared!"
-  
+  mortal_other: "{Player} is now a mortal!"
 tphere:
-  successfull_tp: "{Player} has been tped to you"
+  successful_tp: "{Player} has been tped to you"
+  successful_tp_other: "You were teleported to {Player}"

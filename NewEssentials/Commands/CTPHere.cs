@@ -22,13 +22,11 @@ namespace NewEssentials.Commands
     [CommandActor(typeof(UnturnedUser))]
     public class CTPHere : UnturnedCommand
     {
-        private readonly IServiceProvider m_ServiceProvider;
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserManager m_UserManager;
 
-        public CTPHere(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer, IUserManager userManager) :base(serviceProvider)
+        public CTPHere(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer, IUserManager userManager) : base(serviceProvider)
         {
-            m_ServiceProvider = serviceProvider;
             m_StringLocalizer = stringLocalizer;
             m_UserManager = userManager;
         }
@@ -50,7 +48,9 @@ namespace NewEssentials.Commands
             UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             Player tpPlayer = (user as UnturnedUser).Player;
             await tpPlayer.TeleportToLocationAsync(uPlayer.Player.transform.position);
-            await PrintAsync(m_StringLocalizer["tphere:successfull_tp", new { Player = user.DisplayName }]);
+            
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new { Player = user.DisplayName }]);
+            await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = uPlayer.DisplayName}]);
         }
     }
 }
