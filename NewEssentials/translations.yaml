@@ -135,3 +135,6 @@ god:
   god_other: "{Player} is now a God!"
   mortal: "You are now a mortal!"
   mortal_other: "{Player} has reappeared!"
+  
+tphere:
+  successfull_tp: "{Player} has been tped to you"
