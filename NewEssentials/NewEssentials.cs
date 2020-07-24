@@ -7,6 +7,7 @@ using NewEssentials.API.Chat;
 using NewEssentials.API.Players;
 using NewEssentials.Extensions;
 using NewEssentials.Models;
+using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
@@ -27,6 +28,7 @@ namespace NewEssentials
         private readonly ITeleportRequestManager m_TpaRequestManager;
         private readonly IBroadcastingService m_BroadcastingService;
         private readonly IAfkChecker m_AfkChecker;
+        private readonly IPermissionRegistry m_PermissionRegistry;
 
         private const string WarpsKey = "warps";
 
@@ -37,6 +39,7 @@ namespace NewEssentials
             IDataStore dataStore, 
             IBroadcastingService broadcastingService,
             IAfkChecker afkChecker,
+            IPermissionRegistry permissionRegistry,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
@@ -46,11 +49,16 @@ namespace NewEssentials
             m_TpaRequestManager = tpaRequestManager;
             m_BroadcastingService = broadcastingService;
             m_AfkChecker = afkChecker;
+            m_PermissionRegistry = permissionRegistry;
         }
 
         protected override async UniTask OnLoadAsync()
         {
             await UniTask.SwitchToThreadPool();
+
+            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players");
+            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players");
+            m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk");
 
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {

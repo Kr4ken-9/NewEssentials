@@ -45,7 +45,7 @@ namespace NewEssentials.Commands.Stats
             }
             else
             {
-                string nestedPermission = "rep.give";
+                string nestedPermission = "give";
                 if (await CheckPermissionAsync(nestedPermission) == PermissionGrantResult.Deny)
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 
