@@ -24,7 +24,7 @@ namespace NewEssentials.Players
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class AfkChecker : IAfkChecker, IAsyncDisposable
     {
-        private readonly IEventBus m_EventEventBus;
+        private readonly IEventBus m_EventBus;
         private readonly IUserManager m_UserManager;
         private readonly IPermissionChecker m_PermissionChecker;
         private IStringLocalizer m_StringLocalizer;
@@ -35,7 +35,7 @@ namespace NewEssentials.Players
 
         public AfkChecker(IEventBus eventBus, IRuntime runtime, IUserManager users, IPermissionChecker permissionChecker)
         {
-            m_EventEventBus = eventBus;
+            m_EventBus = eventBus;
             m_UserManager = users;
             m_PermissionChecker = permissionChecker;
             m_ServiceRunning = true;
@@ -43,7 +43,7 @@ namespace NewEssentials.Players
             if (Level.isLoaded)
                 GetCurrentPlayers();
             
-            m_EventEventBus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
+            m_EventBus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
 
             AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
         }

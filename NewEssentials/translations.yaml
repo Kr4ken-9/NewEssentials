@@ -138,3 +138,6 @@ god:
 tphere:
   successful_tp: "{Player} has been tped to you"
   successful_tp_other: "You were teleported to {Player}"
+more:
+  none: "You are not holding an item."
+  success: "Spawned {Amount} of {Item}."
