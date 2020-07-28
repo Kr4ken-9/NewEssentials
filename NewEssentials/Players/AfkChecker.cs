@@ -107,7 +107,9 @@ namespace NewEssentials.Players
 
         private async Task PlayerJoin(UserConnectedEvent @event)
         {
-            UnturnedUser newUser = (UnturnedUser) @event.User;
+            if (!(@event.User is UnturnedUser newUser))
+                return;
+            
             newUser.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
 
             PlayerMovementCheckerComponent component = newUser.Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();

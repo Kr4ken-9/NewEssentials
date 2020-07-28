@@ -38,15 +38,22 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
             }
 
-            IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, Context.Parameters[0], UserSearchMode.Name);
-            if (user == null)
+            string searchTerm = Context.Parameters[0];
+            IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.Name);
+            if (user == null || !(Context.Actor is UnturnedUser uPlayer))
             {
-                await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = Context.Parameters[0] }]);
+                await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
                 return;
             }
 
-            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
-            Player tpPlayer = (user as UnturnedUser).Player;
+            // Player is offline
+            if (!Provider.clients.Any(x => x.playerID.steamID == uPlayer.SteamId))
+            {
+                await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
+                return;
+            }
+
+            Player tpPlayer = uPlayer.Player;
             await tpPlayer.TeleportToLocationAsync(uPlayer.Player.transform.position);
             
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new { Player = user.DisplayName }]);
