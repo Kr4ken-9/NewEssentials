@@ -110,10 +110,13 @@ namespace NewEssentials.Extensions
             }
         }
 
-        public static async UniTask<bool> TeleportToLocationAsync(this Player player, Vector3 position)
+        public static async UniTask<bool> TeleportToLocationAsync(this Player player, Vector3 position) =>
+            await TeleportToLocationAsync(player, position, player.transform.eulerAngles.y);
+
+        public static async UniTask<bool> TeleportToLocationAsync(this Player player, Vector3 position, float yaw)
         {
             await UniTask.SwitchToMainThread();
-            return player.teleportToLocation(position, player.transform.eulerAngles.y);
+            return player.teleportToLocation(position, yaw);
         }
 
         public static async UniTask TeleportToLocationUnsafeAsync(this Player player, Vector3 position)

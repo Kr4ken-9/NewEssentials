@@ -141,3 +141,21 @@ tphere:
 more:
   none: "You are not holding an item."
   success: "Spawned {Amount} of {Item}."
+pvp:
+  enabled: "PVP is now enabled."
+  disabled: "PVP is now disabled."
+investigate:
+  success: "SteamID of {Player} is: {ID}"
+  success_object: "The owner of the object you are looking at is: {ID}"
+  no_object: "You are not looking at an object."
+  no_owner: "The object you are looking at has no owner."
+compass:
+  north: "You are facing North."
+  northeast: "You are facing North East."
+  east: "You are facing East."
+  southeast: "You are facing South East."
+  south: "You are facing South."
+  southwest: "You are facing South West."
+  west: "You are facing West."
+  northwest: "You are facing North West."
+  unknown: "You are an alien. Where the fuck are you?"
