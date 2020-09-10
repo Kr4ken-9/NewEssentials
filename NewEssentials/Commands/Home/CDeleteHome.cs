@@ -49,7 +49,7 @@ namespace NewEssentials.Commands.Home
             homes.Remove(homeName);
             userData.Data["homes"] = homes;
 
-            await m_UserDataStore.SaveUserDataAsync(userData);
+            await m_UserDataStore.SetUserDataAsync(userData);
             await uPlayer.PrintMessageAsync(m_StringLocalizer["home:delete", new {Home = homeName}]);
         }
     }

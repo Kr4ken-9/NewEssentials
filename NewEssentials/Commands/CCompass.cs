@@ -36,7 +36,7 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            float direction = uPlayer.Player.transform.eulerAngles.y;
+            float direction = uPlayer.Player.Player.transform.eulerAngles.y;
             string directionName;
 
             //TODO: Teleporting breaks direction name for some reason
@@ -55,7 +55,7 @@ namespace NewEssentials.Commands
                     _ => throw new CommandWrongUsageException(Context)
                 };
 
-                await uPlayer.Player.TeleportToLocationAsync(uPlayer.Player.transform.position, direction);
+                await uPlayer.Player.Player.TeleportToLocationAsync(uPlayer.Player.Player.transform.position, direction);
             }
 
             directionName = direction switch

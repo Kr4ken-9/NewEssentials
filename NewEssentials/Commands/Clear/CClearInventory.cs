@@ -37,7 +37,7 @@ namespace NewEssentials.Commands.Clear
                 UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
                 
                 await UniTask.SwitchToMainThread();
-                uPlayer.Player.ClearInventory();
+                uPlayer.Player.Player.ClearInventory();
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["clear:inventory"]);
             }
             else

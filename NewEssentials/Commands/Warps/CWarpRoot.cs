@@ -41,8 +41,8 @@ namespace NewEssentials.Commands.Warps
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             await UniTask.SwitchToMainThread();
 
-            uPlayer.Player.teleportToLocation(warpsData.Warps[searchTerm].ToUnityVector3(),
-                uPlayer.Player.transform.eulerAngles.y);
+            uPlayer.Player.Player.teleportToLocation(warpsData.Warps[searchTerm].ToUnityVector3(),
+                uPlayer.Player.Player.transform.eulerAngles.y);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["warps:success", new {Warp = searchTerm}]);
         }

@@ -16,6 +16,7 @@ using OpenMod.Core.Helpers;
 using OpenMod.Core.Users;
 using OpenMod.Core.Users.Events;
 using OpenMod.Unturned.Users;
+using OpenMod.Unturned.Users.Events;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -42,8 +43,8 @@ namespace NewEssentials.Players
 
             if (Level.isLoaded)
                 GetCurrentPlayers();
-            
-            m_EventBus.Subscribe<UserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
+
+            m_EventBus.Subscribe<UnturnedUserConnectedEvent>(runtime, (provider, sender, @event) => PlayerJoin(@event));
 
             AsyncHelper.Schedule("NewEssentials::AfkChecker", async () => await CheckAfkPlayers());
         }
@@ -56,7 +57,7 @@ namespace NewEssentials.Players
             m_KickAFK = kickAFK;
 
             if (m_Timeout < 0)
-                DisposeAsync();
+                AsyncHelper.RunSync(async () => await DisposeAsync());
         }
 
         private async UniTask CheckAfkPlayers()
@@ -66,13 +67,13 @@ namespace NewEssentials.Players
                 await UniTask.Delay(10000);
 
                 var users = await m_UserManager.GetUsersAsync(KnownActorTypes.Player);
-                
+
                 foreach (var user in users)
                 {
                     if (!(user is UnturnedUser unturnedUser))
                         continue;
 
-                    bool afk = (DateTime.Now.TimeOfDay - (TimeSpan) user.Session.SessionData["lastMovement"])
+                    bool afk = (DateTime.Now.TimeOfDay - (TimeSpan)user.Session.SessionData["lastMovement"])
                                 .TotalSeconds >=
                                 m_Timeout &&
                                 await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") !=
@@ -82,10 +83,10 @@ namespace NewEssentials.Players
                         continue;
 
                     if (m_AnnounceAFK)
-                        await Announce(m_StringLocalizer["afk:announcement", new {Player = unturnedUser.DisplayName}], Color.white);
-                    
+                        await Announce(m_StringLocalizer["afk:announcement", new { Player = unturnedUser.DisplayName }], Color.white);
+
                     if (m_KickAFK)
-                        await unturnedUser.Player.KickAsync(m_StringLocalizer["afk:kicked"]);
+                        await unturnedUser.Player.Player.KickAsync(m_StringLocalizer["afk:kicked"]);
                 }
             }
         }
@@ -95,9 +96,9 @@ namespace NewEssentials.Players
             await UniTask.SwitchToMainThread();
             ChatManager.serverSendMessage(text, color);
         }
-        
+
         #region Dictionary Population
-        
+
         private async Task GetCurrentPlayers()
         {
             foreach (var user in (await m_UserManager.GetUsersAsync(KnownActorTypes.Player)).Cast<UnturnedUser>())
@@ -105,18 +106,15 @@ namespace NewEssentials.Players
                     user.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
         }
 
-        private async Task PlayerJoin(UserConnectedEvent @event)
+        private async Task PlayerJoin(UnturnedUserConnectedEvent @event)
         {
-            if (!(@event.User is UnturnedUser newUser))
-                return;
-            
-            newUser.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
+            await UniTask.SwitchToMainThread();
+            @event.User.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
 
-            PlayerMovementCheckerComponent component = newUser.Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();
-            component.Resolve(newUser);
-
+            PlayerMovementCheckerComponent component = @event.User.Player.Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();
+            component.Resolve(@event.User);
         }
-        
+
         #endregion
 
         public async ValueTask DisposeAsync()

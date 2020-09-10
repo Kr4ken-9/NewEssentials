@@ -35,13 +35,13 @@ namespace NewEssentials.Commands.Movement
             await UniTask.SwitchToMainThread();
             
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            Transform aim = uPlayer.Player.look.aim;
+            Transform aim = uPlayer.Player.Player.look.aim;
             
             if (!PhysicsUtility.raycast(new Ray(aim.position, aim.forward), out RaycastHit hit, 1024f,
                 COLLISION_NO_SKY))
                 throw new UserFriendlyException(m_StringLocalizer["jump:none"]);
 
-            await uPlayer.Player.TeleportToLocationUnsafeAsync(hit.point + new Vector3(0f, 2f, 0f));
+            await uPlayer.Player.Player.TeleportToLocationUnsafeAsync(hit.point + new Vector3(0f, 2f, 0f));
             await uPlayer.PrintMessageAsync(m_StringLocalizer["jump:success"]);
         }
     }

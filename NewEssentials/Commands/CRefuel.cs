@@ -30,7 +30,7 @@ namespace NewEssentials.Commands
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             await UniTask.SwitchToMainThread();
 
-            var currentVehicle = uPlayer.Player.movement.getVehicle();
+            var currentVehicle = uPlayer.Player.Player.movement.getVehicle();
             if (currentVehicle != null)
             {
                 if (!RefuelVehicle(currentVehicle))
@@ -40,7 +40,7 @@ namespace NewEssentials.Commands
                 return;
             }
             
-            PlayerLook look = uPlayer.Player.look;
+            PlayerLook look = uPlayer.Player.Player.look;
             RaycastInfo raycast = DamageTool.raycast(new Ray(look.aim.position, look.aim.forward),
                 100f, RayMasks.VEHICLE | RayMasks.BARRICADE);
 

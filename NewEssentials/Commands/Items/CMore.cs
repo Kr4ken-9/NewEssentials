@@ -33,7 +33,7 @@ namespace NewEssentials.Commands.Items
                 amount = await Context.Parameters.GetAsync<int>(0);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            PlayerEquipment equipment = uPlayer.Player.equipment;
+            PlayerEquipment equipment = uPlayer.Player.Player.equipment;
 
             if (equipment.itemID == 0)
                 throw new UserFriendlyException(m_StringLocalizer["more:none"]);
@@ -42,7 +42,7 @@ namespace NewEssentials.Commands.Items
 
             await UniTask.SwitchToMainThread();
             for(int i = 0; i < amount; i++)
-                uPlayer.Player.inventory.forceAddItem(item, true);
+                uPlayer.Player.Player.inventory.forceAddItem(item, true);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["more:success",
                 new {Amount = amount, Item = equipment.asset.itemName}]);

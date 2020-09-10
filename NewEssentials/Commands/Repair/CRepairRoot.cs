@@ -27,7 +27,7 @@ namespace NewEssentials.Commands.Repair
                 throw new CommandWrongUsageException(Context);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            PlayerInventory inventory = uPlayer.Player.inventory;
+            PlayerInventory inventory = uPlayer.Player.Player.inventory;
 
             await UniTask.SwitchToMainThread();
             foreach (SDG.Unturned.Items itemContainer in inventory.items)

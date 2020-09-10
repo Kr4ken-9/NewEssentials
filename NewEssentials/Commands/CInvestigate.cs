@@ -37,7 +37,7 @@ namespace NewEssentials.Commands
             {
                 string searchTerm = Context.Parameters[0];
                 IUser potentialUser =
-                    await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.NameOrId);
+                    await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByNameOrId);
 
                 if (potentialUser == null)
                     throw new UserFriendlyException(m_StringLocalizer["general:invalid_player",
@@ -52,7 +52,7 @@ namespace NewEssentials.Commands
             if (!(Context.Actor is UnturnedUser uPlayer))
                 throw new CommandWrongUsageException(Context);
 
-            PlayerLook look = uPlayer.Player.look;
+            PlayerLook look = uPlayer.Player.Player.look;
             RaycastInfo raycast = DamageTool.raycast(new Ray(look.aim.position, look.aim.forward), 256f,
                 RayMasks.DAMAGE_SERVER);
 

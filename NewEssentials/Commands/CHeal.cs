@@ -31,7 +31,7 @@ namespace NewEssentials.Commands
             {
                 UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
 
-                uPlayer.Player.life.askHeal(100, true, true);
+                uPlayer.Player.Player.life.askHeal(100, true, true);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["heal:success"]);
             }
             else

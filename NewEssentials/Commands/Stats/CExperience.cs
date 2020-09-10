@@ -39,7 +39,7 @@ namespace NewEssentials.Commands.Stats
                 UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
 
                 await UniTask.SwitchToMainThread();
-                uPlayer.Player.skills.askAward(additionalExperience);
+                uPlayer.Player.Player.skills.askAward(additionalExperience);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["experience:success", new {Experience = additionalExperience.ToString()}]);
             }
             else

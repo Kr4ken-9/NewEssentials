@@ -31,11 +31,11 @@ namespace NewEssentials.Commands.Movement
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             
             //TODO: throw UserFriendlyException on bad input
-            Vector3 newPosition = uPlayer.Player.transform.position;
+            Vector3 newPosition = uPlayer.Player.Player.transform.position;
             float upDistance = Context.Parameters.Length == 0 ? 10f : await Context.Parameters.GetAsync<float>(0);
             newPosition.y += upDistance;
 
-            await uPlayer.Player.TeleportToLocationUnsafeAsync(newPosition);
+            await uPlayer.Player.Player.TeleportToLocationUnsafeAsync(newPosition);
             await uPlayer.PrintMessageAsync(m_StringLocalizer["ascend:success",
                 new {Distance = upDistance.ToString()}]);
         }

@@ -49,7 +49,7 @@ namespace NewEssentials.Commands.Items
 
             await UniTask.SwitchToMainThread();
             for (byte b = 0; b < amount; b++)
-                uPlayer.Player.inventory.forceAddItem(item, true);
+                uPlayer.Player.Player.inventory.forceAddItem(item, true);
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = itemAsset.itemName }]);
         }

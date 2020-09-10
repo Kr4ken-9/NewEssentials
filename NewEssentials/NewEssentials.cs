@@ -92,7 +92,7 @@ namespace NewEssentials
         {
             var userData = await m_UserDataStore.GetUserDataAsync(sender.player.channel.owner.playerID.steamID.ToString(), "player");
             userData.Data["deathLocation"] = sender.transform.position.ToSerializableVector3();
-            await m_UserDataStore.SaveUserDataAsync(userData);
+            await m_UserDataStore.SetUserDataAsync(userData);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace NewEssentials.Commands
             }
 
             string searchTerm = Context.Parameters[0];
-            IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.Name);
+            IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByName);
             if (user == null || !(Context.Actor is UnturnedUser uPlayer))
             {
                 await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
@@ -47,14 +47,14 @@ namespace NewEssentials.Commands
             }
 
             // Player is offline
-            if (!Provider.clients.Any(x => x.playerID.steamID == uPlayer.SteamId))
+            if (Provider.clients.All(x => x.playerID.steamID != uPlayer.SteamId))
             {
                 await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
                 return;
             }
 
-            Player tpPlayer = uPlayer.Player;
-            await tpPlayer.TeleportToLocationAsync(uPlayer.Player.transform.position);
+            Player tpPlayer = uPlayer.Player.Player;
+            await tpPlayer.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);
             
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new { Player = user.DisplayName }]);
             await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = uPlayer.DisplayName}]);

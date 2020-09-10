@@ -37,7 +37,7 @@ namespace NewEssentials.Commands.Home
             if (Context.Parameters.Length == 0)
             {
                 await UniTask.SwitchToMainThread();
-                if (uPlayer.Player.teleportToBed())
+                if (uPlayer.Player.Player.teleportToBed())
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = "bed"}]);
                 else
                     throw new UserFriendlyException(m_StringLocalizer["home:no_bed"]);
@@ -56,7 +56,7 @@ namespace NewEssentials.Commands.Home
 
                 SerializableVector3 home = SerializableVector3.GetSerializableVector3FromUserData(homes, homeName);
 
-                if (await uPlayer.Player.TeleportToLocationAsync(home.ToUnityVector3()))
+                if (await uPlayer.Player.Player.TeleportToLocationAsync(home.ToUnityVector3()))
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = homeName}]);
                 else
                     throw new UserFriendlyException(m_StringLocalizer["home:failure", new {Home = homeName}]);

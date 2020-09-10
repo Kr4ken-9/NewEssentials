@@ -41,7 +41,7 @@ namespace NewEssentials.Commands.Warps
                 throw new UserFriendlyException(m_StringLocalizer["warps:set:exists", new {Warp = newWarpName}]);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            var newWarpLocation = uPlayer.Player.transform.position.ToSerializableVector3();
+            var newWarpLocation = uPlayer.Player.Player.transform.position.ToSerializableVector3();
             
             warpData.Warps.Add(newWarpName, newWarpLocation);
             await m_DataStore.SaveAsync(WarpsKey, warpData);

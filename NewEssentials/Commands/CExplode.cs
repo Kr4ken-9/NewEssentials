@@ -50,7 +50,7 @@ namespace NewEssentials.Commands
             }
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            Transform aim = uPlayer.Player.look.aim;
+            Transform aim = uPlayer.Player.Player.look.aim;
             if (!PhysicsUtility.raycast(new Ray(aim.position, aim.forward), out RaycastHit hit, 512f,
                 RayMasks.DAMAGE_SERVER))
                 throw new UserFriendlyException(m_StringLocalizer["explode:failure"]);

@@ -28,7 +28,7 @@ namespace NewEssentials.Commands.Movement
 
             await UniTask.SwitchToMainThread();
             UnturnedUser user = (UnturnedUser) Context.Actor;
-            Vector3 position = user.Player.transform.position;
+            Vector3 position = user.Player.Player.transform.position;
 
             await user.PrintMessageAsync(m_StringLocalizer["position",
                 new {X = position.x, Y = position.y, Z = position.z}]);

@@ -40,7 +40,7 @@ namespace NewEssentials.Commands
                     throw new CommandWrongUsageException("Could not find player");
             }
             else if (Context.Parameters.Length == 1)
-                target = ((UnturnedUser) Context.Actor).Player;
+                target = ((UnturnedUser) Context.Actor).Player.Player;
             else
                 throw new CommandWrongUsageException("Unexpected amount of parameters");
 

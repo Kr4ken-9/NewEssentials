@@ -64,7 +64,7 @@ namespace NewEssentials.Commands.TPA
                     throw new UserFriendlyException("This is a placeholder so that we can reassure the compiler that requester will never be null.");
             }
 
-            await requester.player.TeleportToLocationAsync(uPlayer.Player.transform.position);
+            await requester.player.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accepted_self",
                 new { Requester = requester.playerID.characterName }]);

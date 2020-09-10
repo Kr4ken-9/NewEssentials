@@ -35,7 +35,7 @@ namespace NewEssentials.Commands.Vehicles
                     new {Vehicle = vehicleSearchTerm}]);
 
             await UniTask.SwitchToMainThread();
-            if (VehicleTool.giveVehicle(((UnturnedUser) Context.Actor).Player, vehicle.id))
+            if (VehicleTool.giveVehicle(((UnturnedUser) Context.Actor).Player.Player, vehicle.id))
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["vehicle:success",
                     new {Vehicle = vehicle.vehicleName}]);
             else

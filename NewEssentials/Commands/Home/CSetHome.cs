@@ -41,19 +41,19 @@ namespace NewEssentials.Commands.Home
             var homes = (Dictionary<object, object>) userData.Data["homes"];
             if (Context.Parameters.Length == 0)
             {
-                homes["home"] = uPlayer.Player.transform.position.ToSerializableVector3();
+                homes["home"] = uPlayer.Player.Player.transform.position.ToSerializableVector3();
                 userData.Data["homes"] = homes;
 
-                await m_UserDataStore.SaveUserDataAsync(userData);
+                await m_UserDataStore.SetUserDataAsync(userData);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["home:set", new {Home = "home"}]);
             }
             else
             {
                 string home = Context.Parameters[0];
-                homes[home] = uPlayer.Player.transform.position.ToSerializableVector3();
+                homes[home] = uPlayer.Player.Player.transform.position.ToSerializableVector3();
                 userData.Data["homes"] = homes;
 
-                await m_UserDataStore.SaveUserDataAsync(userData);
+                await m_UserDataStore.SetUserDataAsync(userData);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["home:set", new {Home = home}]);
             }
         }

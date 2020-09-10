@@ -40,7 +40,7 @@ namespace NewEssentials.Commands.Stats
                 UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
 
                 await UniTask.SwitchToMainThread();
-                uPlayer.Player.skills.askRep(additionReputation);
+                uPlayer.Player.Player.skills.askRep(additionReputation);
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["reputation:success", new {Reputation = additionReputation.ToString()}]);
             }
             else

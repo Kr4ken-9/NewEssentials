@@ -36,8 +36,8 @@ namespace NewEssentials.Commands.Movement
                 if (!(Context.Actor is UnturnedUser uPlayer))
                     throw new CommandWrongUsageException(Context);
 
-                movement = uPlayer.Player.movement;
-                look = uPlayer.Player.look;
+                movement = uPlayer.Player.Player.movement;
+                look = uPlayer.Player.Player.look;
                 vanished = !movement.canAddSimulationResultsToUpdates;
                 if (vanished)
                 {
@@ -49,7 +49,7 @@ namespace NewEssentials.Commands.Movement
                     await uPlayer.PrintMessageAsync(m_StringLocalizer["vanish:vanished"]);
                 }
 
-                uPlayer.Player.movement.canAddSimulationResultsToUpdates = vanished;
+                uPlayer.Player.Player.movement.canAddSimulationResultsToUpdates = vanished;
                 return;
             }
 

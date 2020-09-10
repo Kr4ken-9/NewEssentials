@@ -42,7 +42,7 @@ namespace NewEssentials.Commands.Movement
                 SerializableVector3.GetSerializableVector3FromUserData(
                     (Dictionary<object, object>) userData.Data["deathLocation"]);
 
-            await uPlayer.Player.TeleportToLocationAsync(backLocation.ToUnityVector3());
+            await uPlayer.Player.Player.TeleportToLocationAsync(backLocation.ToUnityVector3());
             await uPlayer.PrintMessageAsync(m_StringLocalizer["back:success"]);
         }
     }
