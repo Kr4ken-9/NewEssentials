@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.Players;
+using OpenMod.API.Eventing;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
-using SDG.Unturned;
+using OpenMod.Unturned.Players.Life.Events;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NewEssentials.Players
 {
-    [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
-    public class GodManager : IGodManager, IAsyncDisposable
+    [PluginServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
+    public class GodManager : IGodManager
     {
         private readonly HashSet<ulong> m_Gods;
         
         //TODO: Add some harmony patches to prevent all damage e.g infection/dehydration/suffocation since Nelly selectively uses this event
-        public GodManager()
+        public GodManager(NewEssentials plugin,
+            IEventBus eventBus)
         {
             m_Gods = new HashSet<ulong>();
-            DamageTool.damagePlayerRequested += onDamagePlayerRequested;
+
+            eventBus.Subscribe(plugin, (EventCallback<UnturnedPlayerDamagingEvent>)OnPlayerDamaging);
         }
 
         public bool ToggleGod(ulong steamID)
@@ -33,15 +36,12 @@ namespace NewEssentials.Players
             return true;
         }
 
-        private void onDamagePlayerRequested(ref DamagePlayerParameters parameters, ref bool shouldAllow)
+        private Task OnPlayerDamaging(IServiceProvider serviceProvider, object sender, UnturnedPlayerDamagingEvent @event)
         {
-            if (m_Gods.Contains(parameters.player.channel.owner.playerID.steamID.m_SteamID))
-                shouldAllow = false;
-        }
+            if (m_Gods.Contains(@event.Killer.m_SteamID))
+                @event.IsCancelled = true;
 
-        public async ValueTask DisposeAsync()
-        {
-            DamageTool.damagePlayerRequested -= onDamagePlayerRequested;
+            return Task.CompletedTask;
         }
     }
 }

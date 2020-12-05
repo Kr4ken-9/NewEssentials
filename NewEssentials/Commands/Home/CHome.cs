@@ -13,7 +13,7 @@ using OpenMod.Unturned.Users;
 namespace NewEssentials.Commands.Home
 {
     [Command("home")]
-    [CommandDescription("Teleport to your bed or one set with /sethome")]
+    [CommandDescription("Teleport to your bed or one set with /home set")]
     [CommandSyntax("<name>")]
     [CommandActor(typeof(UnturnedUser))]
     public class CHome : UnturnedCommand

@@ -53,8 +53,10 @@ namespace NewEssentials.Commands
                 return;
             }
 
-            Player tpPlayer = uPlayer.Player.Player;
-            await tpPlayer.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);
+            var callingPlayer = (UnturnedUser) Context.Actor;
+            var position = callingPlayer.Player.Transform.Position;
+
+            await uPlayer.Player.SetPositionAsync(position);
             
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new { Player = user.DisplayName }]);
             await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = uPlayer.DisplayName}]);
