@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.Players;
-using OpenMod.API;
 using OpenMod.API.Eventing;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
@@ -11,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace NewEssentials.Players
 {
-    [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
+    [PluginServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class GodManager : IGodManager
     {
         private readonly HashSet<ulong> m_Gods;
         
         //TODO: Add some harmony patches to prevent all damage e.g infection/dehydration/suffocation since Nelly selectively uses this event
-        public GodManager(IRuntime runtime,
+        public GodManager(NewEssentials plugin,
             IEventBus eventBus)
         {
             m_Gods = new HashSet<ulong>();
 
-            eventBus.Subscribe(runtime, (EventCallback<UnturnedPlayerDamagingEvent>)OnPlayerDamaging);
+            eventBus.Subscribe(plugin, (EventCallback<UnturnedPlayerDamagingEvent>)OnPlayerDamaging);
         }
 
         public bool ToggleGod(ulong steamID)
