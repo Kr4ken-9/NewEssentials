@@ -1,11 +1,11 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
+using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using System;
 
 namespace NewEssentials.Commands
 {
@@ -31,7 +31,14 @@ namespace NewEssentials.Commands
             {
                 UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
 
-                uPlayer.Player.Player.life.askHeal(100, true, true);
+                var life = uPlayer.Player.Player.life;
+
+                life.askHeal(100, true, true);
+                life.serverModifyFood(100);
+                life.serverModifyWater(100);
+                life.serverModifyStamina(100);
+                life.serverModifyVirus(100);
+
                 await uPlayer.PrintMessageAsync(m_StringLocalizer["heal:success"]);
             }
             else
