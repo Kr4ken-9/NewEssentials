@@ -31,6 +31,7 @@ namespace NewEssentials
         private readonly IPermissionRegistry m_PermissionRegistry;
 
         private const string WarpsKey = "warps";
+        private const string KitsKey = "kits";
 
         public NewEssentials(IStringLocalizer stringLocalizer,
             IConfiguration configuration,
@@ -65,6 +66,14 @@ namespace NewEssentials
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData
                 {
                     Warps = new Dictionary<string, SerializableVector3>()
+                });
+            }
+
+            if (!await m_DataStore.ExistsAsync(KitsKey))
+            {
+                await m_DataStore.SaveAsync(KitsKey, new KitsData
+                {
+                    Kits = new Dictionary<string, ushort[]>()
                 });
             }
 
