@@ -5,6 +5,8 @@ general:
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"
+  none: "There are no kits available to you."
+  list: "Kits: {List}"
 commands:
   failed_player: "Could not find player : {Player}"
   failed_players: "Could not find players: {Players}"

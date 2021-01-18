@@ -76,6 +76,14 @@ namespace NewEssentials
                     Kits = new Dictionary<string, ushort[]>()
                 });
             }
+            else
+            {
+                foreach(var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
+                {
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}");
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}");
+                }
+            }
 
             m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
             
