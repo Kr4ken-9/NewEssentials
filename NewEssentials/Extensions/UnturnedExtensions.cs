@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using NewEssentials.Models;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;
@@ -9,6 +11,34 @@ namespace NewEssentials.Extensions
     public static class UnturnedExtensions
     {
         private static readonly byte[] PlaceholderArray = Array.Empty<byte>();
+
+        public static SerializableItem[] ToSerializableItems(this PlayerClothing clothing)
+        {
+            var serializableItems = new List<SerializableItem>();
+            
+            if (clothing.hat != 0)
+                serializableItems.Add(new SerializableItem(clothing.hat.ToString(), clothing.hatState, 1, 100, clothing.hatQuality));
+
+            if (clothing.glasses != 0)
+                serializableItems.Add(new SerializableItem(clothing.glasses.ToString(), clothing.glassesState, 1, 100, clothing.glassesQuality));
+
+            if (clothing.mask != 0)
+                serializableItems.Add(new SerializableItem(clothing.mask.ToString(), clothing.maskState, 1, 100, clothing.maskQuality));
+
+            if (clothing.shirt != 0)
+                serializableItems.Add(new SerializableItem(clothing.shirt.ToString(), clothing.shirtState, 1, 100, clothing.shirtQuality));
+
+            if (clothing.vest != 0)
+                serializableItems.Add(new SerializableItem(clothing.vest.ToString(), clothing.vestState, 1, 100, clothing.vestQuality));
+
+            if (clothing.backpack != 0)
+                serializableItems.Add(new SerializableItem(clothing.backpack.ToString(), clothing.backpackState, 1, 100, clothing.backpackQuality));
+
+            if (clothing.pants != 0)
+                serializableItems.Add(new SerializableItem(clothing.pants.ToString(), clothing.pantsState, 1, 100, clothing.pantsQuality));
+
+            return serializableItems.ToArray();
+        }
         
         public static async UniTask MaxAllSkillsAsync(this PlayerSkills playerSkills, bool kunii = false)
         {
