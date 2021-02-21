@@ -43,7 +43,7 @@ namespace NewEssentials.Commands.Kits
 
                 // Remove trailing ", "
                 kitsBuilder.Remove(kitsBuilder.Length - 2, 2);
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:kits", new {List = kitsBuilder.ToString()}]);
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:list", new {List = kitsBuilder.ToString()}]);
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace NewEssentials.Commands.Kits
             
             // Remove trailing ", "
             kitsBuilder.Remove(kitsBuilder.Length - 2, 2);
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:kits", new {List = kitsBuilder.ToString()}]);
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:list", new {List = kitsBuilder.ToString()}]);
         }
     }
 }

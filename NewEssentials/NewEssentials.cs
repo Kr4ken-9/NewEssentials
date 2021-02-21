@@ -109,5 +109,11 @@ namespace NewEssentials
             userData.Data["deathLocation"] = sender.transform.position.ToSerializableVector3();
             await m_UserDataStore.SetUserDataAsync(userData);
         }
+
+        public void RegisterNewKitPermission(string kitName)
+        {
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitName}");
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitName}");
+        }
     }
 }

@@ -8,6 +8,7 @@ using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
+using OpenMod.API.Plugins;
 using OpenMod.Core.Commands;
 using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
@@ -24,12 +25,17 @@ namespace NewEssentials.Commands.Kits
     {
         private readonly IDataStore m_DataStore;
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IPluginAccessor<NewEssentials> m_PluginAccessor;
         private const string KitsKey = "kits";
 
-        public CKitCreate(IDataStore dataStore, IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CKitCreate(IDataStore dataStore,
+            IStringLocalizer stringLocalizer,
+            IPluginAccessor<NewEssentials> pluginAccessor,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_DataStore = dataStore;
             m_StringLocalizer = stringLocalizer;
+            m_PluginAccessor = pluginAccessor;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -74,6 +80,7 @@ namespace NewEssentials.Commands.Kits
             
             kitsData.Kits.Add(kitName, new SerializableKit(serializableItems.ToArray(), kitCooldown));
             await m_DataStore.SaveAsync(KitsKey, kitsData);
+            m_PluginAccessor.Instance.RegisterNewKitPermission(kitName);
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:create:success", new {Kit = kitName}]);
         }

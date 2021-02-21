@@ -68,7 +68,7 @@ namespace NewEssentials.Commands.Kits
 
             if (recipient == null)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[1]}]);
-
+            
             SerializableKit kit = kitsData.Kits[kitName];
             foreach (var item in kit.SerializableItems)
             {
