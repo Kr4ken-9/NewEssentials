@@ -45,6 +45,8 @@ namespace NewEssentials.Commands.Kits
                 throw new UserFriendlyException(m_StringLocalizer["kits:create:exists", new {Kit = kitName}]);
 
             var unturnedUser = Context.Actor as UnturnedUser;
+            
+            // Player clothes are not included in inventory, so we need to collect them manually
             SerializableItem[] serializableClothes = unturnedUser.Player.Player.clothing.ToSerializableItems();
             
             // IInventoryPage separates items into pages (basically categories) including equipped items
@@ -56,6 +58,8 @@ namespace NewEssentials.Commands.Kits
             // Since we are checking the length and then later enumerating again this will prevent "multiple enumeration"
             // https://www.jetbrains.com/help/rider/PossibleMultipleEnumeration.html
             var serializableItems = new List<SerializableItem>();
+            
+            // By adding the clothes first, the player will receive them first and equip them
             serializableItems.AddRange(serializableClothes);
 
             serializableItems.AddRange(items.Select(item => new SerializableItem(

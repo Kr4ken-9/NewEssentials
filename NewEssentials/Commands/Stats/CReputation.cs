@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Core.Permissions;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -15,6 +16,7 @@ namespace NewEssentials.Commands.Stats
     [CommandAlias("rep")]
     [CommandDescription("Give yourself or another player reputation (can be negative)")]
     [CommandSyntax("<amount> [player]")]
+    [RegisterCommandPermission("give", Description = "Give reputation to players")]
     public class CReputation : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;

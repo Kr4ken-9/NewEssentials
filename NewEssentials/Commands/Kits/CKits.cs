@@ -3,6 +3,7 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
+using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.Core.Commands;
@@ -32,10 +33,7 @@ namespace NewEssentials.Commands.Kits
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
 
             if (kitsData.Kits.Count == 0)
-            {
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:none"]);
-                return;
-            }
+                throw new UserFriendlyException(m_StringLocalizer["kits:none"]);
 
             StringBuilder kitsBuilder = new StringBuilder();
             if (Context.Actor.Type == KnownActorTypes.Console)
@@ -59,6 +57,9 @@ namespace NewEssentials.Commands.Kits
                     kitsBuilder.Append($"{pair.Key}, ");
                 }
             }
+
+            if (kitsBuilder.Length == 0)
+                throw new UserFriendlyException(m_StringLocalizer["kits:none"]);
             
             // Remove trailing ", "
             kitsBuilder.Remove(kitsBuilder.Length - 2, 2);

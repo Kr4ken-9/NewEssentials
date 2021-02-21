@@ -57,8 +57,6 @@ namespace NewEssentials
         {
             await UniTask.SwitchToThreadPool();
 
-            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players");
-            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players");
             m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk");
 
             if (!await m_DataStore.ExistsAsync(WarpsKey))

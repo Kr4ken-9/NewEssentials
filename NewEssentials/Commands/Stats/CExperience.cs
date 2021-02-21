@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
+using OpenMod.Core.Permissions;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -15,6 +16,7 @@ namespace NewEssentials.Commands.Stats
     [CommandAlias("exp")]
     [CommandDescription("Give yourself or another player experience (must be positive)")]
     [CommandSyntax("<amount> [player]")]
+    [RegisterCommandPermission("give", Description = "Give experience to players")]
     public class CExperience : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
