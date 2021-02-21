@@ -7,6 +7,9 @@ kits:
   disabled: "New Essentials kits are disabled"
   none: "There are no kits available to you."
   list: "Kits: {List}"
+  create:
+    exists: "{Kit} already exists. To update this kit, use /kit update."
+    none: "You must have items in your inventory to create a kit."
 commands:
   failed_player: "Could not find player : {Player}"
   failed_players: "Could not find players: {Players}"

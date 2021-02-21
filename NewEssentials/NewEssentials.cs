@@ -73,7 +73,7 @@ namespace NewEssentials
             {
                 await m_DataStore.SaveAsync(KitsKey, new KitsData
                 {
-                    Kits = new Dictionary<string, ushort[]>()
+                    Kits = new Dictionary<string, SerializableItem>()
                 });
             }
             else

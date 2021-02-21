@@ -6,6 +6,6 @@ namespace NewEssentials.Models
     [Serializable]
     public class KitsData
     {
-        public Dictionary<string, ushort[]> Kits { get; set; }
+        public Dictionary<string, SerializableItem> Kits { get; set; }
     }
 }

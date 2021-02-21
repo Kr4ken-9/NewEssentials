@@ -5,11 +5,14 @@ using Microsoft.Extensions.Localization;
 using NewEssentials.Models;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
+using OpenMod.Core.Commands;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 
 namespace NewEssentials.Commands.Kits
 {
+    [Command("kits")]
+    [CommandDescription("List the kits available to you")]
     public class CKits : UnturnedCommand
     {
         private readonly IDataStore m_DataStore;
