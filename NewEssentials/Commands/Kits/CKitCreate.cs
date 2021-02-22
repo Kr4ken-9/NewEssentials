@@ -46,7 +46,7 @@ namespace NewEssentials.Commands.Kits
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
 
             if (kitsData.Kits.ContainsKey(kitName))
-                throw new UserFriendlyException(m_StringLocalizer["kits:create:exists", new {Kit = kitName}]);
+                throw new UserFriendlyException(m_StringLocalizer["kits:spawn:none", new {Kit = kitName}]);
 
             var unturnedUser = Context.Actor as UnturnedUser;
             

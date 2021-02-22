@@ -7,8 +7,9 @@ kits:
   disabled: "New Essentials kits are disabled"
   none: "There are no kits available to you."
   list: "Kits: {List}"
+  removed: "{Kit} is no more."
   create:
-    exists: "{Kit} already exists. To update this kit, use /kit update."
+    exists: "{Kit} already exists. To update this kit, use /kit remove followed by /kit create."
     none: "You must have items in your inventory to create a kit."
     success: "Created kit: {Kit} with your current inventory."
   spawn:

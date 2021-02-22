@@ -18,6 +18,7 @@ namespace NewEssentials.Commands.Kits
     [Command("kit")]
     [CommandDescription("Spawn a kit for yourself or another user")]
     [CommandSyntax("<name> [user]")]
+    // TODO: This permission seems to default to grant, and there is an error with the DefaultGrant attribute
     [RegisterCommandPermission("cooldowns.exempt", Description = "Bypass any kit-related cooldowns")]
     public class CKitRoot : UnturnedCommand
     {
@@ -37,7 +38,6 @@ namespace NewEssentials.Commands.Kits
             m_UserDirectory = userDirectory;
         }
 
-        //TODO: Cooldowns
         protected override async UniTask OnExecuteAsync()
         {
             if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
