@@ -5,6 +5,20 @@ general:
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"
+  none: "There are no kits available to you."
+  list: "Kits: {List}"
+  removed: "{Kit} is no more."
+  create:
+    exists: "{Kit} already exists. To update this kit, use /kit remove followed by /kit create."
+    none: "You must have items in your inventory to create a kit."
+    success: "Created kit: {Kit} with your current inventory."
+  spawn:
+    none: "{Kit} is not a kit."
+    denied: "You do not have permission to spawn {Kit}."
+    success: "You have spawned {Kit} for {Player}."
+    cooldown: "You must wait {Time} seconds before you can use {Kit} again."
+  give:
+    denied: "You do not have permission to give players {Kit}."
 commands:
   failed_player: "Could not find player : {Player}"
   failed_players: "Could not find players: {Players}"

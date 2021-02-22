@@ -31,6 +31,7 @@ namespace NewEssentials
         private readonly IPermissionRegistry m_PermissionRegistry;
 
         private const string WarpsKey = "warps";
+        private const string KitsKey = "kits";
 
         public NewEssentials(IStringLocalizer stringLocalizer,
             IConfiguration configuration,
@@ -56,8 +57,6 @@ namespace NewEssentials
         {
             await UniTask.SwitchToThreadPool();
 
-            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players");
-            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players");
             m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk");
 
             if (!await m_DataStore.ExistsAsync(WarpsKey))
@@ -66,6 +65,22 @@ namespace NewEssentials
                 {
                     Warps = new Dictionary<string, SerializableVector3>()
                 });
+            }
+
+            if (!await m_DataStore.ExistsAsync(KitsKey))
+            {
+                await m_DataStore.SaveAsync(KitsKey, new KitsData
+                {
+                    Kits = new Dictionary<string, SerializableKit>()
+                });
+            }
+            else
+            {
+                foreach(var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
+                {
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}");
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}");
+                }
             }
 
             m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
@@ -93,6 +108,12 @@ namespace NewEssentials
             var userData = await m_UserDataStore.GetUserDataAsync(sender.player.channel.owner.playerID.steamID.ToString(), "player");
             userData.Data["deathLocation"] = sender.transform.position.ToSerializableVector3();
             await m_UserDataStore.SetUserDataAsync(userData);
+        }
+
+        public void RegisterNewKitPermission(string kitName)
+        {
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitName}");
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitName}");
         }
     }
 }
