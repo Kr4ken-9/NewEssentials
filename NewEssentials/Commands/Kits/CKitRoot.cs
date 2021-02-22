@@ -7,10 +7,10 @@ using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
+using OpenMod.Core.Permissions;
 using OpenMod.Core.Users;
 using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
-using OpenMod.Unturned.Items;
 using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Kits
@@ -18,6 +18,7 @@ namespace NewEssentials.Commands.Kits
     [Command("kit")]
     [CommandDescription("Spawn a kit for yourself or another user")]
     [CommandSyntax("<name> [user]")]
+    [RegisterCommandPermission("cooldowns.exempt", Description = "Bypass any kit-related cooldowns")]
     public class CKitRoot : UnturnedCommand
     {
         private readonly IDataStore m_DataStore;
@@ -70,7 +71,36 @@ namespace NewEssentials.Commands.Kits
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[1]}]);
             
             SerializableKit kit = kitsData.Kits[kitName];
-            foreach (var item in kit.SerializableItems)
+            
+            // If there is a non-zero cooldown and the user is not exempt from cooldowns
+            // Then we will add a cooldown to them for this specific kit
+            // Unless they are already under a cooldown, in which we will deny them the kit
+            if (kit.Cooldown != 0 && await CheckPermissionAsync("cooldowns.exempt") == PermissionGrantResult.Deny)
+            {
+                TimeSpan rightThisVeryInstant = DateTime.Now.TimeOfDay;
+                if (!recipient.Session.SessionData.ContainsKey($"kits.cooldowns.{kitName}"))
+                {
+                    recipient.Session.SessionData.Add($"kits.cooldowns.{kitName}", rightThisVeryInstant);
+                }
+                else
+                {
+                    TimeSpan lastKitUse = (TimeSpan) recipient.Session.SessionData[$"kits.cooldowns.{kitName}"];
+                    double remainingSeconds = (rightThisVeryInstant - lastKitUse).TotalSeconds;
+
+                    if (remainingSeconds < kit.Cooldown)
+                    {
+                        throw new UserFriendlyException(m_StringLocalizer["kits:spawn:cooldown",
+                            new {Time = remainingSeconds, Kit = kitName}]);
+                    }
+
+                    recipient.Session.SessionData[$"kits.cooldowns.{kitName}"] = rightThisVeryInstant;
+                }
+            }
+
+            // TODO: Update OpenMod
+            // Currently experiencing a fixed issue when dropping items:
+            // https://github.com/openmod/openmod/issues/225
+                foreach (var item in kit.SerializableItems)
             {
                 await m_ItemSpawner.GiveItemAsync(
                     recipient.Player.Inventory,

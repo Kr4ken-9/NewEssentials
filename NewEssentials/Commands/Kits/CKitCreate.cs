@@ -6,11 +6,9 @@ using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
-using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
 using OpenMod.Core.Commands;
-using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 

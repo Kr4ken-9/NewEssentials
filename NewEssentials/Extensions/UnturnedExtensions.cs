@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using NewEssentials.Models;
-using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;
 

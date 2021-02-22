@@ -1,6 +1,4 @@
 using System;
-using NewEssentials.API.Players;
-using OpenMod.Core.Helpers;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using UnityEngine;

@@ -15,6 +15,7 @@ kits:
     none: "{Kit} is not a kit."
     denied: "You do not have permission to spawn {Kit}."
     success: "You have spawned {Kit} for {Player}."
+    cooldown: "You must wait {Time} seconds before you can use {Kit} again."
   give:
     denied: "You do not have permission to give players {Kit}."
 commands:
