@@ -16,7 +16,7 @@ namespace NewEssentials.Commands.Stats
     [CommandAlias("exp")]
     [CommandDescription("Give yourself or another player experience (must be positive)")]
     [CommandSyntax("<amount> [player]")]
-    [RegisterCommandPermission("give", Description = "Give experience to players")]
+    //[RegisterCommandPermission("give", Description = "Give experience to players")]
     public class CExperience : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;

@@ -19,7 +19,7 @@ namespace NewEssentials.Commands.Kits
     [CommandDescription("Spawn a kit for yourself or another user")]
     [CommandSyntax("<name> [user]")]
     // TODO: This permission seems to default to grant, and there is an error with the DefaultGrant attribute
-    [RegisterCommandPermission("cooldowns.exempt", Description = "Bypass any kit-related cooldowns")]
+    //[RegisterCommandPermission("cooldowns.exempt", Description = "Bypass any kit-related cooldowns", DefaultGrant = PermissionGrantResult.Deny)]
     public class CKitRoot : UnturnedCommand
     {
         private readonly IDataStore m_DataStore;
@@ -85,9 +85,10 @@ namespace NewEssentials.Commands.Kits
                 else
                 {
                     TimeSpan lastKitUse = (TimeSpan) recipient.Session.SessionData[$"kits.cooldowns.{kitName}"];
-                    double remainingSeconds = (rightThisVeryInstant - lastKitUse).TotalSeconds;
+                    double secondsSinceLastUse = (rightThisVeryInstant - lastKitUse).TotalSeconds;
+                    double remainingSeconds = Math.Round(kit.Cooldown - secondsSinceLastUse, 2);
 
-                    if (remainingSeconds < kit.Cooldown)
+                    if (secondsSinceLastUse < kit.Cooldown)
                     {
                         throw new UserFriendlyException(m_StringLocalizer["kits:spawn:cooldown",
                             new {Time = remainingSeconds, Kit = kitName}]);
@@ -96,11 +97,8 @@ namespace NewEssentials.Commands.Kits
                     recipient.Session.SessionData[$"kits.cooldowns.{kitName}"] = rightThisVeryInstant;
                 }
             }
-
-            // TODO: Update OpenMod
-            // Currently experiencing a fixed issue when dropping items:
-            // https://github.com/openmod/openmod/issues/225
-                foreach (var item in kit.SerializableItems)
+            
+            foreach (var item in kit.SerializableItems)
             {
                 await m_ItemSpawner.GiveItemAsync(
                     recipient.Player.Inventory,

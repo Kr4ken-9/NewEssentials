@@ -57,7 +57,12 @@ namespace NewEssentials
         {
             await UniTask.SwitchToThreadPool();
 
-            m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk");
+            m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk", PermissionGrantResult.Deny);
+            
+            // Registering the following permissions without attributes because my MSBuild is fucked or something
+            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.kit.cooldowns.exempt", "Bypass any kit-related cooldowns", PermissionGrantResult.Deny);
 
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
@@ -78,8 +83,8 @@ namespace NewEssentials
             {
                 foreach(var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
                 {
-                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}");
-                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}");
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}", $"Permission to spawn {kitPair.Key} kit", PermissionGrantResult.Deny);
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}", $"Permission to give others {kitPair.Key} kit", PermissionGrantResult.Deny);
                 }
             }
 
