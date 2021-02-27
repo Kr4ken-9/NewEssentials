@@ -64,6 +64,12 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.kit.cooldowns.exempt", "Bypass any kit-related cooldowns", PermissionGrantResult.Deny);
 
+            // Create permissions for allowing between 1-10 homes
+            for (byte b = 1; b < 11; b++)
+                m_PermissionRegistry.RegisterPermission(this, $"commands.home.set.{b}", "Allow user to have {b} homes", PermissionGrantResult.Deny);
+            
+            m_PermissionRegistry.RegisterPermission(this, "commands.home.set.infinite", "Allow user to have infinite homes", PermissionGrantResult.Deny);
+
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData

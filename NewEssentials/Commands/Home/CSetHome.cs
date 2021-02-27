@@ -4,6 +4,8 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using NewEssentials.Models;
+using OpenMod.API.Commands;
+using OpenMod.API.Permissions;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
@@ -39,6 +41,31 @@ namespace NewEssentials.Commands.Home
                 userData.Data.Add("homes", new Dictionary<string, SerializableVector3>());
 
             var homes = (Dictionary<object, object>) userData.Data["homes"];
+            int amountOfHomes = homes.Count;
+            
+            // If this is the user's first home, or they have permission to make infinite homes, then skip the check
+            if (amountOfHomes != 0 && await CheckPermissionAsync("infinite") == PermissionGrantResult.Deny)
+            {
+                bool any = false;
+                for (int i = amountOfHomes; i < 11; i++)
+                {
+                    // No logic unless it finds a permission with a number to limit homes
+                    if (await CheckPermissionAsync(i.ToString()) == PermissionGrantResult.Deny)
+                        continue;
+
+                    any = true;
+
+                    if (i > amountOfHomes)
+                        break;
+
+                    throw new UserFriendlyException(m_StringLocalizer["home:too_many"]);
+                }
+
+                // If there is no permission, only allow 1 home
+                if (!any)
+                    throw new UserFriendlyException(m_StringLocalizer["home:too_many"]);
+            }
+
             if (Context.Parameters.Length == 0)
             {
                 homes["home"] = uPlayer.Player.Player.transform.position.ToSerializableVector3();
