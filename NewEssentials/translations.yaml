@@ -20,19 +20,19 @@ kits:
   give:
     denied: "You do not have permission to give players {Kit}."
 commands:
-  failed_player: "Could not find player : {Player}"
+  failed_player: "Could not find player: {Player}"
   failed_players: "Could not find players: {Players}"
 maxskills:
   granted: "Your skills have been maxed out!"
-  granted_other: "{Player} has been granted max skills"
-  granted_all: "All players have been granted max skills"
-  kunii: "Kunii is a god"
+  granted_other: "{Player} has been granted max skills."
+  granted_all: "All players have been granted max skills."
+  kunii: "Kunii is a god."
 item:
   syntax: "/item [<id>/<item name>] <amount>"
   give_syntax: "/giveitem <player> [<id>/<item name>] <amount>"
-  invalid: "{Item} is not an item"
-  too_much: "The max item spawn limit is {UpperLimit}"
-  success: "Spawned {Amount} {Item}"
+  invalid: "{Item} is not an item."
+  too_much: "The max item spawn limit is {UpperLimit}."
+  success: "Spawned {Amount} {Item}."
 vehicle:
   invalid: "{Vehicle} is not a vehicle."
   failed: "Something is blocking the vehicle from spawning."

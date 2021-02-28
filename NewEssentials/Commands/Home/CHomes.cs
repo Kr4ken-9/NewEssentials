@@ -47,6 +47,9 @@ namespace NewEssentials.Commands.Home
             UnturnedUser uPlayer = Context.Parameters.Length == 0
                 ? (UnturnedUser) Context.Actor
                 : m_UnturnedUserDirectory.FindUser(Context.Parameters[0], UserSearchMode.FindByName);
+
+            if (uPlayer == null)
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[0]}]);
             
             UserData userData = await m_UserDataStore.GetUserDataAsync(uPlayer.Id, uPlayer.Type);
 
