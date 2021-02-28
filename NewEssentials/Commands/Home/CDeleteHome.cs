@@ -17,7 +17,6 @@ namespace NewEssentials.Commands.Home
     [CommandAlias("remove")]
     [CommandDescription("Delete a saved home for yourself or another user")]
     [CommandSyntax("<name> [user]")]
-    [CommandActor(typeof(UnturnedUser))]
     [CommandParent(typeof(CHome))]
     public class CDeleteHome : UnturnedCommand
     {
