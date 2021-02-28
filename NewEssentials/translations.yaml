@@ -108,6 +108,7 @@ repair:
     looking: "Successfully repaired the vehicle you are looking at."
 warps:
   none: "{Warp} is not a warp."
+  no_permission: "You do not have permission to warp to {Warp}."
   success: "Warped to {Warp} successfully."
   deleted: "Deleted {Warp} successfully."
   list: "Warps include: {Warps}"

@@ -6,6 +6,7 @@ using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Persistence;
+using OpenMod.API.Plugins;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 
@@ -20,13 +21,18 @@ namespace NewEssentials.Commands.Warps
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IDataStore m_DataStore;
+        private readonly IPluginAccessor<NewEssentials> m_PluginAccessor;
         private const string WarpsKey = "warps";
 
-        public CWarpSet(IStringLocalizer stringLocalizer, IDataStore dataStore, IServiceProvider serviceProvider) :
+        public CWarpSet(IStringLocalizer stringLocalizer,
+            IDataStore dataStore,
+            IPluginAccessor<NewEssentials> pluginAccessor,
+            IServiceProvider serviceProvider) :
             base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_DataStore = dataStore;
+            m_PluginAccessor = pluginAccessor;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -45,6 +51,7 @@ namespace NewEssentials.Commands.Warps
             
             warpData.Warps.Add(newWarpName, newWarpLocation);
             await m_DataStore.SaveAsync(WarpsKey, warpData);
+            m_PluginAccessor.Instance.RegisterNewWarpPermission(newWarpName);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["warps:set:success", new {Warp = newWarpName}]);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
@@ -53,10 +54,8 @@ namespace NewEssentials
             m_PermissionRegistry = permissionRegistry;
         }
 
-        protected override async UniTask OnLoadAsync()
+        private void RegisterPermissions()
         {
-            await UniTask.SwitchToThreadPool();
-
             m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk", PermissionGrantResult.Deny);
             
             // Registering the following permissions without attributes because my MSBuild is fucked or something
@@ -72,12 +71,21 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.delete.others", "Allow user to delete another user's homes", PermissionGrantResult.Deny);
 
+        }
+
+        private async Task RegisterDataStores()
+        {
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData
                 {
                     Warps = new Dictionary<string, SerializableVector3>()
                 });
+            }
+            else
+            {
+                foreach(var warpPair in (await m_DataStore.LoadAsync<WarpsData>(WarpsKey)).Warps)
+                    m_PermissionRegistry.RegisterPermission(this, $"warps.{warpPair.Key}", $"Permission to warp to {warpPair.Key}", PermissionGrantResult.Deny);
             }
 
             if (!await m_DataStore.ExistsAsync(KitsKey))
@@ -95,6 +103,15 @@ namespace NewEssentials
                     m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}", $"Permission to give others {kitPair.Key} kit", PermissionGrantResult.Deny);
                 }
             }
+        }
+
+        protected override async UniTask OnLoadAsync()
+        {
+            await UniTask.SwitchToThreadPool();
+            
+            RegisterPermissions();
+
+            await RegisterDataStores();
 
             m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
             
@@ -128,5 +145,9 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitName}");
             m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitName}");
         }
+
+        public void RegisterNewWarpPermission(string warpName) => m_PermissionRegistry.RegisterPermission(this,
+            $"warps.{warpName}", $"Permission to warp to {warpName}", PermissionGrantResult.Deny);
+
     }
 }
