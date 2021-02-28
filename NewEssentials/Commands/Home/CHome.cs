@@ -21,8 +21,7 @@ namespace NewEssentials.Commands.Home
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
 
-        public CHome(IStringLocalizer stringLocalizer, IUserDataStore userDataStore, IServiceProvider serviceProvider) :
-            base(serviceProvider)
+        public CHome(IStringLocalizer stringLocalizer, IUserDataStore userDataStore, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;

@@ -56,11 +56,15 @@ namespace NewEssentials.Commands.Home
             if (!userData.Data.ContainsKey("homes"))
                 throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
 
+            var homes = (Dictionary<object, object>) userData.Data["homes"];
+            if (homes.Count == 0)
+                throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
+
             var stringBuilder = new StringBuilder();
-            foreach (var pair in (Dictionary<object, object>)userData.Data["homes"])
+            foreach (var pair in homes)
                 stringBuilder.Append($"{pair.Key}, ");
 
-            stringBuilder.Remove(stringBuilder.Length - 2, 1);
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { User = uPlayer.DisplayName, Homes = stringBuilder.ToString() }]);
         }
