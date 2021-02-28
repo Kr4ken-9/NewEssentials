@@ -69,7 +69,8 @@ namespace NewEssentials
                 m_PermissionRegistry.RegisterPermission(this, $"commands.home.set.{b}", "Allow user to have {b} homes", PermissionGrantResult.Deny);
             
             m_PermissionRegistry.RegisterPermission(this, "commands.home.set.infinite", "Allow user to have infinite homes", PermissionGrantResult.Deny);
-
+            m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
+            
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData

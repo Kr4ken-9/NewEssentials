@@ -35,6 +35,7 @@ namespace NewEssentials.Commands
             }
 
             string searchTerm = Context.Parameters[0];
+            // TODO: Replace with user directory, which automatically filters online players
             IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByName);
             if (user == null || !(Context.Actor is UnturnedUser uPlayer))
             {

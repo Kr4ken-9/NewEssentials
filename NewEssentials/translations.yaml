@@ -46,7 +46,7 @@ home:
   no_home: "You have no home to teleport to."
   invalid_home: "{Home} is not one of your homes."
   set: "{Home} set at this location."
-  list: "Your homes include: {Homes}."
+  list: "{User}'s homes include: {Homes}."
   delete: "Deleted home: {Home}."
   too_many: "You are not allowed to set another home."
 back:

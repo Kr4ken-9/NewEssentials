@@ -8,30 +8,46 @@ using OpenMod.Unturned.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenMod.API.Permissions;
+using OpenMod.Core.Users;
 
 namespace NewEssentials.Commands.Home
 {
     [Command("homes")]
-    [CommandDescription("List your saved homes")]
-    [CommandActor(typeof(UnturnedUser))]
+    [CommandDescription("List your or another user's saved homes")]
+    [CommandSyntax("[user]")]
     public class CHomes : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
+        private readonly IUnturnedUserDirectory m_UnturnedUserDirectory;
 
-        public CHomes(IStringLocalizer stringLocalizer, IUserDataStore userDataStore,
+        public CHomes(IStringLocalizer stringLocalizer,
+            IUserDataStore userDataStore,
+            IUnturnedUserDirectory unturnedUserDirectory,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
+            m_UnturnedUserDirectory = unturnedUserDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length != 0)
-                throw new CommandWrongUsageException(Context);
+            switch (Context.Parameters.Length)
+            {
+                case > 1:
+                    throw new CommandWrongUsageException(Context);
+                case 0 when Context.Actor.Type != KnownActorTypes.Player:
+                    throw new CommandWrongUsageException(Context);
+                case 1 when await CheckPermissionAsync("others") == PermissionGrantResult.Deny:
+                    throw new NotEnoughPermissionException(Context, "others");
+            }
 
-            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
+            UnturnedUser uPlayer = Context.Parameters.Length == 0
+                ? (UnturnedUser) Context.Actor
+                : m_UnturnedUserDirectory.FindUser(Context.Parameters[0], UserSearchMode.FindByName);
+            
             UserData userData = await m_UserDataStore.GetUserDataAsync(uPlayer.Id, uPlayer.Type);
 
             if (!userData.Data.ContainsKey("homes"))
@@ -43,7 +59,7 @@ namespace NewEssentials.Commands.Home
 
             stringBuilder.Remove(stringBuilder.Length - 2, 1);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { Homes = stringBuilder.ToString() }]);
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { User = uPlayer.DisplayName, Homes = stringBuilder.ToString() }]);
         }
     }
 }
