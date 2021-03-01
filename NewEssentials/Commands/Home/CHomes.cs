@@ -34,7 +34,7 @@ namespace NewEssentials.Commands.Home
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length is > 1)
+            if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
             
             if (Context.Parameters.Length == 0 && Context.Actor.Type != KnownActorTypes.Player)
