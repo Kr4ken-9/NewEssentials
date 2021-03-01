@@ -36,16 +36,14 @@ namespace NewEssentials.Commands.Home
 
         protected override async UniTask OnExecuteAsync()
         {
-            switch (Context.Parameters.Length)
-            {
-                case < 1:
-                case > 2:
-                    throw new CommandWrongUsageException(Context);
-                case 1 when Context.Actor.Type != KnownActorTypes.Player:
-                    throw new CommandWrongUsageException(Context);
-                case 2 when await CheckPermissionAsync("others") == PermissionGrantResult.Deny:
-                    throw new NotEnoughPermissionException(Context, "others");
-            }
+            if (Context.Parameters.Length is < 1 || Context.Parameters.Length is > 2)
+                throw new CommandWrongUsageException(Context);
+            
+            if (Context.Parameters.Length == 1 && Context.Actor.Type != KnownActorTypes.Player)
+                throw new CommandWrongUsageException(Context);
+            
+            if (Context.Parameters.Length == 2 && await CheckPermissionAsync("others") == PermissionGrantResult.Deny)
+                throw new NotEnoughPermissionException(Context, "others");
 
             UnturnedUser uPlayer = Context.Parameters.Length == 1
                 ? (UnturnedUser) Context.Actor

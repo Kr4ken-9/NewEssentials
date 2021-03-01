@@ -7,7 +7,6 @@ using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
-using OpenMod.Core.Permissions;
 using OpenMod.Core.Users;
 using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
