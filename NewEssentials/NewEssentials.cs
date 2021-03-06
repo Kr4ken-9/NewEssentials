@@ -61,7 +61,6 @@ namespace NewEssentials
             // Registering the following permissions without attributes because my MSBuild is fucked or something
             m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players", PermissionGrantResult.Deny);
-            m_PermissionRegistry.RegisterPermission(this, "commands.kit.cooldowns.exempt", "Bypass any kit-related cooldowns", PermissionGrantResult.Deny);
 
             // Create permissions for allowing between 1-10 homes
             for (byte b = 1; b < 11; b++)
@@ -70,8 +69,7 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "commands.home.set.infinite", "Allow user to have infinite homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.delete.others", "Allow user to delete another user's homes", PermissionGrantResult.Deny);
-
-            m_PermissionRegistry.RegisterPermission(this, "commands.warp.cooldowns.exempt", "Bypass any warp-related cooldowns", PermissionGrantResult.Deny);
+            
             m_PermissionRegistry.RegisterPermission(this, "warps.cooldowns.exempt", "Bypass any warps-related cooldowns", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "kits.cooldowns.exempt", "Bypass any kits-related cooldowns", PermissionGrantResult.Deny);
         }
