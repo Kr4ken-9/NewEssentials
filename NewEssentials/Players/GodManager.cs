@@ -38,7 +38,7 @@ namespace NewEssentials.Players
 
         private Task OnPlayerDamaging(IServiceProvider serviceProvider, object sender, UnturnedPlayerDamagingEvent @event)
         {
-            if (m_Gods.Contains(@event.Killer.m_SteamID))
+            if (m_Gods.Contains(@event.Player.SteamId.m_SteamID))
                 @event.IsCancelled = true;
 
             return Task.CompletedTask;
