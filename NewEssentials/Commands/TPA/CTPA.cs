@@ -44,8 +44,8 @@ namespace NewEssentials.Commands.TPA
             ulong requesterSteamID = uPlayer.SteamId.m_SteamID;
             ulong recipientSteamID = recipient.playerID.steamID.m_SteamID;
 
-            if (requesterSteamID == recipientSteamID)
-                throw new UserFriendlyException(m_StringLocalizer["tpa:self"]);
+            /*if (requesterSteamID == recipientSteamID)
+                throw new UserFriendlyException(m_StringLocalizer["tpa:self"]);*/
 
             if (m_TpaRequestManager.IsRequestOpen(recipientSteamID, requesterSteamID))
                 throw new UserFriendlyException(m_StringLocalizer["already_requested"]);

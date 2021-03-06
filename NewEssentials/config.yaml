@@ -22,3 +22,8 @@ afkchecker:
   # announceAFK will just tell everyone when someone goes afk. kickAFK will get kick players that go afk.
   announceAFK: true
   kickAFK: false
+teleportation:
+  # Delay in seconds before players can teleport (through warp, tpa, etc)
+  delay: 5
+  cancelOnMove: true
+  cancelOnDamage: true

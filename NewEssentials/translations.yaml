@@ -62,10 +62,11 @@ tpa:
   no_requests: "You have no pending TPA requests."
   no_requests_from: "You have no pending TPA requests from {Requester}."
   accepted_self: "You accepted {Requester}'s TPA request."
-  accepted_other: "Your TPA request to {Recipient} was accepted."
+  accepted_other: "Your TPA request to {Recipient} was accepted. Please wait {Time} seconds."
   denied_self: "You denied {Requester}'s TPA request."
   denied_other: "Your TPA request to {Recipient} was denied."
   disconnected: "{Requester} disconnected before they could teleport to you."
+  cancelled: "TPA cancelled due to damage or movement"
 tell:
   invalid_recipient: "{Recipient} is not a player."
   sent: "You > {Recipient}: {Message}"
