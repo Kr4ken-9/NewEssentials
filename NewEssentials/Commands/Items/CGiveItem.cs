@@ -44,7 +44,7 @@ namespace NewEssentials.Commands.Items
 
             byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
             if (!m_Configuration.GetItemAmount(amount, out amount))
-                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new {UpperLimit = amount}]);
+                throw new UserFriendlyException(m_StringLocalizer["item:too_much", new {UpperLimit = amount}]);
 
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
             

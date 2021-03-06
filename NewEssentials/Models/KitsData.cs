@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace NewEssentials.Models
 {
     [Serializable]
-    public class WarpsData
+    public class KitsData
     {
-        public Dictionary<string, SerializableWarp> Warps { get; set; }
+        public Dictionary<string, SerializableKit> Kits { get; set; }
     }
 }

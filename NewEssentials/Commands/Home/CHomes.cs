@@ -8,42 +8,64 @@ using OpenMod.Unturned.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenMod.API.Permissions;
+using OpenMod.Core.Users;
 
 namespace NewEssentials.Commands.Home
 {
     [Command("homes")]
-    [CommandDescription("List your saved homes")]
-    [CommandActor(typeof(UnturnedUser))]
+    [CommandDescription("List your or another user's saved homes")]
+    [CommandSyntax("[user]")]
     public class CHomes : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
+        private readonly IUnturnedUserDirectory m_UnturnedUserDirectory;
 
-        public CHomes(IStringLocalizer stringLocalizer, IUserDataStore userDataStore,
+        public CHomes(IStringLocalizer stringLocalizer,
+            IUserDataStore userDataStore,
+            IUnturnedUserDirectory unturnedUserDirectory,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
+            m_UnturnedUserDirectory = unturnedUserDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length != 0)
+            if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
+            
+            if (Context.Parameters.Length == 0 && Context.Actor.Type != KnownActorTypes.Player)
+                throw new CommandWrongUsageException(Context);
+            
+            if (Context.Parameters.Length == 1 && await CheckPermissionAsync("others") == PermissionGrantResult.Deny)
+                throw new NotEnoughPermissionException(Context, "others");
 
-            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
+            UnturnedUser uPlayer = Context.Parameters.Length == 0
+                ? (UnturnedUser) Context.Actor
+                : m_UnturnedUserDirectory.FindUser(Context.Parameters[0], UserSearchMode.FindByName);
+
+            if (uPlayer == null)
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[0]}]);
+            
             UserData userData = await m_UserDataStore.GetUserDataAsync(uPlayer.Id, uPlayer.Type);
 
             if (!userData.Data.ContainsKey("homes"))
                 throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
 
+            var homes = (Dictionary<object, object>) userData.Data["homes"];
+            if (homes.Count == 0)
+                throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
+
             var stringBuilder = new StringBuilder();
-            foreach (var pair in (Dictionary<object, object>)userData.Data["homes"])
+            foreach (var pair in homes)
                 stringBuilder.Append($"{pair.Key}, ");
 
-            stringBuilder.Remove(stringBuilder.Length - 2, 1);
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { Homes = stringBuilder.ToString() }]);
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:list", new { User = uPlayer.DisplayName, Homes = stringBuilder.ToString() }]);
         }
     }
 }

@@ -5,20 +5,34 @@ general:
 kits:
   enabled: "New Essentials kits are enabled"
   disabled: "New Essentials kits are disabled"
+  none: "There are no kits available to you."
+  list: "Kits: {List}"
+  removed: "{Kit} is no more."
+  create:
+    exists: "{Kit} already exists. To update this kit, use /kit remove followed by /kit create."
+    none: "You must have items in your inventory to create a kit."
+    success: "Created kit: {Kit} with your current inventory."
+  spawn:
+    none: "{Kit} is not a kit."
+    denied: "You do not have permission to spawn {Kit}."
+    success: "You have spawned {Kit} for {Player}."
+    cooldown: "You must wait {Time} seconds before you can use {Kit} again."
+  give:
+    denied: "You do not have permission to give players {Kit}."
 commands:
-  failed_player: "Could not find player : {Player}"
+  failed_player: "Could not find player: {Player}"
   failed_players: "Could not find players: {Players}"
 maxskills:
   granted: "Your skills have been maxed out!"
-  granted_other: "{Player} has been granted max skills"
-  granted_all: "All players have been granted max skills"
-  kunii: "Kunii is a god"
+  granted_other: "{Player} has been granted max skills."
+  granted_all: "All players have been granted max skills."
+  kunii: "Kunii is a god."
 item:
   syntax: "/item [<id>/<item name>] <amount>"
   give_syntax: "/giveitem <player> [<id>/<item name>] <amount>"
-  invalid: "{Item} is not an item"
-  too_much: "The max item spawn limit is {UpperLimit}"
-  success: "Spawned {Amount} {Item}"
+  invalid: "{Item} is not an item."
+  too_much: "The max item spawn limit is {UpperLimit}."
+  success: "Spawned {Amount} {Item}."
 vehicle:
   invalid: "{Vehicle} is not a vehicle."
   failed: "Something is blocking the vehicle from spawning."
@@ -26,14 +40,15 @@ vehicle:
   success_given: "Spawned {Vehicle} for {Player} successfully."
   invalid_player: "{Player} is not a player."
 home:
-  success: "Teleported to {Home}"
-  failure: "Could not teleport to {Home}"
-  no_bed: "You have no bed to teleport to"
-  no_home: "You have no home to teleport to"
-  invalid_home: "{Home} is not one of your homes"
-  set: "{Home} set at this location"
-  list: "Your homes include: {Homes}"
-  delete: "Deleted home: {Home}"
+  success: "Teleported to {Home}."
+  failure: "Could not teleport to {Home}."
+  no_bed: "You have no bed to teleport to."
+  no_home: "You have no home to teleport to."
+  invalid_home: "{Home} is not one of your homes."
+  set: "{Home} set at this location."
+  list: "{User}'s homes include: {Homes}."
+  delete: "Deleted home: {Home}."
+  too_many: "You are not allowed to set another home."
 back:
   none: "You have no known death location."
   success: "Teleported to last death location."
@@ -93,9 +108,11 @@ repair:
     looking: "Successfully repaired the vehicle you are looking at."
 warps:
   none: "{Warp} is not a warp."
+  no_permission: "You do not have permission to warp to {Warp}."
   success: "Warped to {Warp} successfully."
   deleted: "Deleted {Warp} successfully."
   list: "Warps include: {Warps}"
+  cooldown: "You must wait {Time} seconds before you can use {Warp} again."
   set:
     exists: "{Warp} already exists."
     success: "Saved new warp: {Warp} at your location."

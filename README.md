@@ -5,6 +5,7 @@ The new essential plugin for Unturned. This project aims to be a replacement for
 ## Current Features
 
 - Lots of Commands
+- Kits
 - AFK Announcer/Kicker
 - [SuperBroadcaster](https://github.com/IcePlugins/SuperBroadcaster)
 
@@ -12,9 +13,9 @@ The new essential plugin for Unturned. This project aims to be a replacement for
 
 See the [issue tracker](https://github.com/Kr4ken-9/NewEssentials/issues) and [milestones](https://github.com/Kr4ken-9/NewEssentials/milestones) to get an idea of the plans for this project. Some are outlined below:
 
-- Achieve feature parity with uEssentials
 - Implement permissively licensed essential plugins
 - Support MySQL data stores
+- Moderation
 
 ## Special Thanks
 

@@ -2,12 +2,11 @@
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using NewEssentials.API;
 using OpenMod.API.Commands;
+using OpenMod.API.Users;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
-using SDG.Unturned;
-using UnityEngine;
+using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Messaging
 {
@@ -18,13 +17,14 @@ namespace NewEssentials.Commands.Messaging
     public class CTell : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IPrivateMessageStore m_PrivateMessageManager;
+        private readonly UnturnedUserDirectory m_UnturnedUserDirectory;
 
-        public CTell(IStringLocalizer stringLocalizer, IPrivateMessageStore privateMessageManager,
+        public CTell(IStringLocalizer stringLocalizer,
+            UnturnedUserDirectory unturnedUserDirectory,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_PrivateMessageManager = privateMessageManager;
+            m_UnturnedUserDirectory = unturnedUserDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -33,25 +33,20 @@ namespace NewEssentials.Commands.Messaging
                 throw new CommandWrongUsageException(Context);
 
             string recipientName = Context.Parameters[0];
-            if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient))
-                throw new UserFriendlyException(m_StringLocalizer["tell:invalid_recipient",
-                    new { Recipient = recipientName }]);
+            UnturnedUser recipient = m_UnturnedUserDirectory.FindUser(recipientName, UserSearchMode.FindByName);
 
-            ulong senderSteamID = 1337;
-            if (Context.Actor.Type == KnownActorTypes.Player)
-                senderSteamID = ulong.Parse(Context.Actor.Id);
+            if (recipient == null)
+                throw new UserFriendlyException(m_StringLocalizer["tell:invalid_recipient", new {Recipient = recipientName}]);
 
-            m_PrivateMessageManager.RecordLastMessager(recipient.playerID.steamID.m_SteamID, senderSteamID);
+            recipient.Session.SessionData["lastMessager"] = Context.Actor.Type == KnownActorTypes.Player
+                ? Context.Actor.Id
+                : Context.Actor.Type;
             var message = string.Join(" ", Context.Parameters);
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["tell:sent",
-                new { Recipient = recipient.playerID.characterName, Message = message }]);
+                new { Recipient = recipient.DisplayName, Message = message }]);
 
-            await UniTask.SwitchToMainThread();
-            ChatManager.serverSendMessage(
-                m_StringLocalizer["tell:received", new { Sender = Context.Actor.DisplayName, Message = message }],
-                Color.white,
-                toPlayer: recipient);
+            await recipient.PrintMessageAsync(m_StringLocalizer["tell:received", new {Sender = Context.Actor.DisplayName, Message = message}]);
         }
     }
 }

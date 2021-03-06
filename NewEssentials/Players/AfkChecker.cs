@@ -14,7 +14,6 @@ using OpenMod.API.Prioritization;
 using OpenMod.API.Users;
 using OpenMod.Core.Helpers;
 using OpenMod.Core.Users;
-using OpenMod.Core.Users.Events;
 using OpenMod.Unturned.Users;
 using OpenMod.Unturned.Users.Events;
 using SDG.Unturned;

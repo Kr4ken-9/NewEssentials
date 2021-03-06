@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
@@ -31,6 +32,7 @@ namespace NewEssentials
         private readonly IPermissionRegistry m_PermissionRegistry;
 
         private const string WarpsKey = "warps";
+        private const string KitsKey = "kits";
 
         public NewEssentials(IStringLocalizer stringLocalizer,
             IConfiguration configuration,
@@ -52,21 +54,72 @@ namespace NewEssentials
             m_PermissionRegistry = permissionRegistry;
         }
 
-        protected override async UniTask OnLoadAsync()
+        private void RegisterPermissions()
         {
-            await UniTask.SwitchToThreadPool();
+            m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk", PermissionGrantResult.Deny);
+            
+            // Registering the following permissions without attributes because my MSBuild is fucked or something
+            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.kit.cooldowns.exempt", "Bypass any kit-related cooldowns", PermissionGrantResult.Deny);
 
-            m_PermissionRegistry.RegisterPermission(this, "commands.experience.give", "Give experience to players");
-            m_PermissionRegistry.RegisterPermission(this, "commands.reputation.give", "Give reputation to players");
-            m_PermissionRegistry.RegisterPermission(this, "afkchecker.exempt", "Don't get kicked if you go afk");
+            // Create permissions for allowing between 1-10 homes
+            for (byte b = 1; b < 11; b++)
+                m_PermissionRegistry.RegisterPermission(this, $"commands.home.set.{b}", "Allow user to have {b} homes", PermissionGrantResult.Deny);
+            
+            m_PermissionRegistry.RegisterPermission(this, "commands.home.set.infinite", "Allow user to have infinite homes", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "commands.homes.delete.others", "Allow user to delete another user's homes", PermissionGrantResult.Deny);
 
+            m_PermissionRegistry.RegisterPermission(this, "commands.warp.cooldowns.exempt", "Bypass any warp-related cooldowns", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "warps.cooldowns.exempt", "Bypass any warps-related cooldowns", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "kits.cooldowns.exempt", "Bypass any kits-related cooldowns", PermissionGrantResult.Deny);
+        }
+
+        private async Task RegisterDataStores()
+        {
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData
                 {
-                    Warps = new Dictionary<string, SerializableVector3>()
+                    Warps = new Dictionary<string, SerializableWarp>()
                 });
             }
+            else
+            {
+                foreach(var warpPair in (await m_DataStore.LoadAsync<WarpsData>(WarpsKey)).Warps)
+                    m_PermissionRegistry.RegisterPermission(this, $"warps.{warpPair.Key}", $"Permission to warp to {warpPair.Key}", PermissionGrantResult.Deny);
+            }
+
+            if (!await m_DataStore.ExistsAsync(KitsKey))
+            {
+                await m_DataStore.SaveAsync(KitsKey, new KitsData
+                {
+                    Kits = new Dictionary<string, SerializableKit>()
+                });
+            }
+            else
+            {
+                foreach(var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
+                {
+                    // Outdated permissions but left for compatibility
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}", $"Migrate to kits.{kitPair.Key} when possible please", PermissionGrantResult.Deny);
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}", $"Migrate to kits.give.{kitPair.Key} when possible please", PermissionGrantResult.Deny);
+                    
+                    // Updated permissions for consistency
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.{kitPair.Key}", $"Permission to spawn {kitPair.Key} kit", PermissionGrantResult.Deny);
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.give.{kitPair.Key}", $"Permission to give others {kitPair.Key} kit", PermissionGrantResult.Deny);
+                }
+            }
+        }
+
+        protected override async UniTask OnLoadAsync()
+        {
+            await UniTask.SwitchToThreadPool();
+            
+            RegisterPermissions();
+
+            await RegisterDataStores();
 
             m_TpaRequestManager.SetLocalizer(m_StringLocalizer);
             
@@ -94,5 +147,18 @@ namespace NewEssentials
             userData.Data["deathLocation"] = sender.transform.position.ToSerializableVector3();
             await m_UserDataStore.SetUserDataAsync(userData);
         }
+
+        public void RegisterNewKitPermission(string kitName)
+        {
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitName}");
+            m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitName}");
+            
+            m_PermissionRegistry.RegisterPermission(this, $"kits.{kitName}");
+            m_PermissionRegistry.RegisterPermission(this, $"kits.give.{kitName}");
+        }
+
+        public void RegisterNewWarpPermission(string warpName) => m_PermissionRegistry.RegisterPermission(this,
+            $"warps.{warpName}", $"Permission to warp to {warpName}", PermissionGrantResult.Deny);
+
     }
 }

@@ -15,6 +15,7 @@ namespace NewEssentials.Commands.Stats
     [CommandAlias("rep")]
     [CommandDescription("Give yourself or another player reputation (can be negative)")]
     [CommandSyntax("<amount> [player]")]
+    //[RegisterCommandPermission("give", Description = "Give reputation to players")]
     public class CReputation : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
