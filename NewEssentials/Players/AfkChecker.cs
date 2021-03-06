@@ -75,7 +75,7 @@ namespace NewEssentials.Players
                     bool afk = (DateTime.Now.TimeOfDay - (TimeSpan)user.Session.SessionData["lastMovement"])
                                 .TotalSeconds >=
                                 m_Timeout &&
-                                await m_PermissionChecker.CheckPermissionAsync(user, "Kr4ken.NewEssentials:afkchecker.exempt") !=
+                                await m_PermissionChecker.CheckPermissionAsync(user, "NewEssentials:afkchecker.exempt") !=
                                 PermissionGrantResult.Grant;
 
                     if (!afk)
