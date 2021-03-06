@@ -1,17 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using OpenMod.API.Commands;
 using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using SDG.Unturned;
 using System;
-using System.Linq;
 
 namespace NewEssentials.Commands
 {
-
     [Command("tphere")]
     [CommandDescription("Tp a player to you")]
     [CommandSyntax("<player>")]
@@ -34,29 +32,21 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
             }
 
-            string searchTerm = Context.Parameters[0];
-            // TODO: Replace with user directory, which automatically filters online players
-            IUser user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByName);
-            if (user == null || !(Context.Actor is UnturnedUser uPlayer))
-            {
-                await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
-                return;
-            }
+            var searchTerm = Context.Parameters[0];
+            var user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByNameOrId);
 
-            // Player is offline
-            if (Provider.clients.All(x => x.playerID.steamID != uPlayer.SteamId))
-            {
-                await PrintAsync(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
-                return;
-            }
+            if (user is not UnturnedUser unturnedUser)
+                throw new UserFriendlyException(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
 
             var callingPlayer = (UnturnedUser) Context.Actor;
             var position = callingPlayer.Player.Transform.Position;
 
-            await uPlayer.Player.SetPositionAsync(position);
-            
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new { Player = user.DisplayName }]);
-            await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = uPlayer.DisplayName}]);
+            await unturnedUser.Player.SetPositionAsync(position);
+
+            await unturnedUser.PrintMessageAsync(
+                m_StringLocalizer["tphere:successful_tp", new {Player = user.DisplayName}]);
+            await user.PrintMessageAsync(
+                m_StringLocalizer["tphere:successful_tp_other", new {Player = unturnedUser.DisplayName}]);
         }
     }
 }
