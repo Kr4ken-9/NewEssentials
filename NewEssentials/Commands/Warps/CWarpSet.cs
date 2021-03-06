@@ -15,7 +15,7 @@ namespace NewEssentials.Commands.Warps
     [Command("set")]
     [CommandParent(typeof(CWarpRoot))]
     [CommandDescription("Save a warp at your location")]
-    [CommandSyntax("<name>")]
+    [CommandSyntax("<name> [cooldown]")]
     [CommandActor(typeof(UnturnedUser))]
     public class CWarpSet : UnturnedCommand
     {
@@ -37,8 +37,10 @@ namespace NewEssentials.Commands.Warps
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length != 1)
+            if (Context.Parameters.Length < 1 || Context.Parameters.Length > 2)
                 throw new CommandWrongUsageException(Context);
+
+            int cooldown = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<int>(1) : 0;
 
             var warpData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string newWarpName = Context.Parameters[0];
@@ -49,7 +51,7 @@ namespace NewEssentials.Commands.Warps
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             var newWarpLocation = uPlayer.Player.Player.transform.position.ToSerializableVector3();
             
-            warpData.Warps.Add(newWarpName, newWarpLocation);
+            warpData.Warps.Add(newWarpName, new SerializableWarp(cooldown, newWarpLocation));
             await m_DataStore.SaveAsync(WarpsKey, warpData);
             m_PluginAccessor.Instance.RegisterNewWarpPermission(newWarpName);
 

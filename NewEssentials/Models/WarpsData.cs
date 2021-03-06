@@ -6,6 +6,6 @@ namespace NewEssentials.Models
     [Serializable]
     public class WarpsData
     {
-        public Dictionary<string, SerializableVector3> Warps { get; set; }
+        public Dictionary<string, SerializableWarp> Warps { get; set; }
     }
 }

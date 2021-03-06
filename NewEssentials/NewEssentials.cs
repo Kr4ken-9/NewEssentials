@@ -71,6 +71,9 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.delete.others", "Allow user to delete another user's homes", PermissionGrantResult.Deny);
 
+            m_PermissionRegistry.RegisterPermission(this, "commands.warp.cooldowns.exempt", "Bypass any warp-related cooldowns", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "warps.cooldowns.exempt", "Bypass any warps-related cooldowns", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "kits.cooldowns.exempt", "Bypass any kits-related cooldowns", PermissionGrantResult.Deny);
         }
 
         private async Task RegisterDataStores()
@@ -79,7 +82,7 @@ namespace NewEssentials
             {
                 await m_DataStore.SaveAsync(WarpsKey, new WarpsData
                 {
-                    Warps = new Dictionary<string, SerializableVector3>()
+                    Warps = new Dictionary<string, SerializableWarp>()
                 });
             }
             else
@@ -99,8 +102,13 @@ namespace NewEssentials
             {
                 foreach(var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
                 {
-                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}", $"Permission to spawn {kitPair.Key} kit", PermissionGrantResult.Deny);
-                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}", $"Permission to give others {kitPair.Key} kit", PermissionGrantResult.Deny);
+                    // Outdated permissions but left for compatibility
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}", $"Migrate to kits.{kitPair.Key} when possible please", PermissionGrantResult.Deny);
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitPair.Key}", $"Migrate to kits.give.{kitPair.Key} when possible please", PermissionGrantResult.Deny);
+                    
+                    // Updated permissions for consistency
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.{kitPair.Key}", $"Permission to spawn {kitPair.Key} kit", PermissionGrantResult.Deny);
+                    m_PermissionRegistry.RegisterPermission(this, $"kits.give.{kitPair.Key}", $"Permission to give others {kitPair.Key} kit", PermissionGrantResult.Deny);
                 }
             }
         }
@@ -144,6 +152,9 @@ namespace NewEssentials
         {
             m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitName}");
             m_PermissionRegistry.RegisterPermission(this, $"kits.kit.give.{kitName}");
+            
+            m_PermissionRegistry.RegisterPermission(this, $"kits.{kitName}");
+            m_PermissionRegistry.RegisterPermission(this, $"kits.give.{kitName}");
         }
 
         public void RegisterNewWarpPermission(string warpName) => m_PermissionRegistry.RegisterPermission(this,

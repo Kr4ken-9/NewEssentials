@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.Players;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
@@ -26,15 +27,23 @@ namespace NewEssentials.Commands.Kits
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IItemSpawner m_ItemSpawner;
         private readonly IUnturnedUserDirectory m_UserDirectory;
+        private readonly ICooldownManager m_CooldownManager;
         private const string KitsKey = "kits";
 
-        public CKitRoot(IDataStore dataStore, IStringLocalizer stringLocalizer, IPermissionChecker permissionChecker, IItemSpawner itemSpawner, IUnturnedUserDirectory userDirectory, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CKitRoot(IDataStore dataStore,
+            IStringLocalizer stringLocalizer,
+            IPermissionChecker permissionChecker,
+            IItemSpawner itemSpawner,
+            IUnturnedUserDirectory userDirectory,
+            ICooldownManager cooldownManager,
+            IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_DataStore = dataStore;
             m_StringLocalizer = stringLocalizer;
             m_PermissionChecker = permissionChecker;
             m_ItemSpawner = itemSpawner;
             m_UserDirectory = userDirectory;
+            m_CooldownManager = cooldownManager;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -70,32 +79,10 @@ namespace NewEssentials.Commands.Kits
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[1]}]);
             
             SerializableKit kit = kitsData.Kits[kitName];
-            
-            // If there is a non-zero cooldown and the user is not exempt from cooldowns
-            // Then we will add a cooldown to them for this specific kit
-            // Unless they are already under a cooldown, in which we will deny them the kit
-            if (kit.Cooldown != 0 && await CheckPermissionAsync("cooldowns.exempt") == PermissionGrantResult.Deny)
-            {
-                TimeSpan rightThisVeryInstant = DateTime.Now.TimeOfDay;
-                if (!recipient.Session.SessionData.ContainsKey($"kits.cooldowns.{kitName}"))
-                {
-                    recipient.Session.SessionData.Add($"kits.cooldowns.{kitName}", rightThisVeryInstant);
-                }
-                else
-                {
-                    TimeSpan lastKitUse = (TimeSpan) recipient.Session.SessionData[$"kits.cooldowns.{kitName}"];
-                    double secondsSinceLastUse = (rightThisVeryInstant - lastKitUse).TotalSeconds;
-                    double remainingSeconds = Math.Round(kit.Cooldown - secondsSinceLastUse, 2);
 
-                    if (secondsSinceLastUse < kit.Cooldown)
-                    {
-                        throw new UserFriendlyException(m_StringLocalizer["kits:spawn:cooldown",
-                            new {Time = remainingSeconds, Kit = kitName}]);
-                    }
-
-                    recipient.Session.SessionData[$"kits.cooldowns.{kitName}"] = rightThisVeryInstant;
-                }
-            }
+            double? cooldown = await m_CooldownManager.OnCooldownAsync(recipient, "kits", kitName, kit.Cooldown);
+            if (cooldown.HasValue)
+                throw new UserFriendlyException(m_StringLocalizer["kits:spawn:cooldown", new {Kit = kitName, Time = cooldown}]);
             
             foreach (var item in kit.SerializableItems)
             {

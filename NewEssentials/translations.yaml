@@ -112,6 +112,7 @@ warps:
   success: "Warped to {Warp} successfully."
   deleted: "Deleted {Warp} successfully."
   list: "Warps include: {Warps}"
+  cooldown: "You must wait {Time} seconds before you can use {Warp} again."
   set:
     exists: "{Warp} already exists."
     success: "Saved new warp: {Warp} at your location."
