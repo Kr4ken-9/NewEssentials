@@ -25,12 +25,14 @@ namespace NewEssentials.Commands.TPA
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly UnturnedUserDirectory m_UserDirectory;
         private readonly ITeleportRequestManager m_TpaRequestManager;
+        private readonly IConfiguration m_Configuration;
         private readonly IPluginAccessor<NewEssentials> m_PluginAccessor;
         private readonly ITeleportService m_TeleportService;
 
         public CTPAccept(IStringLocalizer stringLocalizer,
             UnturnedUserDirectory userDirectory,
             ITeleportRequestManager tpaRequestManager,
+            IConfiguration configuration,
             IPluginAccessor<NewEssentials> pluginAccessor,
             ITeleportService teleportService,
             IServiceProvider serviceProvider) :
@@ -39,6 +41,7 @@ namespace NewEssentials.Commands.TPA
             m_StringLocalizer = stringLocalizer;
             m_UserDirectory = userDirectory;
             m_TpaRequestManager = tpaRequestManager;
+            m_Configuration = configuration;
             m_PluginAccessor = pluginAccessor;
             m_TeleportService = teleportService;
         }
@@ -81,9 +84,9 @@ namespace NewEssentials.Commands.TPA
                     throw new UserFriendlyException("This is a placeholder so that we can reassure the compiler that requester will never be null.");
             }
 
-            int delay = m_PluginAccessor.Instance.Configuration.GetValue<int>("teleportation:delay");
-            bool cancelOnMove = m_PluginAccessor.Instance.Configuration.GetValue<bool>("teleportation:cancelOnMove");
-            bool cancelOnDamage = m_PluginAccessor.Instance.Configuration.GetValue<bool>("teleportation:cancelOnDamage");
+            int delay = m_Configuration.GetValue<int>("teleportation:delay");
+            bool cancelOnMove = m_Configuration.GetValue<bool>("teleportation:cancelOnMove");
+            bool cancelOnDamage = m_Configuration.GetValue<bool>("teleportation:cancelOnDamage");
             
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_self", new { Requester = requester.DisplayName, Time = delay }]);
 
@@ -94,8 +97,8 @@ namespace NewEssentials.Commands.TPA
 
             if (!successful)
             {
-                requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:canceled"], Color.DarkRed);
-                throw new UserFriendlyException(m_StringLocalizer["tpa:accept:canceled"]);
+                requester.PrintMessageAsync(m_StringLocalizer["teleport:canceled"], Color.DarkRed);
+                throw new UserFriendlyException(m_StringLocalizer["teleport:canceled"]);
             }
 
             await requester.Player.Player.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);

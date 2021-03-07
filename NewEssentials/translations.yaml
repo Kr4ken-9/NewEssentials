@@ -40,7 +40,7 @@ vehicle:
   success_given: "Spawned {Vehicle} for {Player} successfully."
   invalid_player: "{Player} is not a player."
 home:
-  success: "Teleported to {Home}."
+  success: "Teleporting to {Home} in {Time} seconds. Don't move!"
   failure: "Could not teleport to {Home}."
   no_bed: "You have no bed to teleport to."
   no_home: "You have no home to teleport to."
@@ -62,7 +62,6 @@ tpa:
   denied_self: "You denied {Requester}'s TPA request."
   denied_other: "Your TPA request to {Recipient} was denied."
   accept:
-    canceled: "TPA cancelled due to damage or movement."
     disconnected: "{Requester} disconnected before they could teleport to you."
     no_requests: "You have no pending TPA requests."
     no_requests_from: "You have no pending TPA requests from {Requester}."
@@ -178,3 +177,5 @@ compass:
   west: "You are facing West."
   northwest: "You are facing North West."
   unknown: "You are an alien. Where the fuck are you?"
+teleport:
+  canceled: "Teleport cancelled due to damage or movement."
