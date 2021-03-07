@@ -110,7 +110,7 @@ repair:
 warps:
   none: "{Warp} is not a warp."
   no_permission: "You do not have permission to warp to {Warp}."
-  success: "Warped to {Warp} successfully."
+  success: "Warping to {Warp} in {Time} seconds. Don't move!"
   deleted: "Deleted {Warp} successfully."
   list: "Warps include: {Warps}"
   cooldown: "You must wait {Time} seconds before you can use {Warp} again."

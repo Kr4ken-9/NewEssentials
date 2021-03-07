@@ -21,6 +21,7 @@ namespace NewEssentials.Players
             m_EventBus = eventBus;
         }
         
+        // TODO: Handle teleporting with SetPositionAsync and error reporting with PrintMessageAsync
         public async Task<bool> TeleportAsync(UnturnedUser user, TeleportOptions options)
         {
             var cancelled = false;
