@@ -37,15 +37,15 @@ namespace NewEssentials.Players
                 });
             }
 
-            var lastMove = (TimeSpan) user.Session.SessionData["lastMovement"];
+            var lastPosition = user.Player.Transform.Position;
             
             await Task.Delay(new TimeSpan(0, 0, options.Delay));
             sub.Dispose();
 
             if (options.CancelOnMove)
             {
-                var latestMove = (TimeSpan) user.Session.SessionData["lastMovement"];
-                if (lastMove != latestMove)
+                var latestPosition = user.Player.Transform.Position;
+                if (lastPosition != latestPosition)
                     cancelled = true;
             }
 

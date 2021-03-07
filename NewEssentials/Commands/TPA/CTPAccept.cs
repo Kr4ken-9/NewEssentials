@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
@@ -11,7 +12,6 @@ using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using SDG.Unturned;
 
 namespace NewEssentials.Commands.TPA
 {
@@ -56,13 +56,13 @@ namespace NewEssentials.Commands.TPA
             {
                 case 0:
                     if (!m_TpaRequestManager.IsRequestOpen(recipientSteamID))
-                        throw new UserFriendlyException(m_StringLocalizer["tpa:no_requests"]);
+                        throw new UserFriendlyException(m_StringLocalizer["tpa:accept:no_requests"]);
 
                     ulong firstRequester = m_TpaRequestManager.AcceptRequest(recipientSteamID);
                     requester = m_UserDirectory.FindUser(firstRequester.ToString(), UserSearchMode.FindById);
 
                     if (requester == null)
-                        throw new UserFriendlyException(m_StringLocalizer["tpa:disconnected",
+                        throw new UserFriendlyException(m_StringLocalizer["tpa:accept:disconnected",
                             new {Requester = firstRequester.ToString()}]);
 
                     break;
@@ -74,7 +74,7 @@ namespace NewEssentials.Commands.TPA
                         throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new { Recipient = requesterName }]);
 
                     if (!m_TpaRequestManager.IsRequestOpen(recipientSteamID, requester.SteamId.m_SteamID))
-                        throw new UserFriendlyException(m_StringLocalizer["tpa:no_requests_from",
+                        throw new UserFriendlyException(m_StringLocalizer["tpa:accept:no_requests_from",
                             new { Requester = requester.DisplayName }]);
                     break;
                 default:
@@ -85,18 +85,20 @@ namespace NewEssentials.Commands.TPA
             bool cancelOnMove = m_PluginAccessor.Instance.Configuration.GetValue<bool>("teleportation:cancelOnMove");
             bool cancelOnDamage = m_PluginAccessor.Instance.Configuration.GetValue<bool>("teleportation:cancelOnDamage");
             
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_self", new { Requester = requester.DisplayName, Time = delay }]);
+
+            requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_other", new {Recipient = uPlayer.DisplayName, Time = delay}]); 
+            
             bool successful = await m_TeleportService.TeleportAsync(requester,
                 new TeleportOptions(m_PluginAccessor.Instance, delay, cancelOnMove, cancelOnDamage));
 
             if (!successful)
-                throw new UserFriendlyException(m_StringLocalizer["tpa:canceled"]);
+            {
+                requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:canceled"], Color.DarkRed);
+                throw new UserFriendlyException(m_StringLocalizer["tpa:accept:canceled"]);
+            }
 
             await requester.Player.Player.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);
-
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accepted_self",
-                new { Requester = requester.DisplayName }]);
-
-            requester.PrintMessageAsync(m_StringLocalizer["tpa:accepted_other", new {Recipient = uPlayer.DisplayName, Time = delay}]); 
         }
     }
 }

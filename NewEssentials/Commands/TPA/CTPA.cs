@@ -38,6 +38,7 @@ namespace NewEssentials.Commands.TPA
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
             string recipientName = Context.Parameters[0];
 
+            // TODO: Switch to UnturnedUserDirectory
             if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient))
                 throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new {Recipient = recipientName}]);
 
