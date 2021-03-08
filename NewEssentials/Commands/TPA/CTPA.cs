@@ -39,8 +39,29 @@ namespace NewEssentials.Commands.TPA
             string recipientName = Context.Parameters[0];
 
             // TODO: Switch to UnturnedUserDirectory
-            if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient))
+            if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient)){
+                if(recipientName == "a") { //tpa a? I mean you could theoretically just make the player execute "/tpaccept" instead, but oh well fair enough.
+                    ulong requesterSteamID = uPlayer.SteamId.m_SteamID;
+                    if (m_TpaRequestManager.IsRequestOpen(requesterSteamID)) {
+                        ulong firstRequester = m_TpaRequestManager.AcceptRequest(requesterSteamID);
+                        UnturnedUser requester = m_UserDirectory.FindUser(firstRequester.ToString(), UserSearchMode.FindById);
+                        if(requester != null) {
+                            int delay = m_Configuration.GetValue<int>("teleportation:delay");
+                            bool cancelOnMove = m_Configuration.GetValue<bool>("teleportation:cancelOnMove");
+                            bool cancelOnDamage = m_Configuration.GetValue<bool>("teleportation:cancelOnDamage");
+                            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_self", new { Requester = requester.DisplayName, Time = delay }]);
+                            requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_other", new {Recipient = uPlayer.DisplayName, Time = delay}]);
+                            bool successful = await m_TeleportService.TeleportAsync(requester,new TeleportOptions(m_PluginAccessor.Instance, delay, cancelOnMove, cancelOnDamage));
+                            if (!successful){
+                                requester.PrintMessageAsync(m_StringLocalizer["teleport:canceled"], Color.DarkRed);
+                                throw new UserFriendlyException(m_StringLocalizer["teleport:canceled"]);
+                            }
+                            await requester.Player.Player.TeleportToLocationAsync(uPlayer.Player.Player.transform.position);
+                        }
+                    }
+                } // a draft! This may not be 100% correct, but well they'll probably add spacesupported alias in OpenMod soon anyway
                 throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new {Recipient = recipientName}]);
+            }
 
             ulong requesterSteamID = uPlayer.SteamId.m_SteamID;
             ulong recipientSteamID = recipient.playerID.steamID.m_SteamID;
