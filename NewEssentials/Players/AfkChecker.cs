@@ -107,6 +107,9 @@ namespace NewEssentials.Players
 
         private async Task PlayerJoin(UnturnedUserConnectedEvent @event)
         {
+            if (@event.User.Session.SessionData.ContainsKey("lastMovement"))
+                return;
+            
             await UniTask.SwitchToMainThread();
             @event.User.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
 
