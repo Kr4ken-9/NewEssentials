@@ -58,21 +58,25 @@ namespace NewEssentials.Players
 
         public void AcceptRequest(ulong recipient, ulong requester) => m_OpenRequests[recipient].Remove(requester);
 
-        private async UniTask RequestExpirationThread(ulong recipient, ulong requester, int lifetime)
+        private async UniTask RequestExpirationThread(ulong recipientID, ulong requesterID, int lifetime)
         {
             await UniTask.Delay(TimeSpan.FromMilliseconds(lifetime));
 
-            if (!m_OpenRequests[recipient].Contains(requester))
+            if (!m_OpenRequests[recipientID].Contains(requesterID))
                 return;
             
-            m_OpenRequests[recipient].Remove(requester);
+            m_OpenRequests[recipientID].Remove(requesterID);
 
-            SteamPlayer player = PlayerTool.getSteamPlayer(requester);
-            if (player == null)
+            SteamPlayer requester = PlayerTool.getSteamPlayer(requesterID);
+            if (requester == null)
+                return;
+
+            SteamPlayer recipient = PlayerTool.getSteamPlayer(recipientID);
+            if (recipient == null)
                 return;
 
             await UniTask.SwitchToMainThread();
-            ChatManager.serverSendMessage(m_StringLocalizer["tpa:expired", new {Recipient = player.playerID.characterName}], Color.red, toPlayer: player);
+            ChatManager.serverSendMessage(m_StringLocalizer["tpa:expired", new {Recipient = recipient.playerID.characterName}], Color.red, toPlayer: requester);
         }
 
         public async ValueTask DisposeAsync()

@@ -179,3 +179,6 @@ compass:
   unknown: "You are an alien. Where the fuck are you?"
 teleport:
   canceled: "Teleport cancelled due to damage or movement."
+connections:
+  connected: "{User} joined the game."
+  disconnected: "{User} left the game."

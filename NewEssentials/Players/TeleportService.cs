@@ -7,7 +7,6 @@ using OpenMod.API.Ioc;
 using OpenMod.Core.Helpers;
 using OpenMod.Extensions.Games.Abstractions.Players;
 using OpenMod.Unturned.Users;
-using SDG.Unturned;
 
 namespace NewEssentials.Players
 {

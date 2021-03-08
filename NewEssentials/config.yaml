@@ -27,3 +27,6 @@ teleportation:
   delay: 5
   cancelOnMove: true
   cancelOnDamage: true
+connections:
+  joinMesasges: true
+  leaveMessages: true
