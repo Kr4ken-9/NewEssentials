@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using NewEssentials.Models;
 using SDG.Unturned;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewEssentials.Extensions
@@ -14,7 +14,7 @@ namespace NewEssentials.Extensions
         public static SerializableItem[] ToSerializableItems(this PlayerClothing clothing)
         {
             var serializableItems = new List<SerializableItem>();
-            
+
             if (clothing.hat != 0)
                 serializableItems.Add(new SerializableItem(clothing.hat.ToString(), clothing.hatState, 1, 100, clothing.hatQuality));
 
@@ -38,7 +38,7 @@ namespace NewEssentials.Extensions
 
             return serializableItems.ToArray();
         }
-        
+
         public static async UniTask MaxAllSkillsAsync(this PlayerSkills playerSkills, bool kunii = false)
         {
             await UniTask.SwitchToMainThread();
@@ -73,69 +73,74 @@ namespace NewEssentials.Extensions
         public static void ClearInventory(this Player player)
         {
             Items[] items = player.inventory.items;
-            for (byte b = 0; b < PlayerInventory.PAGES; b++)
+            for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
             {
-                if (b == PlayerInventory.AREA)
+                if (items[b]?.items?.Count == 0)
+                {
                     continue;
+                }
 
-                items[b].Clear();
+                items[b].ReverseClear();
 
                 if (b < PlayerInventory.SLOTS)
+                {
                     player.equipment.sendSlot(b);
+                }
             }
 
             PlayerClothing clothing = player.clothing;
-            
+            HumanClothes clothes = clothing.thirdClothes;
+
             // I like sendSwap better but it can only be receieved from owner I think
             // I also really hate everything past this point
             if (clothing.backpack != 0)
             {
+                clothes.backpack = 0;
                 clothing.askWearBackpack(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.glasses != 0)
             {
+                clothes.glasses = 0;
                 clothing.askWearGlasses(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.hat != 0)
             {
+                clothes.hat = 0;
                 clothing.askWearHat(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.mask != 0)
             {
+                clothes.mask = 0;
                 clothing.askWearMask(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.pants != 0)
             {
+                clothes.pants = 0;
                 clothing.askWearPants(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.shirt != 0)
             {
+                clothes.shirt = 0;
                 clothing.askWearShirt(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
 
             if (clothing.vest != 0)
             {
+                clothes.vest = 0;
                 clothing.askWearVest(0, 0, PlaceholderArray, true);
-                items[PlayerInventory.SLOTS].Clear();
             }
         }
 
-        public static void Clear(this Items item)
+        public static void ReverseClear(this Items item)
         {
-            for (byte b = 0; b < item.getItemCount(); b++)
+            for (int b = item.getItemCount() - 1; b >= 0; b--)
             {
-                item.removeItem(b);
+                item.removeItem((byte)b);
             }
         }
 
