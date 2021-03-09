@@ -28,11 +28,9 @@ maxskills:
   granted_all: "All players have been granted max skills."
   kunii: "Kunii is a god."
 item:
-  syntax: "/item [<id>/<item name>] <amount>"
-  give_syntax: "/giveitem <player> [<id>/<item name>] <amount>"
   invalid: "{Item} is not an item."
   too_much: "The max item spawn limit is {UpperLimit}."
-  success: "Spawned {Amount} {Item}."
+  success: "Spawned {Amount} {Item} ({ID})."
 vehicle:
   invalid: "{Vehicle} is not a vehicle."
   failed: "Something is blocking the vehicle from spawning."

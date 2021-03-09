@@ -4,14 +4,14 @@ namespace NewEssentials.Extensions
 {
     public static class ConfigurationExtensions
     {
-        public static bool GetItemAmount(this IConfiguration configuration, byte inputAmount, out byte finalAmount)
+        public static bool GetItemAmount(this IConfiguration configuration, ushort inputAmount, out ushort finalAmount)
         {
             finalAmount = inputAmount;
 
             if (!configuration.GetValue<bool>("items:enableamountlimit"))
                 return true;
 
-            byte maxAmount = configuration.GetValue<byte>("items:maxspawnamount");
+            var maxAmount = configuration.GetValue<ushort>("items:maxspawnamount");
             if (finalAmount <= maxAmount)
                 return true;
 

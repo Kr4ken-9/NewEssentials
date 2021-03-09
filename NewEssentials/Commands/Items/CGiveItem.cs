@@ -30,7 +30,7 @@ namespace NewEssentials.Commands.Items
         {
             // User either didn't provide an item and player or provided too much information
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
-                throw new CommandWrongUsageException(m_StringLocalizer["item:give_syntax"]);
+                throw new CommandWrongUsageException(Context);
 
             string rawPlayer = await Context.Parameters.GetAsync<string>(0);
 
@@ -42,17 +42,17 @@ namespace NewEssentials.Commands.Items
             if (!UnturnedAssetHelper.GetItem(rawItem, out ItemAsset itemAsset))
                 throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawItem}]);
 
-            byte amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<byte>(1) : (byte)1;
+            var amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<ushort>(1) : (ushort)1;
             if (!m_Configuration.GetItemAmount(amount, out amount))
                 throw new UserFriendlyException(m_StringLocalizer["item:too_much", new {UpperLimit = amount}]);
 
             Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
             
             await UniTask.SwitchToMainThread();
-            for (byte b = 0; b < amount; b++)
+            for (ushort u = 0; u < amount; u++)
                 player.player.inventory.forceAddItem(item, true);
 
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName}]);
+            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName, ID = itemAsset.id}]);
         }
     }
 }
