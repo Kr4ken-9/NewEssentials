@@ -34,13 +34,13 @@ namespace NewEssentials.Commands.Clear
         private int BombAllItems()
         {
             int counter = 0;
-            for (byte b = 0; b < Regions.WORLD_SIZE; b += 1)
+            for (byte b = 0; b < Regions.WORLD_SIZE; b++)
             {
-                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2 += 1)
+                for (byte b2 = 0; b2 < Regions.WORLD_SIZE; b2++)
                 {
                     var itemRegion = ItemManager.regions[b, b2];
                     itemRegion.lastRespawn = Time.realtimeSinceStartup;
-                    counter += itemRegion.drops.Count;
+                    counter += itemRegion.items.Count;
                     
                     ItemManager.askClearRegionItems(b, b2);
                 }
