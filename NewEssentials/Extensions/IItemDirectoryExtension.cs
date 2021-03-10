@@ -10,7 +10,7 @@ namespace NewEssentials.Extensions
     // https://github.com/openmod/openmod/blob/main/extensions/OpenMod.Extensions.Games.Abstractions/Items/ItemDirectoryExtensions.cs
     public static class IItemDirectoryExtension
     {
-        public static async UniTask<IItemAsset?> FindByNameOrIdAsync(this IItemDirectory directory, string input)
+        public static async UniTask<UnturnedItemAsset?> FindByNameOrIdAsync(this IItemDirectory directory, string input)
         {
             var assets = (await directory.GetItemAssetsAsync())
                 .OfType<UnturnedItemAsset>()
