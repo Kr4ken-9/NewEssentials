@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using OpenMod.Core.Commands;
+using OpenMod.Extensions.Games.Abstractions.Players;
+using OpenMod.UnityEngine.Extensions;
 using OpenMod.Unturned.Commands;
 using SDG.Unturned;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NewEssentials.Commands.Clear
 {
@@ -15,7 +16,7 @@ namespace NewEssentials.Commands.Clear
     [CommandAlias("v")]
     [CommandParent(typeof(CClearRoot))]
     [CommandDescription("Clears all vehicles or only empty vehicles")]
-    [CommandSyntax("[empty]")]
+    [CommandSyntax("[clearEmpty] [radius]")]
     public class CClearVehicles : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
@@ -27,42 +28,58 @@ namespace NewEssentials.Commands.Clear
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length > 1)
+            if (Context.Parameters.Length > 2)
                 throw new CommandWrongUsageException(Context);
 
             if (Context.Parameters.Length == 0)
             {
                 await UniTask.SwitchToMainThread();
 
-                byte counter = BombVehicles(VehicleManager.vehicles);
+                ushort counter = (ushort)VehicleManager.vehicles.Count;
+                ClearVehiclesExceptTrain(VehicleManager.vehicles.ToList());
 
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["clear:vehicles"]);
+                await PrintAsync(m_StringLocalizer["clear:vehicles", new { Count = counter }]);
+                return;
+            }
+
+            var clearEmpty = Context.Parameters.Count >= 1 && await Context.Parameters.GetAsync<bool>(0);
+            var radius = Context.Parameters.Count == 2 ? await Context.Parameters.GetAsync<float>(1) : 0f;
+            var center = Context.Actor is IPlayerUser playerUser ? playerUser.Player.Transform.Position : new(0, 0, 0);
+
+            await UniTask.SwitchToMainThread();
+
+            List<InteractableVehicle> vehicles;
+            if (radius > 0)
+            {
+                vehicles = new();
+                VehicleManager.getVehiclesInRadius(center.ToUnityVector(), radius * radius, vehicles);
             }
             else
             {
-                string notEmpty = Context.Parameters[0];
-                if(!notEmpty.Equals("empty", StringComparison.InvariantCultureIgnoreCase))
-                    throw new CommandWrongUsageException(Context);
-                
-                await UniTask.SwitchToMainThread();
-
-                byte counter = BombVehicles(VehicleManager.vehicles.Where(v => v.isEmpty));
-
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["clear:vehicles_empty", new {Count = counter}]);
+                vehicles = VehicleManager.vehicles.ToList();
             }
+
+            if (clearEmpty)
+            {
+                vehicles = vehicles.Where(x => x.isEmpty).ToList();
+            }
+
+            await UniTask.SwitchToMainThread();
+
+            ClearVehiclesExceptTrain(vehicles);
+
+            await PrintAsync(m_StringLocalizer[$"clear:vehicles{(clearEmpty ? "_empty" : string.Empty)}", new { vehicles.Count }]);
         }
 
-        private byte BombVehicles(IEnumerable<InteractableVehicle> vehicles)
+        private void ClearVehiclesExceptTrain(IEnumerable<InteractableVehicle> vehicles)
         {
-            byte counter = 0;
             foreach (var vehicle in vehicles)
             {
-                vehicle.transform.position = new Vector3(0, 0, 0);
-                VehicleManager.sendVehicleExploded(vehicle);
-                counter++;
+                if (vehicle.asset.engine != EEngine.TRAIN)
+                {
+                    VehicleManager.askVehicleDestroy(vehicle);
+                }
             }
-
-            return counter;
         }
     }
 }
