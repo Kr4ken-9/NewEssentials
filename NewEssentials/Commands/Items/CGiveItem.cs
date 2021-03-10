@@ -1,13 +1,14 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
-using NewEssentials.Helpers;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
+using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
+using OpenMod.Unturned.Players;
 using SDG.Unturned;
+using System;
 
 namespace NewEssentials.Commands.Items
 {
@@ -19,11 +20,14 @@ namespace NewEssentials.Commands.Items
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IConfiguration m_Configuration;
-        
-        public CGiveItem(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IConfiguration configuration) : base(serviceProvider)
+        private readonly IItemDirectory m_ItemDirectory;
+
+        public CGiveItem(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider,
+            IConfiguration configuration, IItemDirectory itemDirectory) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_Configuration = configuration;
+            m_ItemDirectory = itemDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -32,27 +36,29 @@ namespace NewEssentials.Commands.Items
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
                 throw new CommandWrongUsageException(Context);
 
-            string rawPlayer = await Context.Parameters.GetAsync<string>(0);
+            var player = await Context.Parameters.GetAsync<UnturnedPlayer>(0);
 
-            if (!PlayerTool.tryGetSteamPlayer(rawPlayer, out SteamPlayer player))
-                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = rawPlayer}]);
+            if (player == null)
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new { Player = Context.Parameters[0] }]);
 
-            string rawItem = await Context.Parameters.GetAsync<string>(1);
+            string rawItem = Context.Parameters[1];
 
-            if (!UnturnedAssetHelper.GetItem(rawItem, out ItemAsset itemAsset))
-                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new {Item = rawItem}]);
+            var item = await m_ItemDirectory.FindByNameOrIdAsync(rawItem);
 
-            var amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<ushort>(1) : (ushort)1;
+            if (item == null)
+                throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new { Item = rawItem }]);
+
+            var amount = Context.Parameters.Length == 3 ? await Context.Parameters.GetAsync<ushort>(2) : (ushort)1;
             if (!m_Configuration.GetItemAmount(amount, out amount))
-                throw new UserFriendlyException(m_StringLocalizer["item:too_much", new {UpperLimit = amount}]);
+                throw new UserFriendlyException(m_StringLocalizer["items:too_much", new { UpperLimit = amount }]);
 
-            Item item = new Item(itemAsset.id, EItemOrigin.ADMIN);
-            
+            Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
+
             await UniTask.SwitchToMainThread();
             for (ushort u = 0; u < amount; u++)
-                player.player.inventory.forceAddItem(item, true);
+                player.Player.inventory.forceAddItem(uItem, true);
 
-            await Context.Actor.PrintMessageAsync(m_StringLocalizer["item:success", new {Amount = amount, Item = itemAsset.itemName, ID = itemAsset.id}]);
+            await PrintAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = item.ItemName, ID = item.ItemAssetId }]);
         }
     }
 }

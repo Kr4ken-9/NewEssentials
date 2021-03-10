@@ -1,11 +1,11 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
+using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using System;
 
 namespace NewEssentials.Commands.Items
 {
@@ -17,7 +17,7 @@ namespace NewEssentials.Commands.Items
     {
         private readonly IStringLocalizer m_StringLocalizer;
 
-        public CMore(IStringLocalizer stringLocalizer,  IServiceProvider serviceProvider) : base(serviceProvider)
+        public CMore(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
         }
@@ -27,24 +27,24 @@ namespace NewEssentials.Commands.Items
             if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
 
-            int amount = 10;
+            ushort amount = 10;
             if (Context.Parameters.Length == 1)
-                amount = await Context.Parameters.GetAsync<int>(0);
+                amount = await Context.Parameters.GetAsync<ushort>(0);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
+            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             PlayerEquipment equipment = uPlayer.Player.Player.equipment;
 
             if (equipment.itemID == 0)
                 throw new UserFriendlyException(m_StringLocalizer["more:none"]);
-            
+
             Item item = new Item(equipment.itemID, EItemOrigin.ADMIN);
 
             await UniTask.SwitchToMainThread();
-            for(int i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
                 uPlayer.Player.Player.inventory.forceAddItem(item, true);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["more:success",
-                new {Amount = amount, Item = equipment.asset.itemName}]);
+            await PrintAsync(m_StringLocalizer["more:success",
+                new { Amount = amount, Item = equipment.asset.itemName }]);
         }
     }
 }
