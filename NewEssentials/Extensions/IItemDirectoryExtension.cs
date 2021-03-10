@@ -7,46 +7,65 @@ using System.Linq;
 
 namespace NewEssentials.Extensions
 {
-    // https://github.com/openmod/openmod/blob/main/extensions/OpenMod.Extensions.Games.Abstractions/Items/ItemDirectoryExtensions.cs
     public static class IItemDirectoryExtension
     {
         public static async UniTask<UnturnedItemAsset?> FindByNameOrIdAsync(this IItemDirectory directory, string input)
         {
             var assets = (await directory.GetItemAssetsAsync())
-                .OfType<UnturnedItemAsset>()
-                .OrderBy(x => x.ItemAsset.id);
+                .OfType<UnturnedItemAsset>();
+
+            await UniTask.SwitchToThreadPool();
 
             if (!assets.Any())
             {
                 return null;
             }
 
-            var item = assets.FirstOrDefault(x => x.ItemAssetId.Equals(input, StringComparison.OrdinalIgnoreCase));
-            if (item != null)
+            var itemAsset = assets.FirstOrDefault(x => x.ItemAssetId.Equals(input, StringComparison.OrdinalIgnoreCase));
+            if (itemAsset != null)
             {
-                return item;
+                return itemAsset;
             }
 
-            var matches = assets.Where(x => x.ItemName.IndexOf(input, StringComparison.OrdinalIgnoreCase) >= 0);
+            itemAsset = assets
+                .Where(z => input.Split(' ')
+                  .All(x => z.ItemName.Trim().Split(' ')
+                    .Any(y => y.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0)))
+                .OrderBy(x => x.ItemAsset.id)
+                .FirstOrDefault();
 
-            var minDist = int.MaxValue;
-
-            foreach (var asset in matches)
+            if (itemAsset != null)
             {
-                var distance = StringHelper.LevenshteinDistance(input, asset.ItemName);
+                return itemAsset;
+            }
 
-                // There's no lower distance
+            // https://github.com/openmod/openmod/blob/main/extensions/OpenMod.Extensions.Games.Abstractions/Items/ItemDirectoryExtensions.cs#L29
+            var maxDistance = int.MaxValue;
+
+            assets = assets
+                .Where(z => input.Split(' ')
+                  .Any(x => z.ItemName.Trim().Split(' ')
+                    .Any(y => y.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0)));
+
+            foreach (var (asset, distance) in from asset in assets
+                                              let trimName = asset.ItemName.Trim()
+                                              let distance = StringHelper.LevenshteinDistance(trimName, input)
+                                              select (asset, distance))
+            {
                 if (distance == 0)
-                    return asset;
-
-                if (item == null || distance < minDist)
                 {
-                    item = asset;
-                    minDist = distance;
+                    itemAsset = asset;
+                    break;
+                }
+
+                if (distance < maxDistance)
+                {
+                    itemAsset = asset;
+                    maxDistance = distance;
                 }
             }
 
-            return item;
+            return itemAsset;
         }
     }
 }

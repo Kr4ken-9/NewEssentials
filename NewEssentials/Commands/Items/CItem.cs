@@ -40,7 +40,7 @@ namespace NewEssentials.Commands.Items
             string rawInput = Context.Parameters[0];
             var item = await m_ItemDirectory.FindByNameOrIdAsync(rawInput);
 
-            if (item == null || !ushort.TryParse(item.ItemAssetId, out var id))
+            if (item == null)
                 throw new CommandWrongUsageException(m_StringLocalizer["item:invalid", new { Item = rawInput }]);
 
             var amount = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<ushort>(1) : (ushort)1;
@@ -48,7 +48,7 @@ namespace NewEssentials.Commands.Items
                 throw new UserFriendlyException(m_StringLocalizer["items:too_much", new { UpperLimit = amount }]);
 
             UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
-            Item uItem = new(id, EItemOrigin.ADMIN);
+            Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
 
             await UniTask.SwitchToMainThread();
             for (ushort u = 0; u < amount; u++)
