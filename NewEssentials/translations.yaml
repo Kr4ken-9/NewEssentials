@@ -82,7 +82,7 @@ explode:
   failure: "Failed to cause an explosion where you're looking."
   success: "Boom!"
 clear:
-  vehicles: "Successfully cleared all vehicles."
+  vehicles: "Successfully cleared {Count} vehicles."
   vehicles_empty: "Successfully cleared {Count} empty vehicles."
   items: "Successfully cleared {Count} items."
   inventory: "Successfully cleared your inventory."
