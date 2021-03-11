@@ -35,10 +35,9 @@ namespace NewEssentials.Commands.Clear
             {
                 await UniTask.SwitchToMainThread();
 
-                ushort counter = (ushort)VehicleManager.vehicles.Count;
-                ClearVehiclesExceptTrain(VehicleManager.vehicles.ToList());
+                ushort count = ClearVehiclesExceptTrain(VehicleManager.vehicles.ToList());
 
-                await PrintAsync(m_StringLocalizer["clear:vehicles", new { Count = counter }]);
+                await PrintAsync(m_StringLocalizer["clear:vehicles", new { Count = count }]);
                 return;
             }
 
@@ -66,20 +65,23 @@ namespace NewEssentials.Commands.Clear
 
             await UniTask.SwitchToMainThread();
 
-            ClearVehiclesExceptTrain(vehicles);
+            var counter = ClearVehiclesExceptTrain(vehicles);
 
-            await PrintAsync(m_StringLocalizer[$"clear:vehicles{(clearEmpty ? "_empty" : string.Empty)}", new { vehicles.Count }]);
+            await PrintAsync(m_StringLocalizer[$"clear:vehicles{(clearEmpty ? "_empty" : string.Empty)}", new { counter }]);
         }
 
-        private void ClearVehiclesExceptTrain(IEnumerable<InteractableVehicle> vehicles)
+        private ushort ClearVehiclesExceptTrain(IEnumerable<InteractableVehicle> vehicles)
         {
+            ushort counter = 0;
             foreach (var vehicle in vehicles)
             {
                 if (vehicle.asset.engine != EEngine.TRAIN)
                 {
+                    counter++;
                     VehicleManager.askVehicleDestroy(vehicle);
                 }
             }
+            return counter;
         }
     }
 }
