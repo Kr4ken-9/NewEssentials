@@ -1,6 +1,6 @@
-using System;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using System;
 using UnityEngine;
 
 namespace NewEssentials.Players
@@ -18,7 +18,6 @@ namespace NewEssentials.Players
             m_LastLocation = m_Player.transform.position;
         }
 
-        //Unity you are trash
         public void Resolve(UnturnedUser user)
         {
             m_User = user;
@@ -26,11 +25,16 @@ namespace NewEssentials.Players
 
         private void FixedUpdate()
         {
+            if (m_User == null)
+            {
+                return;
+            }
+
             Vector3 newPosition = m_Player.transform.position;
-            
+
             if (m_LastLocation != newPosition)
                 m_User.Session.SessionData["lastMovement"] = DateTime.Now.TimeOfDay;
-            
+
             m_LastLocation = newPosition;
         }
     }
