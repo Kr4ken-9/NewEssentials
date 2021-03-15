@@ -129,6 +129,7 @@ refuel:
     generator: "Refueled the generator you are looking at."
     oil: "Refueled the oil object you are looking at."
     tank: "Refueled the tank you are looking at."
+    object: "Refueled the object you are looking at."
 respawn:
   vehicles: "Successfully respawned all vehicles."
   animals: "Successfully respawned {Count} dead animals."
