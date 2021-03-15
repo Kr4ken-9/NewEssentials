@@ -154,6 +154,8 @@ god:
 tphere:
   successful_tp: "{Player} has been tped to you"
   successful_tp_other: "You were teleported to {Player}"
+tps:
+  tps: "Ticks per seconds:{IsConsole:|<color={Ticks:cond:>=40?green|red}>} {Ticks}"
 more:
   none: "You are not holding an item."
   success: "Spawned {Amount} of {Item}."
