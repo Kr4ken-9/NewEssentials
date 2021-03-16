@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -27,29 +26,31 @@ namespace NewEssentials.Commands
                 throw new CommandWrongUsageException(Context);
 
             await UniTask.SwitchToMainThread();
-            if (Context.Parameters.Length == 0)
+
+            void Heal(PlayerLife life)
             {
-                UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
-
-                var life = uPlayer.Player.Player.life;
-
                 life.askHeal(100, true, true);
                 life.serverModifyFood(100);
                 life.serverModifyWater(100);
                 life.serverModifyStamina(100);
                 life.serverModifyVirus(100);
+            }
 
-                await uPlayer.PrintMessageAsync(m_StringLocalizer["heal:success"]);
+            if (Context.Parameters.Length == 0)
+            {
+                var player = (UnturnedUser)Context.Actor;
+
+                Heal(player.Player.Player.life);
+
+                await player.PrintMessageAsync(m_StringLocalizer["heal:success"]);
             }
             else
             {
-                string searchTerm = Context.Parameters[0];
-                if (!PlayerTool.tryGetSteamPlayer(searchTerm, out SteamPlayer recipient))
-                    throw new UserFriendlyException(m_StringLocalizer["general:invalid_player",
-                        new { Player = searchTerm }]);
+                var player = await Context.Parameters.GetAsync<UnturnedUser>(0);
 
-                recipient.player.life.askHeal(100, true, true);
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["heal:success_other", new { Player = recipient.playerID.characterName }]);
+                Heal(player.Player.Player.life);
+
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["heal:success_other", new { Player = player.DisplayName }]);
             }
         }
     }
