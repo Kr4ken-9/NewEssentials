@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
@@ -13,6 +11,8 @@ using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
+using System;
+using System.Collections.Generic;
 
 namespace NewEssentials.Commands.Home
 {
@@ -48,7 +48,7 @@ namespace NewEssentials.Commands.Home
             if (Context.Parameters.Length > 1)
                 throw new CommandWrongUsageException(Context);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
+            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             bool bed = Context.Parameters.Length == 0;
             string homeName = Context.Parameters.Length == 1 ? Context.Parameters[0] : "";
             SerializableVector3 home = null;
@@ -60,21 +60,25 @@ namespace NewEssentials.Commands.Home
                 if (!userData.Data.ContainsKey("homes"))
                     throw new UserFriendlyException(m_StringLocalizer["home:no_home"]);
 
-                var homes = (Dictionary<object, object>) userData.Data["homes"];
+                var homes = (Dictionary<object, object>)userData.Data["homes"];
 
                 if (!homes.ContainsKey(homeName))
-                    throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", new {Home = homeName}]);
+                    throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", new { Home = homeName }]);
 
-                home = SerializableVector3.GetSerializableVector3FromUserData(homes, homeName);
+                home = SerializableVector3.Deserialize(homes[homeName]);
+                if (home == null)
+                {
+                    throw new UserFriendlyException(m_StringLocalizer["home:invalid_home", new { Home = homeName }]);
+                }
             }
-            
+
             // Here we will delay the teleportation whether it be to a bed or home
             int delay = m_Configuration.GetValue<int>("teleportation:delay");
             bool cancelOnMove = m_Configuration.GetValue<bool>("teleportation:cancelOnMove");
             bool cancelOnDamage = m_Configuration.GetValue<bool>("teleportation:cancelOnDamage");
-            
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new {Home = homeName, Time = delay}]);
-            
+
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["home:success", new { Home = homeName, Time = delay }]);
+
             bool success = await m_TeleportService.TeleportAsync(uPlayer, new TeleportOptions(m_PluginAccessor.Instance, delay, cancelOnMove, cancelOnDamage));
 
             if (!success)
@@ -91,7 +95,7 @@ namespace NewEssentials.Commands.Home
             }
 
             if (!await uPlayer.Player.Player.TeleportToLocationAsync(home.ToUnityVector3()))
-                throw new UserFriendlyException(m_StringLocalizer["home:failure", new {Home = homeName}]);
+                throw new UserFriendlyException(m_StringLocalizer["home:failure", new { Home = homeName }]);
         }
     }
 }
