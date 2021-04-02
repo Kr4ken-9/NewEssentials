@@ -25,18 +25,25 @@ namespace NewEssentials.Models
             Z = z;
         }
 
-        public Vector3 ToUnityVector3() => new Vector3(X, Y, Z);
+        public Vector3 ToUnityVector3() => new(X, Y, Z);
 
-        // This whole thing is retarded.
-        public static SerializableVector3 GetSerializableVector3FromUserData(Dictionary<object, object> userData, string indexName = null)
+        public static SerializableVector3 Deserialize(object data)
         {
-            Dictionary<object, object> vector = indexName != null ? (Dictionary<object, object>)userData[indexName] : userData;
+            if (data is SerializableVector3 vector3)
+            {
+                return vector3;
+            }
 
-            float x = float.Parse(vector["x"].ToString(), CultureInfo.InvariantCulture);
-            float y = float.Parse(vector["y"].ToString(), CultureInfo.InvariantCulture);
-            float z = float.Parse(vector["z"].ToString(), CultureInfo.InvariantCulture);
+            if (data is Dictionary<object, object> dictionary)
+            {
+                float x = float.Parse(dictionary["x"].ToString(), CultureInfo.InvariantCulture);
+                float y = float.Parse(dictionary["y"].ToString(), CultureInfo.InvariantCulture);
+                float z = float.Parse(dictionary["z"].ToString(), CultureInfo.InvariantCulture);
 
-            return new SerializableVector3(x, y, z);
+                return new(x, y, z);
+            }
+
+            return null;
         }
     }
 }

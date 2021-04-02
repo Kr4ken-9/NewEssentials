@@ -7,6 +7,7 @@ using OpenMod.Unturned.Users;
 using OpenMod.Unturned.Users.Events;
 using SDG.Unturned;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using Color = System.Drawing.Color;
@@ -34,9 +35,6 @@ namespace NewEssentials.Players
             m_PermissionChecker = permissionChecker;
             m_ServiceRunning = true;
 
-            if (Provider.isServer)
-                SyncPlayers();
-
             m_EventListener = m_EventBus.Subscribe<UnturnedUserConnectedEvent>(plugin, OnPlayerJoin);
 
             UniTask.RunOnThreadPool(CheckAfkPlayers);
@@ -44,6 +42,11 @@ namespace NewEssentials.Players
 
         private async UniTask CheckAfkPlayers()
         {
+            if (Provider.isServer)
+            {
+                await SyncPlayers();
+            }
+
             while (m_ServiceRunning)
             {
                 await UniTask.SwitchToThreadPool();
@@ -53,12 +56,12 @@ namespace NewEssentials.Players
                 var announce = m_Configuration.GetSection("afkchecker:announceAFK").Get<bool>();
                 var kick = m_Configuration.GetSection("afkchecker:kickAFK").Get<bool>();
 
-                if (timeout < 0)
+                if (timeout < 0 || (!kick && !announce))
                 {
                     continue;
                 }
 
-                foreach (var user in m_UnturnedUserDirectory.GetOnlineUsers())
+                foreach (var user in m_UnturnedUserDirectory.GetOnlineUsers().ToList())
                 {
                     if (!user.Session.SessionData.TryGetValue("lastMovement", out object @time) || @time is not TimeSpan span)
                     {
@@ -69,40 +72,73 @@ namespace NewEssentials.Players
                         && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") != PermissionGrantResult.Grant;
 
                     if (!afk)
+                    {
+                        user.Session.SessionData["isAfk"] = false;
                         continue;
+                    }
 
-                    if (announce)
+                    if (!user.Session.SessionData.TryGetValue("isAfk", out var unparsedAfk) || unparsedAfk is not bool isAfk)
+                    {
+                        continue;
+                    }
+
+                    // todo: add announceTime and kickTime (not just timeout)
+
+                    if (announce && !isAfk)
                     {
                         await user.Provider?.BroadcastAsync(m_StringLocalizer["afk:announcement", new { Player = user.DisplayName }],
                             Color.White);
                     }
 
                     if (kick)
-                        await user.Session.DisconnectAsync(m_StringLocalizer["afk:kicked"]);
+                    {
+                        await user.Session?.DisconnectAsync(m_StringLocalizer["afk:kicked"]);
+                        continue;
+                    }
+
+                    user.Session.SessionData["isAfk"] = true;
                 }
             }
         }
 
         #region Dictionary Population
 
-        private void SyncPlayers()
+        private async UniTask SyncPlayers()
         {
-            foreach (var user in m_UnturnedUserDirectory.GetOnlineUsers())
+            await UniTask.SwitchToMainThread();
+
+            foreach (var user in m_UnturnedUserDirectory.GetOnlineUsers().ToList())
             {
                 if (!user.Session.SessionData.ContainsKey("lastMovement"))
+                {
                     user.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
+                }
+
+                if (!user.Session.SessionData.ContainsKey("isAfk"))
+                {
+                    user.Session.SessionData.Add("isAfk", false);
+                }
+
+                var component = user.Player.Player.transform.GetOrAddComponent<PlayerMovementCheckerComponent>();
+                component.Resolve(user);
             }
         }
 
         private async Task OnPlayerJoin(IServiceProvider serviceProvider, object sender, UnturnedUserConnectedEvent @event)
         {
-            if (@event.User.Session.SessionData.ContainsKey("lastMovement"))
-                return;
+            if (!@event.User.Session.SessionData.ContainsKey("lastMovement"))
+            {
+                @event.User.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
+            }
+
+            if (!@event.User.Session.SessionData.ContainsKey("isAfk"))
+            {
+                @event.User.Session.SessionData.Add("isAfk", false);
+            }
 
             await UniTask.SwitchToMainThread();
-            @event.User.Session.SessionData.Add("lastMovement", DateTime.Now.TimeOfDay);
 
-            PlayerMovementCheckerComponent component = @event.User.Player.Player.gameObject.AddComponent<PlayerMovementCheckerComponent>();
+            var component = @event.User.Player.Player.transform.GetOrAddComponent<PlayerMovementCheckerComponent>();
             component.Resolve(@event.User);
         }
 
