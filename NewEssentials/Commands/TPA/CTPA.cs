@@ -35,15 +35,15 @@ namespace NewEssentials.Commands.TPA
             if (Context.Parameters.Length != 1)
                 throw new CommandWrongUsageException(Context);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
+            var uPlayer = (UnturnedUser) Context.Actor;
             string recipientName = Context.Parameters[0];
 
-            // TODO: Switch to UnturnedUserDirectory
-            if (!PlayerTool.tryGetSteamPlayer(recipientName, out SteamPlayer recipient))
+            var recipient = await Context.Parameters.GetAsync<UnturnedUser>(0);
+            if (recipient == null)
                 throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new {Recipient = recipientName}]);
 
             ulong requesterSteamID = uPlayer.SteamId.m_SteamID;
-            ulong recipientSteamID = recipient.playerID.steamID.m_SteamID;
+            ulong recipientSteamID = recipient.SteamId.m_SteamID;
 
             if (requesterSteamID == recipientSteamID)
                 throw new UserFriendlyException(m_StringLocalizer["tpa:self"]);
@@ -56,8 +56,9 @@ namespace NewEssentials.Commands.TPA
             m_TpaRequestManager.OpenNewRequest(recipientSteamID, requesterSteamID, requestLifetime);
 
             await UniTask.SwitchToMainThread();
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:success", new {Recipient = recipient.playerID.characterName}]);
-            ChatManager.serverSendMessage(m_StringLocalizer["tpa:delivered", new {Requester = uPlayer.DisplayName}], Color.white, toPlayer: recipient);
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:success", new {Recipient = recipient.DisplayName}]);
+            await recipient.PrintMessageAsync(m_StringLocalizer["tpa:delivered",
+                new {Requester = uPlayer.DisplayName}]);
         }
     }
 }

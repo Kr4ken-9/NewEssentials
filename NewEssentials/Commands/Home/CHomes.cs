@@ -20,16 +20,13 @@ namespace NewEssentials.Commands.Home
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
-        private readonly IUnturnedUserDirectory m_UnturnedUserDirectory;
 
         public CHomes(IStringLocalizer stringLocalizer,
             IUserDataStore userDataStore,
-            IUnturnedUserDirectory unturnedUserDirectory,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
-            m_UnturnedUserDirectory = unturnedUserDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -45,7 +42,7 @@ namespace NewEssentials.Commands.Home
 
             UnturnedUser uPlayer = Context.Parameters.Length == 0
                 ? (UnturnedUser) Context.Actor
-                : m_UnturnedUserDirectory.FindUser(Context.Parameters[0], UserSearchMode.FindByName);
+                : await Context.Parameters.GetAsync<UnturnedUser>(0);
 
             if (uPlayer == null)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[0]}]);

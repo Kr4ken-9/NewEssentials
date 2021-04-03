@@ -26,7 +26,6 @@ namespace NewEssentials.Commands.Kits
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IItemSpawner m_ItemSpawner;
-        private readonly IUnturnedUserDirectory m_UserDirectory;
         private readonly ICooldownManager m_CooldownManager;
         private const string KitsKey = "kits";
 
@@ -34,7 +33,6 @@ namespace NewEssentials.Commands.Kits
             IStringLocalizer stringLocalizer,
             IPermissionChecker permissionChecker,
             IItemSpawner itemSpawner,
-            IUnturnedUserDirectory userDirectory,
             ICooldownManager cooldownManager,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -42,7 +40,6 @@ namespace NewEssentials.Commands.Kits
             m_StringLocalizer = stringLocalizer;
             m_PermissionChecker = permissionChecker;
             m_ItemSpawner = itemSpawner;
-            m_UserDirectory = userDirectory;
             m_CooldownManager = cooldownManager;
         }
 
@@ -71,7 +68,7 @@ namespace NewEssentials.Commands.Kits
 
             UnturnedUser recipient;
             if (Context.Parameters.Length == 2)
-                recipient = m_UserDirectory.FindUser(Context.Parameters[1], UserSearchMode.FindByName);
+                recipient = await Context.Parameters.GetAsync<UnturnedUser>(1);
             else
                 recipient = Context.Actor as UnturnedUser;
 

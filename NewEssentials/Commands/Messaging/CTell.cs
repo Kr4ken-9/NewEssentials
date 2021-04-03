@@ -17,14 +17,11 @@ namespace NewEssentials.Commands.Messaging
     public class CTell : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly UnturnedUserDirectory m_UnturnedUserDirectory;
 
         public CTell(IStringLocalizer stringLocalizer,
-            UnturnedUserDirectory unturnedUserDirectory,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_UnturnedUserDirectory = unturnedUserDirectory;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -33,7 +30,7 @@ namespace NewEssentials.Commands.Messaging
                 throw new CommandWrongUsageException(Context);
 
             string recipientName = Context.Parameters[0];
-            UnturnedUser recipient = m_UnturnedUserDirectory.FindUser(recipientName, UserSearchMode.FindByName);
+            var recipient = await Context.Parameters.GetAsync<UnturnedUser>(0);
 
             if (recipient == null)
                 throw new UserFriendlyException(m_StringLocalizer["tell:invalid_recipient", new {Recipient = recipientName}]);
