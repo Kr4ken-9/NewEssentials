@@ -9,6 +9,7 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Players;
 using SDG.Unturned;
 using System;
+using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Items
 {
@@ -36,9 +37,9 @@ namespace NewEssentials.Commands.Items
             if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
                 throw new CommandWrongUsageException(Context);
 
-            var player = await Context.Parameters.GetAsync<UnturnedPlayer>(0);
+            var user = await Context.Parameters.GetAsync<UnturnedUser>(0);
 
-            if (player == null)
+            if (user == null)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new { Player = Context.Parameters[0] }]);
 
             string rawItem = Context.Parameters[1];
@@ -56,7 +57,7 @@ namespace NewEssentials.Commands.Items
 
             await UniTask.SwitchToMainThread();
             for (ushort u = 0; u < amount; u++)
-                player.Player.inventory.forceAddItem(uItem, true);
+                user.Player.Player.inventory.forceAddItem(uItem, true);
 
             await PrintAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = item.ItemName, ID = item.ItemAssetId }]);
         }
