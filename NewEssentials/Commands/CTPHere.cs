@@ -7,6 +7,7 @@ using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
+using NewEssentials.Extensions;
 
 namespace NewEssentials.Commands
 {
@@ -17,12 +18,10 @@ namespace NewEssentials.Commands
     public class CTPHere : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IUserManager m_UserManager;
 
-        public CTPHere(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer, IUserManager userManager) : base(serviceProvider)
+        public CTPHere(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_UserManager = userManager;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -33,20 +32,18 @@ namespace NewEssentials.Commands
             }
 
             var searchTerm = Context.Parameters[0];
-            var user = await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByNameOrId);
+            var user = await Context.Parameters.GetAsync<UnturnedUser>(0);
 
-            if (user is not UnturnedUser unturnedUser)
+            if (user == null) 
                 throw new UserFriendlyException(m_StringLocalizer["general:invalid_player", new { Player = searchTerm }]);
 
             var callingPlayer = (UnturnedUser) Context.Actor;
-            var position = callingPlayer.Player.Transform.Position;
 
-            await unturnedUser.Player.SetPositionAsync(position);
+            await UniTask.SwitchToMainThread();
+            await user.Player.Player.TeleportToLocationAsync(callingPlayer.Player.Transform.Position.ToUnityEngineVector3());
 
-            await unturnedUser.PrintMessageAsync(
-                m_StringLocalizer["tphere:successful_tp", new {Player = user.DisplayName}]);
-            await user.PrintMessageAsync(
-                m_StringLocalizer["tphere:successful_tp_other", new {Player = unturnedUser.DisplayName}]);
+            await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new {Player = user.DisplayName}]);
+            await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = user.DisplayName}]);
         }
     }
 }
