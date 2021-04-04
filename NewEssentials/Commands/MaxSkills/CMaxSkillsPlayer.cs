@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
+using OpenMod.Unturned.Users;
 using SDG.Unturned;
 
 namespace NewEssentials.Commands.MaxSkills
@@ -29,23 +31,26 @@ namespace NewEssentials.Commands.MaxSkills
                 throw new CommandWrongUsageException(Context, m_StringLocalizer);
             }
 
-            string playersNotFound = "";
+            await UniTask.SwitchToMainThread();
+            
+            StringBuilder playersNotFound = new StringBuilder();
             for (int i = 0; i < Context.Parameters.Length; i++)
             {
-                string userInput = await Context.Parameters.GetAsync<string>(i);
-                if (!PlayerTool.tryGetSteamPlayer(userInput, out SteamPlayer player))
+                var user = await Context.Parameters.GetAsync<UnturnedUser>(i);
+                if (user == null)
                 {
-                    playersNotFound += $"{userInput}, ";
+                    playersNotFound.Append($"{Context.Parameters[i]}, ");
                     continue;
                 }
                 
-                await player.player.skills.MaxAllSkillsAsync();
-                await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_other", new {Player = player.playerID.playerName}]);
+                user.Player.Player.skills.ServerUnlockAllSkills();
+                await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_other", new {Player = user.DisplayName}]);
             }
 
-            if (playersNotFound != "")
+            if (playersNotFound.Length != 0)
             {
-                throw new UserFriendlyException(m_StringLocalizer["commands:failed_players", new {Players = playersNotFound}]);
+                playersNotFound.Remove(playersNotFound.Length - 2, 2);
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_players", new {Players = playersNotFound.ToString()}]);
             }
         }
     }

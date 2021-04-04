@@ -22,8 +22,9 @@ namespace NewEssentials.Commands.MaxSkills
 
         protected override async UniTask OnExecuteAsync()
         {
-            foreach(SteamPlayer player in Provider.clients)
-                await player.player.skills.MaxAllSkillsAsync();
+            await UniTask.SwitchToMainThread();
+            foreach (SteamPlayer player in Provider.clients)
+                player.player.skills.ServerUnlockAllSkills();
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["maxskills:granted_all"]);
         }

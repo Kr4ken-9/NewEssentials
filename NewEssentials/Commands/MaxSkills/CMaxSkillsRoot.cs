@@ -24,7 +24,9 @@ namespace NewEssentials.Commands.MaxSkills
         protected override async UniTask OnExecuteAsync()
         {
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            await uPlayer.Player.Player.skills.MaxAllSkillsAsync();
+
+            await UniTask.SwitchToMainThread();
+            uPlayer.Player.Player.skills.ServerUnlockAllSkills();
 
             await uPlayer.PrintMessageAsync(m_StringLocalizer["maxskills:granted"]);
         }
