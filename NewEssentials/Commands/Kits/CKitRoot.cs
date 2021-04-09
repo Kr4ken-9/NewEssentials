@@ -60,7 +60,7 @@ namespace NewEssentials.Commands.Kits
                 throw new UserFriendlyException(m_StringLocalizer["kits:spawn:none", new {Kit = kitName}]);
 
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"kits.kit.{kitName}") == PermissionGrantResult.Deny)
-                throw new UserFriendlyException(m_StringLocalizer["kits:spawn:deny", new {Kit = kitName}]);
+                throw new UserFriendlyException(m_StringLocalizer["kits:spawn:denied", new {Kit = kitName}]);
             
             if (Context.Parameters.Length == 2 &&
                 await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"kits.kit.give.{kitName}") == PermissionGrantResult.Deny)
