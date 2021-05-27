@@ -28,5 +28,5 @@ teleportation:
   cancelOnMove: true
   cancelOnDamage: true
 connections:
-  joinMesasges: true
+  joinMessages: true
   leaveMessages: true
