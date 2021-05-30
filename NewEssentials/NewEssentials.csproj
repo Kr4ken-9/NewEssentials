@@ -16,13 +16,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenMod.Unturned" Version="3.0.27" />
-    <PackageReference Include="OpenMod.Unturned.Redist" Version="3.21.13" />
+    <PackageReference Include="OpenMod.Unturned" Version="3.0.33" />
+    <PackageReference Include="OpenMod.Unturned.Redist" Version="3.21.18" />
     <PackageReference Include="OpenMod.UnityEngine.Redist" Version="2019.4.10" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
