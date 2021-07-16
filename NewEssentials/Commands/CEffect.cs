@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
+using System;
+using System.Linq;
 
 namespace NewEssentials.Commands
 {
@@ -17,7 +17,7 @@ namespace NewEssentials.Commands
     {
 
         private readonly IPermissionChecker _permission;
-        
+
         public CEffect(IServiceProvider serviceProvider, IPermissionChecker checker) : base(serviceProvider)
         {
             _permission = checker;
@@ -27,33 +27,33 @@ namespace NewEssentials.Commands
         {
             //TODO: Add support for configurable allowed effects?
 
-            UnturnedUser usr = (UnturnedUser) Context.Actor;
+            UnturnedUser usr = (UnturnedUser)Context.Actor;
             Player target;
 
-            
+
             if (Context.Parameters.Length > 1 && Context.Parameters.Length < 2)
             {
                 target = Provider.clients.FirstOrDefault(p =>
                     p.player.name.Contains(Context.Parameters.GetAsync<string>(1).Result))?.player;
-                
+
                 if (target == null)
                     throw new CommandWrongUsageException("Could not find player");
             }
             else if (Context.Parameters.Length == 1)
-                target = ((UnturnedUser) Context.Actor).Player.Player;
+                target = ((UnturnedUser)Context.Actor).Player.Player;
             else
                 throw new CommandWrongUsageException("Unexpected amount of parameters");
 
 
             if (target == null)
                 return;
-            
+
             ushort effectId = await Context.Parameters.GetAsync<ushort>(0);
-            
+
             await UniTask.SwitchToMainThread();
-            
-            EffectManager.sendEffect(effectId, target.channel.owner.playerID.steamID, target.transform.position);
-            
+
+            EffectManager.sendEffect(effectId, target.channel.GetOwnerTransportConnection(), target.transform.position);
+
             await usr.PrintMessageAsync(
                 $"Successfully gave effect {effectId} to {target.channel.owner.playerID.characterName}");
         }

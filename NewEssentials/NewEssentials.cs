@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Chat;
 using NewEssentials.API.Players;
-using NewEssentials.Extensions;
 using NewEssentials.Models;
 using NewEssentials.Players;
 using OpenMod.API.Permissions;
@@ -12,8 +11,6 @@ using OpenMod.API.Plugins;
 using OpenMod.API.Users;
 using OpenMod.Core.Ioc;
 using OpenMod.Unturned.Plugins;
-using SDG.Unturned;
-using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -127,20 +124,6 @@ namespace NewEssentials
                  m_Configuration.GetValue<int>("broadcasting:repeatingDuration"));
 
             ActivatorUtilitiesEx.CreateInstance<AfkChecker>(LifetimeScope);
-
-            PlayerLife.onPlayerDied += SaveDeathLocation;
-        }
-
-        protected override async UniTask OnUnloadAsync()
-        {
-            PlayerLife.onPlayerDied -= SaveDeathLocation;
-        }
-
-        private async void SaveDeathLocation(PlayerLife sender, EDeathCause cause, ELimb limb, CSteamID instigator)
-        {
-            var userData = await m_UserDataStore.GetUserDataAsync(sender.player.channel.owner.playerID.steamID.ToString(), "player");
-            userData.Data["deathLocation"] = sender.transform.position.ToSerializableVector3();
-            await m_UserDataStore.SetUserDataAsync(userData);
         }
 
         public void RegisterNewKitPermission(string kitName)
@@ -154,6 +137,5 @@ namespace NewEssentials
 
         public void RegisterNewWarpPermission(string warpName) => m_PermissionRegistry.RegisterPermission(this,
             $"warps.{warpName}", $"Permission to warp to {warpName}", PermissionGrantResult.Deny);
-
     }
 }

@@ -68,7 +68,7 @@ namespace NewEssentials.Commands.Home
 
             if (Context.Parameters.Length == 0)
             {
-                homes["home"] = uPlayer.Player.Player.transform.position.ToSerializableVector3();
+                homes["home"] = uPlayer.Player.Player.transform.position.ToSerializableVector();
                 userData.Data["homes"] = homes;
 
                 await m_UserDataStore.SetUserDataAsync(userData);
@@ -77,7 +77,7 @@ namespace NewEssentials.Commands.Home
             else
             {
                 string home = Context.Parameters[0];
-                homes[home] = uPlayer.Player.Player.transform.position.ToSerializableVector3();
+                homes[home] = uPlayer.Player.Player.transform.position.ToSerializableVector();
                 userData.Data["homes"] = homes;
 
                 await m_UserDataStore.SetUserDataAsync(userData);

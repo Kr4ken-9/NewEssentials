@@ -8,6 +8,7 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
 using NewEssentials.Extensions;
+using OpenMod.UnityEngine.Extensions;
 
 namespace NewEssentials.Commands
 {
@@ -40,7 +41,7 @@ namespace NewEssentials.Commands
             var callingPlayer = (UnturnedUser) Context.Actor;
 
             await UniTask.SwitchToMainThread();
-            await user.Player.Player.TeleportToLocationAsync(callingPlayer.Player.Transform.Position.ToUnityEngineVector3());
+            await user.Player.Player.TeleportToLocationAsync(callingPlayer.Player.Transform.Position.ToUnityVector());
 
             await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp", new {Player = user.DisplayName}]);
             await user.PrintMessageAsync(m_StringLocalizer["tphere:successful_tp_other", new {Player = user.DisplayName}]);

@@ -1,12 +1,15 @@
 ﻿using NewEssentials.Models;
-using UnityEngine;
+using SV3 = System.Numerics.Vector3;
+using UV3 = UnityEngine.Vector3;
 
 namespace NewEssentials.Extensions
 {
     public static class VectorExtensions
     {
-        public static SerializableVector3 ToSerializableVector3(this Vector3 vector3) => new SerializableVector3(vector3.x, vector3.y, vector3.z);
+        public static SerializableVector3 ToSerializableVector(this UV3 vector)
+            => new(vector.x, vector.y, vector.z);
 
-        public static Vector3 ToUnityEngineVector3(this System.Numerics.Vector3 vector3) => new Vector3(vector3.X, vector3.Y, vector3.Z);
+        public static SerializableVector3 ToSerializableVector(this SV3 vector)
+            => new(vector.X, vector.Y, vector.Z);
     }
 }
