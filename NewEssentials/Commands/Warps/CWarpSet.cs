@@ -1,14 +1,14 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using OpenMod.Core.Commands;
+﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
+using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
+using System;
 
 namespace NewEssentials.Commands.Warps
 {
@@ -46,16 +46,16 @@ namespace NewEssentials.Commands.Warps
             string newWarpName = Context.Parameters[0];
 
             if (warpData.Warps.ContainsKey(newWarpName))
-                throw new UserFriendlyException(m_StringLocalizer["warps:set:exists", new {Warp = newWarpName}]);
+                throw new UserFriendlyException(m_StringLocalizer["warps:set:exists", new { Warp = newWarpName }]);
 
-            UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            var newWarpLocation = uPlayer.Player.Player.transform.position.ToSerializableVector3();
-            
+            UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
+            var newWarpLocation = uPlayer.Player.Transform.Position.ToSerializableVector();
+
             warpData.Warps.Add(newWarpName, new SerializableWarp(cooldown, newWarpLocation));
             await m_DataStore.SaveAsync(WarpsKey, warpData);
             m_PluginAccessor.Instance.RegisterNewWarpPermission(newWarpName);
 
-            await uPlayer.PrintMessageAsync(m_StringLocalizer["warps:set:success", new {Warp = newWarpName}]);
+            await uPlayer.PrintMessageAsync(m_StringLocalizer["warps:set:success", new { Warp = newWarpName }]);
         }
     }
 }

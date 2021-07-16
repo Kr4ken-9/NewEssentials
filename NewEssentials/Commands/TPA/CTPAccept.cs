@@ -90,14 +90,14 @@ namespace NewEssentials.Commands.TPA
             
             await uPlayer.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_self", new { Requester = requester.DisplayName, Time = delay }]);
 
-            requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_other", new {Recipient = uPlayer.DisplayName, Time = delay}]); 
+            await requester.PrintMessageAsync(m_StringLocalizer["tpa:accept:accepted_other", new {Recipient = uPlayer.DisplayName, Time = delay}]); 
             
             bool successful = await m_TeleportService.TeleportAsync(requester,
                 new TeleportOptions(m_PluginAccessor.Instance, delay, cancelOnMove, cancelOnDamage));
 
             if (!successful)
             {
-                requester.PrintMessageAsync(m_StringLocalizer["teleport:canceled"], Color.DarkRed);
+                await requester.PrintMessageAsync(m_StringLocalizer["teleport:canceled"], Color.DarkRed);
                 throw new UserFriendlyException(m_StringLocalizer["teleport:canceled"]);
             }
 
