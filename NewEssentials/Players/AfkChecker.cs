@@ -52,11 +52,17 @@ namespace NewEssentials.Players
                 await UniTask.SwitchToThreadPool();
                 await UniTask.Delay(10000);
 
+                var status = m_Configuration.GetSection("afkchecker:enabled").Get<bool>();
                 var timeout = m_Configuration.GetSection("afkchecker:timeout").Get<int>();
                 var announce = m_Configuration.GetSection("afkchecker:announceAFK").Get<bool>();
                 var kick = m_Configuration.GetSection("afkchecker:kickAFK").Get<bool>();
 
                 if (timeout < 0 || (!kick && !announce))
+                {
+                    continue;
+                }
+
+                if (!status || (!kick && !announce))
                 {
                     continue;
                 }
@@ -86,13 +92,12 @@ namespace NewEssentials.Players
 
                     if (announce && !isAfk)
                     {
-                        await user.Provider?.BroadcastAsync(m_StringLocalizer["afk:announcement", new { Player = user.DisplayName }],
-                            Color.White);
+                        await user.Provider?.BroadcastAsync(m_StringLocalizer["afk:announcement", new { Player = user.DisplayName }, new { Time = timeout }], Color.White);
                     }
 
                     if (kick)
                     {
-                        await user.Session?.DisconnectAsync(m_StringLocalizer["afk:kicked"]);
+                        await user.Session?.DisconnectAsync(m_StringLocalizer["afk:kicked", new { Time = timeout }]);
                         continue;
                     }
 
