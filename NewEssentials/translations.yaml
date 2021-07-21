@@ -1,3 +1,4 @@
+
 general:
   invalid_player: "{Player} is not a player."
   disconnected: "{Player} disconnected."
@@ -140,7 +141,7 @@ broadcasting:
   too_long: "The duration that you specified on your broadcast is above this server's max broadcast time limit."
   success: "You have successfully created a superbroadcast."
 afk:
-  kicked: "You were kicked for being afk!"
+  kicked: "You were kicked for being afk for {Time} seconds !"
   announcement: "{Player} is now afk!"
 vanish:
   vanished: "You have vanished! Poof!"
