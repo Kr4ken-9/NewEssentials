@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
-using OpenMod.API.Users;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -38,7 +38,7 @@ namespace NewEssentials.Commands.Messaging
             recipient.Session.SessionData["lastMessager"] = Context.Actor.Type == KnownActorTypes.Player
                 ? Context.Actor.Id
                 : Context.Actor.Type;
-            var message = string.Join(" ", Context.Parameters);
+            var message = string.Join(" ", Context.Parameters.Skip(1));
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["tell:sent",
                 new { Recipient = recipient.DisplayName, Message = message }]);
