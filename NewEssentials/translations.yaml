@@ -184,3 +184,5 @@ teleport:
 connections:
   connected: "{User} joined the game."
   disconnected: "{User} left the game."
+ping:
+  ping: "Ping of {User.FullActorName}: {Ping}"
