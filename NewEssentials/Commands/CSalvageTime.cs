@@ -6,16 +6,16 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
 
-namespace NewEssentials.Commands.Movement
+namespace NewEssentials.Commands
 {
-    [Command("jumpheight")]
-    [CommandAlias("jh")]
-    [CommandSyntax("[user] <jumpHeight>")]
-    [CommandDescription("Change your or other player jump height. 0 = Freeze, 1 = Normal")]
-    [RegisterCommandPermission("other", Description = "Allows to change jump height of other player")]
-    public class CJumpHeight : UnturnedCommand
+    [Command("salvagetime")]
+    [CommandAlias("stime")]
+    [CommandDescription("Change your or other player salvage time.")]
+    [CommandSyntax("[user] <salvageTime>")]
+    [RegisterCommandPermission("other", Description = "Allows to change salvage time of other player")]
+    public class CSalvageTime : UnturnedCommand
     {
-        public CJumpHeight(IServiceProvider serviceProvider) : base(serviceProvider)
+        public CSalvageTime(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -35,10 +35,10 @@ namespace NewEssentials.Commands.Movement
                 return;
             }
 
-            var jump = await Context.Parameters.GetAsync<float>(Context.Parameters.Count - 1);
+            var salvage = await Context.Parameters.GetAsync<float>(Context.Parameters.Count - 1);
 
             await UniTask.SwitchToMainThread();
-            targetActor.Player.Player.movement.sendPluginJumpMultiplier(jump);
+            targetActor.Player.Player.interact.sendSalvageTimeOverride(salvage);
         }
     }
 }
