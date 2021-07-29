@@ -24,7 +24,7 @@ namespace NewEssentials.Commands
 
             await UniTask.SwitchToMainThread();
             if (!PhysicsUtility.raycast(new(look.getEyesPosition(), look.aim.forward),
-                out var hit, 8f, RayMasks.BARRICADE))
+                out var hit, 8f, RayMasks.BARRICADE | RayMasks.VEHICLE))
             {
                 return;
             }
