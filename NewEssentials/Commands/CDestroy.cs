@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -14,8 +15,11 @@ namespace NewEssentials.Commands
     [CommandDescription("Destroys the barricade, structure, or vehicle that you are looking at.")]
     public class CDestroy : UnturnedCommand
     {
-        public CDestroy(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly IStringLocalizer m_StringLocalizer;
+
+        public CDestroy(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -49,6 +53,8 @@ namespace NewEssentials.Commands
                 StructureManager.destroyStructure(structureRegion, x, y, index, Vector3.zero);
                 return;
             }
+
+            await PrintAsync(m_StringLocalizer["destroy:invalid"]);
         }
     }
 }

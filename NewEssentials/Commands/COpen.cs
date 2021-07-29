@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -13,8 +14,11 @@ namespace NewEssentials.Commands
     [CommandDescription("Force open door, storage, and vehicle")]
     public class COpen : UnturnedCommand
     {
-        public COpen(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly IStringLocalizer m_StringLocalizer;
+
+        public COpen(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -32,14 +36,13 @@ namespace NewEssentials.Commands
             var interactable = hit.collider.GetComponent<Interactable>();
             if (interactable is InteractableDoorHinge hinge and { door: not null })
             {
-                if (BarricadeManager.ServerSetDoorOpen(hinge.door, !hinge.door.isOpen))
-                {
-
-                }
+                BarricadeManager.ServerSetDoorOpen(hinge.door, !hinge.door.isOpen);
+                return;
             }
             else if (interactable is InteractableStorage storage)
             {
                 user.Player.Player.inventory.openStorage(storage);
+                return;
             }
             else if (interactable is InteractableVehicle vehicle)
             {
@@ -49,7 +52,10 @@ namespace NewEssentials.Commands
                 var group = shouldLock ? user.Player.Player.quests.groupID : vehicle.lockedGroup;
 
                 VehicleManager.ServerSetVehicleLock(vehicle, owner, group, shouldLock);
+                return;
             }
+
+            await PrintAsync(m_StringLocalizer["open:invalid"]);
         }
     }
 }

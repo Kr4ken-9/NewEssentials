@@ -1,4 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using NewEssentials.Commands.Movement;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Core.Permissions;
@@ -8,15 +10,18 @@ using System;
 
 namespace NewEssentials.Commands
 {
-    [Command("salvagetime")]
-    [CommandAlias("stime")]
-    [CommandDescription("Change your or other player salvage time.")]
-    [CommandSyntax("[user] <salvageTime>")]
-    [RegisterCommandPermission("other", Description = "Allows to change salvage time of other player")]
-    public class CSalvageTime : UnturnedCommand
+    [Command("salvagespeed")]
+    [CommandAlias("sspeed")]
+    [CommandDescription("Change your or other player salvage speed.")]
+    [CommandSyntax("[user] <salvageSpeed>")]
+    [RegisterCommandPermission("other", Description = "Allows to change salvage speed of other player")]
+    public class CSalvageSpeed : UnturnedCommand
     {
-        public CSalvageTime(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly IStringLocalizer m_StringLocalizer;
+
+        public CSalvageSpeed(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -39,6 +44,16 @@ namespace NewEssentials.Commands
 
             await UniTask.SwitchToMainThread();
             targetActor.Player.Player.interact.sendSalvageTimeOverride(salvage);
+
+            if (Context.Actor != targetActor)
+            {
+                await PrintAsync(m_StringLocalizer["salvageSpeed:instigator", new
+                {
+                    User = targetActor,
+                    SalvageSpeed = salvage
+                }]);
+            }
+            await targetActor.PrintMessageAsync(m_StringLocalizer["salvageSpeed:target", new { SalvageSpeed = salvage }]);
         }
     }
 }

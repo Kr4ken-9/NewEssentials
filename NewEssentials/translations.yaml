@@ -186,3 +186,19 @@ connections:
   disconnected: "{User} left the game."
 ping:
   ping: "Ping of {User.FullActorName}: {Ping}"
+speed:
+  instigator: "Movement speed of {User.FullActorName} has changed to {Speed}"
+  target: "Your movement speed has changed to {Speed}"
+gravity:
+  instigator: "Movement gravity of {User.FullActorName} has changed to {Gravity}"
+  target: "Your movement gravity has changed to {Gravity}"
+jumpheight:
+  instigator: "Movement jump of {User.FullActorName} has changed to {Jump}"
+  target: "Your movement jump has changed to {Jump}"
+salvageSpeed:
+  instigator: "Salvage speed of {User.FullActorName} has changed to {SalvageSpeed}"
+  target: "Your salvage speed has changed to {SalvageSpeed}"
+open:
+  invalid: "Cannot open this object"
+destroy:
+  invalid: "Cannot destroy this object"

@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Core.Permissions;
@@ -15,8 +16,11 @@ namespace NewEssentials.Commands.Movement
     [RegisterCommandPermission("other", Description = "Allows to change jump height of other player")]
     public class CJumpHeight : UnturnedCommand
     {
-        public CJumpHeight(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly IStringLocalizer m_StringLocalizer;
+
+        public CJumpHeight(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -39,6 +43,16 @@ namespace NewEssentials.Commands.Movement
 
             await UniTask.SwitchToMainThread();
             targetActor.Player.Player.movement.sendPluginJumpMultiplier(jump);
+
+            if (Context.Actor != targetActor)
+            {
+                await PrintAsync(m_StringLocalizer["jumpheight:instigator", new
+                {
+                    User = targetActor,
+                    Jump = jump
+                }]);
+            }
+            await targetActor.PrintMessageAsync(m_StringLocalizer["jumpheight:target", new { Jump = jump }]);
         }
     }
 }

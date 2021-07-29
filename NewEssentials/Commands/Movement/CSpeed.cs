@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Core.Permissions;
@@ -14,8 +15,11 @@ namespace NewEssentials.Commands.Movement
     [RegisterCommandPermission("other", Description = "Allows to change speed of other player")]
     public class CSpeed : UnturnedCommand
     {
-        public CSpeed(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly IStringLocalizer m_StringLocalizer;
+
+        public CSpeed(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -38,6 +42,16 @@ namespace NewEssentials.Commands.Movement
 
             await UniTask.SwitchToMainThread();
             targetActor.Player.Player.movement.sendPluginSpeedMultiplier(speed);
+
+            if (Context.Actor != targetActor)
+            {
+                await PrintAsync(m_StringLocalizer["speed:instigator", new
+                {
+                    User = targetActor,
+                    Speed = speed
+                }]);
+            }
+            await targetActor.PrintMessageAsync(m_StringLocalizer["speed:target", new { Speed = speed }]);
         }
     }
 }
