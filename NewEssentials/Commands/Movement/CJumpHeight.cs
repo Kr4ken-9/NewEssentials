@@ -23,7 +23,7 @@ namespace NewEssentials.Commands.Movement
         {
             var targetActor = Context.Parameters.Count == 2
                 ? await Context.Parameters.GetAsync<UnturnedUser>(0)
-                : (UnturnedUser)Context.Actor;
+                : Context.Actor as UnturnedUser;
 
             if (targetActor != Context.Actor && await CheckPermissionAsync("other") != PermissionGrantResult.Grant)
             {
