@@ -40,7 +40,7 @@ namespace NewEssentials.Commands
             }
 
             PlayerLook look = uPlayer.Player.Player.look;
-            RaycastInfo raycast = DamageTool.raycast(new(look.aim.position, look.aim.forward), 100f, RayMasks.DAMAGE_SERVER);
+            RaycastInfo raycast = DamageTool.raycast(new(look.aim.position, look.aim.forward), 8f, RayMasks.DAMAGE_SERVER);
 
             if (raycast.vehicle != null)
             {
