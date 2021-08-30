@@ -44,6 +44,9 @@ namespace NewEssentials.Players
 
             if (options.CancelOnMove)
             {
+                if (user.Player == null || user.Player.Transform == null)
+                    return false;
+                
                 var latestPosition = user.Player.Transform.Position;
                 if (lastPosition != latestPosition)
                     cancelled = true;

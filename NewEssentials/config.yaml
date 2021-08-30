@@ -1,4 +1,3 @@
-kits: true
 items:
   enableamountlimit: true
   silentamountlimit: true

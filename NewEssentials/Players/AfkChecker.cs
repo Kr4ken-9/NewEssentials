@@ -143,7 +143,15 @@ namespace NewEssentials.Players
 
             await UniTask.SwitchToMainThread();
 
-            var component = @event.User.Player.Player.transform.GetOrAddComponent<PlayerMovementCheckerComponent>();
+            var player = @event.User.Player.Player;
+            if (player == null)
+                return;
+
+            var transform = player.transform;
+            if (transform == null)
+                return;
+
+            var component = transform.GetOrAddComponent<PlayerMovementCheckerComponent>();
             component.Resolve(@event.User);
         }
 

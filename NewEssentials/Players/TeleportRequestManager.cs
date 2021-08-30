@@ -85,8 +85,14 @@ namespace NewEssentials.Players
             Provider.onEnemyDisconnected -= RemovePlayer;
         }
 
-        private void AddPlayer(SteamPlayer newPlayer) =>
+        private void AddPlayer(SteamPlayer newPlayer)
+        {
+            var id = newPlayer.playerID.steamID.m_SteamID;
+            if (m_OpenRequests.ContainsKey(id))
+                return;
+            
             m_OpenRequests.Add(newPlayer.playerID.steamID.m_SteamID, new List<ulong>());
+        }
 
         private void RemovePlayer(SteamPlayer gonePlayer) =>
             m_OpenRequests.Remove(gonePlayer.playerID.steamID.m_SteamID);
