@@ -21,24 +21,27 @@ namespace NewEssentials.Events
 
         public async Task HandleEventAsync(object sender, UnturnedPlayerDeathEvent @event)
         {
+            await UniTask.SwitchToMainThread();
+
             var id = @event.Player.EntityInstanceId;
             var position = @event.Player.Transform.Position.ToSerializableVector();
 
-            await UniTask.SwitchToThreadPool();
-
-            var userData = await m_UserDataStore.GetUserDataAsync(id, KnownActorTypes.Player);
-            if (userData == null)
+            UniTask.RunOnThreadPool(async () =>
             {
-                var displayName = @event.Player.SteamPlayer.playerID.characterName;
+                var userData = await m_UserDataStore.GetUserDataAsync(id, KnownActorTypes.Player);
+                if (userData == null)
+                {
+                    var displayName = @event.Player.SteamPlayer.playerID.characterName;
 
-                await m_UserDataSeeder.SeedUserDataAsync(id, KnownActorTypes.Player, displayName,
-                    new() { { "deathLocation", position } });
+                    await m_UserDataSeeder.SeedUserDataAsync(id, KnownActorTypes.Player, displayName,
+                        new() { { "deathLocation", position } });
 
-                return;
-            }
+                    return;
+                }
 
-            userData.Data["deathLocation"] = position;
-            await m_UserDataStore.SetUserDataAsync(userData);
+                userData.Data["deathLocation"] = position;
+                await m_UserDataStore.SetUserDataAsync(userData);
+            }).Forget();
         }
     }
 }
