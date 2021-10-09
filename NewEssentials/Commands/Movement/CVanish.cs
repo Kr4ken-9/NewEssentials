@@ -65,13 +65,13 @@ namespace NewEssentials.Commands.Movement
             if (vanished)
             {
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["vanish:unvanished_other", new {Player = targetName}]);
-                ChatManager.serverSendMessage(m_StringLocalizer["vanish:unvanished"], Color.white, toPlayer: target);
+                ChatManager.serverSendMessage(m_StringLocalizer["vanish:unvanished"], Color.white, toPlayer: target, useRichTextFormatting: true);
                 movement.updates.Add(new PlayerStateUpdate(movement.real, look.angle, look.rot));
             }
             else
             {
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["vanish:vanished_other", new {Player = targetName}]);
-                ChatManager.serverSendMessage(m_StringLocalizer["vanish:vanished"], Color.white, toPlayer: target);
+                ChatManager.serverSendMessage(m_StringLocalizer["vanish:vanished"], Color.white, toPlayer: target, useRichTextFormatting: true);
             }
 
             target.player.movement.canAddSimulationResultsToUpdates = vanished;
