@@ -76,7 +76,7 @@ namespace NewEssentials.Players
                 return;
 
             await UniTask.SwitchToMainThread();
-            ChatManager.serverSendMessage(m_StringLocalizer["tpa:expired", new {Recipient = recipient.playerID.characterName}], Color.red, toPlayer: requester);
+            ChatManager.serverSendMessage(m_StringLocalizer["tpa:expired", new {Recipient = recipient.playerID.characterName}], Color.red, toPlayer: requester, useRichTextFormatting: true);
         }
 
         public async ValueTask DisposeAsync()

@@ -58,14 +58,14 @@ namespace NewEssentials.Commands
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["god:god_other",
                     new {Player = target.playerID.characterName}]);
                 
-                ChatManager.serverSendMessage(m_StringLocalizer["god:god"], Color.white, toPlayer: target);
+                ChatManager.serverSendMessage(m_StringLocalizer["god:god"], Color.white, toPlayer: target, useRichTextFormatting: true);
             }
             else
             {
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["god:mortal_other",
                     new {Player = target.playerID.characterName}]);
                 
-                ChatManager.serverSendMessage(m_StringLocalizer["god:mortal"], Color.white, toPlayer: target);
+                ChatManager.serverSendMessage(m_StringLocalizer["god:mortal"], Color.white, toPlayer: target, useRichTextFormatting: true);
             }
         }
     }
