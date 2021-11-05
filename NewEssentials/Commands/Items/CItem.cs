@@ -48,11 +48,13 @@ namespace NewEssentials.Commands.Items
                 throw new UserFriendlyException(m_StringLocalizer["items:too_much", new { UpperLimit = amount }]);
 
             UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
-            Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
 
             await UniTask.SwitchToMainThread();
             for (ushort u = 0; u < amount; u++)
+            {
+                Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
                 uPlayer.Player.Player.inventory.forceAddItem(uItem, true);
+            }
 
             await PrintAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = item.ItemName, ID = item.ItemAssetId }]);
         }

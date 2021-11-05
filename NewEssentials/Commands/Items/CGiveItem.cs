@@ -6,10 +6,9 @@ using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Extensions.Games.Abstractions.Items;
 using OpenMod.Unturned.Commands;
-using OpenMod.Unturned.Players;
+using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using System;
-using OpenMod.Unturned.Users;
 
 namespace NewEssentials.Commands.Items
 {
@@ -53,11 +52,12 @@ namespace NewEssentials.Commands.Items
             if (!m_Configuration.GetItemAmount(amount, out amount))
                 throw new UserFriendlyException(m_StringLocalizer["items:too_much", new { UpperLimit = amount }]);
 
-            Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
-
             await UniTask.SwitchToMainThread();
             for (ushort u = 0; u < amount; u++)
+            {
+                Item uItem = new(item.ItemAsset.id, EItemOrigin.ADMIN);
                 user.Player.Player.inventory.forceAddItem(uItem, true);
+            }
 
             await PrintAsync(m_StringLocalizer["item:success", new { Amount = amount, Item = item.ItemName, ID = item.ItemAssetId }]);
         }
