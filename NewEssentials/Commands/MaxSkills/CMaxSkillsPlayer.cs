@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Text;
 using Cysharp.Threading.Tasks;
-using Microsoft.Extensions.Localization;
 using NewEssentials.Extensions;
 using OpenMod.API.Commands;
+using OpenMod.API.Localization;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -17,9 +17,9 @@ namespace NewEssentials.Commands.MaxSkills
     [CommandParent(typeof(CMaxSkillsRoot))]
     public class CMaxSkillsPlayer : UnturnedCommand
     {
-        private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IOpenModStringLocalizer m_StringLocalizer;
 
-        public CMaxSkillsPlayer(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CMaxSkillsPlayer(IOpenModStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
         }
