@@ -4,8 +4,9 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
-using NewEssentials.Extensions;
-using NewEssentials.Options;
+using NewEssentials.API.User;
+using NewEssentials.Configuration;
+using NewEssentials.Unturned;
 using OpenMod.API.Commands;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
@@ -23,14 +24,14 @@ namespace NewEssentials.Commands.TPA
     public class CTPAccept : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly UnturnedUserDirectory m_UserDirectory;
+        private readonly IUserParser m_UserParser;
         private readonly ITeleportRequestManager m_TpaRequestManager;
         private readonly IConfiguration m_Configuration;
         private readonly IPluginAccessor<NewEssentials> m_PluginAccessor;
         private readonly ITeleportService m_TeleportService;
 
         public CTPAccept(IStringLocalizer stringLocalizer,
-            UnturnedUserDirectory userDirectory,
+            IUserParser userParser,
             ITeleportRequestManager tpaRequestManager,
             IConfiguration configuration,
             IPluginAccessor<NewEssentials> pluginAccessor,
@@ -39,7 +40,7 @@ namespace NewEssentials.Commands.TPA
             base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_UserDirectory = userDirectory;
+            m_UserParser = userParser;
             m_TpaRequestManager = tpaRequestManager;
             m_Configuration = configuration;
             m_PluginAccessor = pluginAccessor;
@@ -62,7 +63,7 @@ namespace NewEssentials.Commands.TPA
                         throw new UserFriendlyException(m_StringLocalizer["tpa:accept:no_requests"]);
 
                     ulong firstRequester = m_TpaRequestManager.AcceptRequest(recipientSteamID);
-                    requester = m_UserDirectory.FindUser(firstRequester.ToString(), UserSearchMode.FindById);
+                    requester = await m_UserParser.ParseUserAsync(firstRequester.ToString());
 
                     if (requester == null)
                         throw new UserFriendlyException(m_StringLocalizer["tpa:accept:disconnected",
@@ -71,7 +72,7 @@ namespace NewEssentials.Commands.TPA
                     break;
                 case 1:
                     string requesterName = Context.Parameters[0];
-                    requester = m_UserDirectory.FindUser(requesterName, UserSearchMode.FindByName);
+                    requester = await m_UserParser.ParseUserAsync(requesterName);
                     
                     if (requester == null)
                         throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new { Recipient = requesterName }]);

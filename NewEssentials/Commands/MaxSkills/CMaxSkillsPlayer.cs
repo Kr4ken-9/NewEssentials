@@ -1,7 +1,8 @@
 using System;
 using System.Text;
 using Cysharp.Threading.Tasks;
-using NewEssentials.Extensions;
+using NewEssentials.API.User;
+using NewEssentials.System;
 using OpenMod.API.Commands;
 using OpenMod.API.Localization;
 using OpenMod.Core.Commands;
@@ -18,10 +19,12 @@ namespace NewEssentials.Commands.MaxSkills
     public class CMaxSkillsPlayer : UnturnedCommand
     {
         private readonly IOpenModStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
-        public CMaxSkillsPlayer(IOpenModStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CMaxSkillsPlayer(IOpenModStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -34,10 +37,11 @@ namespace NewEssentials.Commands.MaxSkills
             await UniTask.SwitchToMainThread();
             
             StringBuilder playersNotFound = new StringBuilder();
+            ReferenceBoolean b = new ReferenceBoolean();
             for (int i = 0; i < Context.Parameters.Length; i++)
             {
-                var user = await Context.Parameters.GetAsync<UnturnedUser>(i);
-                if (user == null)
+                var user = await m_UserParser.TryParseUserAsync(Context.Parameters[i], b);
+                if (!b)
                 {
                     playersNotFound.Append($"{Context.Parameters[i]}, ");
                     continue;

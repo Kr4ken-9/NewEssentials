@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration.Serializable
 {
     [Serializable]
-    public class SerializableItem
+    public class SerializableItem : ISerializable
     {
         public string ID { get; set; }
         public byte[] State { get; set; }

@@ -3,12 +3,11 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
+using NewEssentials.API.User;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
-using SDG.Unturned;
-using UnityEngine;
 
 namespace NewEssentials.Commands.TPA
 {
@@ -21,13 +20,15 @@ namespace NewEssentials.Commands.TPA
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IConfiguration m_Configuration;
         private readonly ITeleportRequestManager m_TpaRequestManager;
+        private readonly IUserParser m_UserParser;
 
         public CTPA(IStringLocalizer stringLocalizer, IConfiguration configuration, ITeleportRequestManager tpaRequestManager,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_Configuration = configuration;
             m_TpaRequestManager = tpaRequestManager;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -38,7 +39,7 @@ namespace NewEssentials.Commands.TPA
             var uPlayer = (UnturnedUser) Context.Actor;
             string recipientName = Context.Parameters[0];
 
-            var recipient = await Context.Parameters.GetAsync<UnturnedUser>(0);
+            var recipient = await m_UserParser.ParseUserAsync(await Context.Parameters.GetAsync<string>(0));
             if (recipient == null)
                 throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient", new {Recipient = recipientName}]);
 

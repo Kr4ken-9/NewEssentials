@@ -64,10 +64,8 @@ namespace NewEssentials.Players
                 cooldowns[key] = now;
             }
             else
-            {
                 cooldowns.Add(key, now);
-            }
-
+            
             await user.SavePersistentDataAsync(CooldownsDataKey, cooldowns);
             return null;
         }

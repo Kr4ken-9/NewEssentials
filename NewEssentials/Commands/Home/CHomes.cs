@@ -8,6 +8,7 @@ using OpenMod.Unturned.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NewEssentials.API.User;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Users;
 
@@ -20,13 +21,15 @@ namespace NewEssentials.Commands.Home
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IUserDataStore m_UserDataStore;
+        private readonly IUserParser m_UserParser;
 
         public CHomes(IStringLocalizer stringLocalizer,
             IUserDataStore userDataStore,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_UserDataStore = userDataStore;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -42,7 +45,7 @@ namespace NewEssentials.Commands.Home
 
             UnturnedUser uPlayer = Context.Parameters.Length == 0
                 ? (UnturnedUser) Context.Actor
-                : await Context.Parameters.GetAsync<UnturnedUser>(0);
+                : await m_UserParser.ParseUserAsync(Context.Parameters[0]);
 
             if (uPlayer == null)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[0]}]);

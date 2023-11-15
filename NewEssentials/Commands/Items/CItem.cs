@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Extensions;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Extensions.Games.Abstractions.Items;
@@ -9,6 +8,8 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using System;
+using NewEssentials.Configuration;
+using NewEssentials.Items;
 
 namespace NewEssentials.Commands.Items
 {

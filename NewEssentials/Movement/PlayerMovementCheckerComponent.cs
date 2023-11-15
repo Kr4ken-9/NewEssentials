@@ -1,9 +1,9 @@
+using System;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
-using System;
 using UnityEngine;
 
-namespace NewEssentials.Players
+namespace NewEssentials.Movement
 {
     //TODO: If OpenMod.Games.Abstractions isn't releasing for some time add events
     public class PlayerMovementCheckerComponent : MonoBehaviour

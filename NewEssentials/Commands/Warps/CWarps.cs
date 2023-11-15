@@ -3,7 +3,7 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Models;
+using NewEssentials.Configuration;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.Unturned.Commands;

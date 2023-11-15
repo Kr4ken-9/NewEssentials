@@ -3,8 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Chat;
 using NewEssentials.API.Players;
-using NewEssentials.Models;
-using NewEssentials.Players;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
@@ -14,6 +12,9 @@ using OpenMod.Unturned.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NewEssentials.Configuration;
+using NewEssentials.Configuration.Serializable;
+using NewEssentials.Movement;
 
 [assembly: PluginMetadata("NewEssentials", Author = "Kr4ken", DisplayName = "New Essentials")]
 
@@ -65,6 +66,8 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "commands.home.set.infinite", "Allow user to have infinite homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.others", "Allow user to list another user's homes", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "commands.homes.delete.others", "Allow user to delete another user's homes", PermissionGrantResult.Deny);
+            
+            m_PermissionRegistry.RegisterPermission(this, "co");
 
             m_PermissionRegistry.RegisterPermission(this, "warps.cooldowns.exempt", "Bypass any warps-related cooldowns", PermissionGrantResult.Deny);
             m_PermissionRegistry.RegisterPermission(this, "kits.cooldowns.exempt", "Bypass any kits-related cooldowns", PermissionGrantResult.Deny);

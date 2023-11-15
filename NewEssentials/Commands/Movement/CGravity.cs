@@ -6,6 +6,7 @@ using OpenMod.Core.Permissions;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
+using NewEssentials.API.User;
 
 namespace NewEssentials.Commands.Movement
 {
@@ -16,16 +17,18 @@ namespace NewEssentials.Commands.Movement
     public class CGravity : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
-        public CGravity(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer) : base(serviceProvider)
+        public CGravity(IServiceProvider serviceProvider, IStringLocalizer stringLocalizer, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
         {
             var targetActor = Context.Parameters.Count == 2
-                ? await Context.Parameters.GetAsync<UnturnedUser>(0)
+                ? await m_UserParser.ParseUserAsync(Context.Parameters[0])
                 : Context.Actor as UnturnedUser;
 
             if (targetActor != Context.Actor && await CheckPermissionAsync("other") != PermissionGrantResult.Grant)

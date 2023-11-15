@@ -4,8 +4,7 @@ using Microsoft.Extensions.Configuration;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
-using NewEssentials.Models;
-using NewEssentials.Options;
+using NewEssentials.Configuration;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
@@ -57,14 +56,14 @@ namespace NewEssentials.Commands.Warps
             var warpsData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string searchTerm = Context.Parameters[0];
 
-            if (!warpsData.Warps.ContainsKey(searchTerm))
+            if (!warpsData.ContainsWarp(searchTerm))
                 throw new UserFriendlyException(m_StringLocalizer["warps:none", new {Warp = searchTerm}]);
 
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"warps.{searchTerm}") == PermissionGrantResult.Deny)
                 throw new UserFriendlyException(m_StringLocalizer["warps:no_permission", new {Warp = searchTerm}]);
 
             UnturnedUser uPlayer = (UnturnedUser) Context.Actor;
-            var warp = warpsData.Warps[searchTerm];
+            var warp = warpsData[searchTerm];
 
             double? cooldown = await m_CooldownManager.OnCooldownAsync(uPlayer, "warps", searchTerm, warp.Cooldown);
             if (cooldown.HasValue)

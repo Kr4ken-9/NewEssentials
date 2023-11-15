@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using NewEssentials.Configuration.Serializable;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration
 {
     [Serializable]
     public class KitsData

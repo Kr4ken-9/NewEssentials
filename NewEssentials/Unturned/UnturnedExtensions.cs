@@ -1,66 +1,27 @@
-﻿using Cysharp.Threading.Tasks;
-using NewEssentials.Models;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using SDG.Unturned;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace NewEssentials.Extensions
+namespace NewEssentials.Unturned
 {
     public static class UnturnedExtensions
     {
         private static readonly byte[] PlaceholderArray = Array.Empty<byte>();
-
-        public static SerializableItem[] ToSerializableItems(this PlayerClothing clothing)
-        {
-            var serializableItems = new List<SerializableItem>();
-
-            if (clothing.hat != 0)
-                serializableItems.Add(new SerializableItem(clothing.hat.ToString(), clothing.hatState, 1, 100, clothing.hatQuality));
-
-            if (clothing.glasses != 0)
-                serializableItems.Add(new SerializableItem(clothing.glasses.ToString(), clothing.glassesState, 1, 100, clothing.glassesQuality));
-
-            if (clothing.mask != 0)
-                serializableItems.Add(new SerializableItem(clothing.mask.ToString(), clothing.maskState, 1, 100, clothing.maskQuality));
-
-            if (clothing.shirt != 0)
-                serializableItems.Add(new SerializableItem(clothing.shirt.ToString(), clothing.shirtState, 1, 100, clothing.shirtQuality));
-
-            if (clothing.vest != 0)
-                serializableItems.Add(new SerializableItem(clothing.vest.ToString(), clothing.vestState, 1, 100, clothing.vestQuality));
-
-            if (clothing.backpack != 0)
-                serializableItems.Add(new SerializableItem(clothing.backpack.ToString(), clothing.backpackState, 1, 100, clothing.backpackQuality));
-
-            if (clothing.pants != 0)
-                serializableItems.Add(new SerializableItem(clothing.pants.ToString(), clothing.pantsState, 1, 100, clothing.pantsQuality));
-
-            return serializableItems.ToArray();
-        }
-
-        public static async UniTask KickAsync(this Player player, string reason)
-        {
-            await UniTask.SwitchToMainThread();
-            Provider.kick(player.channel.owner.playerID.steamID, reason);
-        }
-
+        
+        
         public static void ClearInventory(this Player player)
         {
-            Items[] items = player.inventory.items;
+            SDG.Unturned.Items[] items = player.inventory.items;
             for (byte b = 0; b < PlayerInventory.PAGES - 2; b++)
             {
                 if (items[b]?.items?.Count == 0)
-                {
                     continue;
-                }
-
+                
                 items[b].ReverseClear();
 
                 if (b < PlayerInventory.SLOTS)
-                {
                     player.equipment.sendSlot(b);
-                }
             }
 
             PlayerClothing clothing = player.clothing;
@@ -111,7 +72,7 @@ namespace NewEssentials.Extensions
             }
         }
 
-        public static void ReverseClear(this Items item)
+        public static void ReverseClear(this SDG.Unturned.Items item)
         {
             for (int b = item.getItemCount() - 1; b >= 0; b--)
             {

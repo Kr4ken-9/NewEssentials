@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Extensions;
-using NewEssentials.Models;
+using NewEssentials.Configuration.Serializable;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Users;

@@ -1,16 +1,13 @@
 ﻿using OpenMod.API;
 
-namespace NewEssentials.Options
+namespace NewEssentials.Configuration
 {
     public class TeleportOptions
     {
-        public IOpenModComponent Instance;
-        
-        public int Delay;
-
-        public bool CancelOnMove;
-
-        public bool CancelOnDamage;
+        public IOpenModComponent Instance { get; }
+        public int Delay { get; }
+        public bool CancelOnMove { get; }
+        public bool CancelOnDamage { get; }
 
         public TeleportOptions(IOpenModComponent instance, int delay, bool cancelOnMove, bool cancelOnDamage)
         {

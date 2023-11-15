@@ -1,7 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Models;
+using NewEssentials.Configuration;
 using OpenMod.API.Commands;
 using OpenMod.API.Persistence;
 using OpenMod.Core.Commands;

@@ -1,15 +1,15 @@
 ﻿using OpenMod.Extensions.Games.Abstractions.Items;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration.Serializable
 {
-    public class SerializedItemState : IItemState
+    public class SerializableItemState : IItemState, ISerializable
     {
         public double ItemQuality { get; }
         public double ItemDurability { get; }
         public double ItemAmount { get; }
         public byte[] StateData { get; }
 
-        public SerializedItemState(double itemQuality, double itemDurability, double itemAmount, byte[] stateData)
+        public SerializableItemState(double itemQuality, double itemDurability, double itemAmount, byte[] stateData)
         {
             ItemQuality = itemQuality;
             ItemDurability = itemDurability;

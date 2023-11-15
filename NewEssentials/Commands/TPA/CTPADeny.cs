@@ -3,6 +3,8 @@ using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
+using NewEssentials.API.User;
+using NewEssentials.System;
 using OpenMod.API.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -20,12 +22,14 @@ namespace NewEssentials.Commands.TPA
     {
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly ITeleportRequestManager m_TpaRequestManager;
+        private readonly IUserParser m_UserParser;
 
-        public CTPADeny(IStringLocalizer stringLocalizer, ITeleportRequestManager tpaRequestManager, IServiceProvider serviceProvider) :
+        public CTPADeny(IStringLocalizer stringLocalizer, ITeleportRequestManager tpaRequestManager, IServiceProvider serviceProvider, IUserParser userParser) :
             base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_TpaRequestManager = tpaRequestManager;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -52,10 +56,12 @@ namespace NewEssentials.Commands.TPA
                     break;
                 case 1:
                     string requesterName = Context.Parameters[0];
-                    if (!PlayerTool.tryGetSteamPlayer(requesterName, out requester))
+                    ReferenceBoolean b = new ReferenceBoolean();
+                    UnturnedUser usr = await m_UserParser.TryParseUserAsync(requesterName, b);
+                    if (!b)
                         throw new UserFriendlyException(m_StringLocalizer["tpa:invalid_recipient",
                             new { Recipient = requesterName }]);
-
+                    requester = usr.Player.SteamPlayer;
                     if (!m_TpaRequestManager.IsRequestOpen(recipientSteamID, requester.playerID.steamID.m_SteamID))
                         throw new UserFriendlyException(m_StringLocalizer["tpa:no_requests_from",
                             new { Requester = requester.playerID.characterName }]);

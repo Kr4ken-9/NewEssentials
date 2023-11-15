@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
@@ -6,13 +9,9 @@ using OpenMod.API.Permissions;
 using OpenMod.Unturned.Users;
 using OpenMod.Unturned.Users.Events;
 using SDG.Unturned;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEngine;
 using Color = System.Drawing.Color;
 
-namespace NewEssentials.Players
+namespace NewEssentials.Movement
 {
     public class AfkChecker : IAsyncDisposable
     {
@@ -42,11 +41,9 @@ namespace NewEssentials.Players
 
         private async UniTask CheckAfkPlayers()
         {
-            if (Provider.isServer)
-            {
+            if (Provider.isServer) //Is this really necessary?
                 await SyncPlayers();
-            }
-
+            
             while (m_ServiceRunning)
             {
                 await UniTask.SwitchToThreadPool();
@@ -58,22 +55,16 @@ namespace NewEssentials.Players
                 var kick = m_Configuration.GetSection("afkchecker:kickAFK").Get<bool>();
 
                 if (timeout < 0 || (!kick && !announce))
-                {
                     continue;
-                }
 
                 if (!status || (!kick && !announce))
-                {
                     continue;
-                }
 
                 foreach (var user in m_UnturnedUserDirectory.GetOnlineUsers().ToList())
                 {
                     if (!user.Session.SessionData.TryGetValue("lastMovement", out object @time) || @time is not TimeSpan span)
-                    {
                         continue;
-                    }
-
+                    
                     bool afk = (DateTime.Now.TimeOfDay - span).TotalSeconds >= timeout
                         && await m_PermissionChecker.CheckPermissionAsync(user, "afkchecker.exempt") != PermissionGrantResult.Grant;
 
@@ -84,17 +75,13 @@ namespace NewEssentials.Players
                     }
 
                     if (!user.Session.SessionData.TryGetValue("isAfk", out var unparsedAfk) || unparsedAfk is not bool isAfk)
-                    {
                         continue;
-                    }
-
+                    
                     // todo: add announceTime and kickTime (not just timeout)
 
                     if (announce && !isAfk)
-                    {
                         await user.Provider?.BroadcastAsync(m_StringLocalizer["afk:announcement", new { Player = user.DisplayName }, new { Time = timeout }], Color.White);
-                    }
-
+                    
                     if (kick)
                     {
                         await user.Session?.DisconnectAsync(m_StringLocalizer["afk:kicked", new { Time = timeout }]);

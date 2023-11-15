@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using NewEssentials.Extensions;
+using NewEssentials.Configuration.Serializable;
+using NewEssentials.User;
 using OpenMod.API.Eventing;
+using OpenMod.API.Permissions;
+using OpenMod.API.Prioritization;
 using OpenMod.API.Users;
+using OpenMod.Core.Eventing;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Players.Life.Events;
-using System.Threading.Tasks;
-using NewEssentials.User;
-using OpenMod.API.Permissions;
-using OpenMod.Extensions.Games.Abstractions.Players;
-using OpenMod.Unturned.Users;
 using SDG.Unturned;
 
-namespace NewEssentials.Events
+namespace NewEssentials.Players
 {
     public class UnturnedPlayerDeathEventListener : IEventListener<UnturnedPlayerDeathEvent>
     {
@@ -30,6 +30,7 @@ namespace NewEssentials.Events
             m_UserProvider = users;
         }
 
+        [EventListener(Priority = EventListenerPriority.Normal)]
         public async Task HandleEventAsync(object sender, UnturnedPlayerDeathEvent @event)
         {
             await UniTask.SwitchToMainThread();

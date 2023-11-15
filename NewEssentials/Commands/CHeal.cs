@@ -5,6 +5,8 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using System;
+using NewEssentials.API.User;
+using OpenMod.API.Commands;
 
 namespace NewEssentials.Commands
 {
@@ -14,10 +16,12 @@ namespace NewEssentials.Commands
     public class CHeal : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
-        public CHeal(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CHeal(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -46,8 +50,9 @@ namespace NewEssentials.Commands
             }
             else
             {
-                var player = await Context.Parameters.GetAsync<UnturnedUser>(0);
-
+                var player = await m_UserParser.ParseUserAsync(Context.Parameters[0]);
+                if (player == null)
+                    throw new UserFriendlyException(m_StringLocalizer["commands:failed_player"]);
                 Heal(player.Player.Player.life);
 
                 await Context.Actor.PrintMessageAsync(m_StringLocalizer["heal:success_other", new { Player = player.DisplayName }]);

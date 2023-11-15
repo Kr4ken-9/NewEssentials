@@ -1,11 +1,12 @@
 using Cysharp.Threading.Tasks;
-using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using System;
-using System.Linq;
+using Microsoft.Extensions.Localization;
+using NewEssentials.API.User;
+using OpenMod.API.Commands;
 
 namespace NewEssentials.Commands
 {
@@ -16,46 +17,46 @@ namespace NewEssentials.Commands
     public class CEffect : UnturnedCommand
     {
 
-        private readonly IPermissionChecker _permission;
+        private readonly IUserParser m_UserParser;
+        private readonly IStringLocalizer m_StringLocalizer;
 
-        public CEffect(IServiceProvider serviceProvider, IPermissionChecker checker) : base(serviceProvider)
+        public CEffect(IServiceProvider serviceProvider, IUserParser userParser, IStringLocalizer stringLocalizer) : base(serviceProvider)
         {
-            _permission = checker;
+            m_UserParser = userParser;
+            m_StringLocalizer = stringLocalizer;
         }
 
         protected override async UniTask OnExecuteAsync()
         {
             //TODO: Add support for configurable allowed effects?
 
-            UnturnedUser usr = (UnturnedUser)Context.Actor;
-            Player target;
-
-
-            if (Context.Parameters.Length > 1 && Context.Parameters.Length < 2)
-            {
-                target = Provider.clients.FirstOrDefault(p =>
-                    p.player.name.Contains(Context.Parameters.GetAsync<string>(1).Result))?.player;
-
-                if (target == null)
-                    throw new CommandWrongUsageException("Could not find player");
-            }
-            else if (Context.Parameters.Length == 1)
-                target = ((UnturnedUser)Context.Actor).Player.Player;
-            else
-                throw new CommandWrongUsageException("Unexpected amount of parameters");
-
-
-            if (target == null)
-                return;
+            var targetActor = Context.Parameters.Count == 2
+                ? await m_UserParser.ParseUserAsync(Context.Parameters[1])
+                : Context.Actor as UnturnedUser;
+            
+            
+            //TODO: add messages for the below
+            
+            if (targetActor == null)
+                throw new UserFriendlyException(m_StringLocalizer["commands:failed_player"]);
 
             ushort effectId = await Context.Parameters.GetAsync<ushort>(0);
 
             await UniTask.SwitchToMainThread();
 
-            EffectManager.sendEffect(effectId, target.channel.GetOwnerTransportConnection(), target.transform.position);
-
-            await usr.PrintMessageAsync(
-                $"Successfully gave effect {effectId} to {target.channel.owner.playerID.characterName}");
+            //no one cares nelson stop ruining my day ty
+#pragma warning disable CS0618 // Type or member is obsolete
+            TriggerEffectParameters paras = new TriggerEffectParameters(effectId)
+            {
+                position = targetActor.Player.Player.transform.position
+            };
+#pragma warning restore CS0618 // Type or member is obsolete
+            paras.SetRelevantPlayer(targetActor.Player.SteamPlayer);
+            
+            EffectManager.triggerEffect(paras);
+            
+            await Context.Actor.PrintMessageAsync(
+                $"Successfully gave effect {effectId} to {targetActor.DisplayName}");
         }
     }
 }

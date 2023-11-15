@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using SDG.Unturned;
 
-namespace NewEssentials.Helpers
+namespace NewEssentials.Unturned
 {
     public static class UnturnedAssetHelper
     {

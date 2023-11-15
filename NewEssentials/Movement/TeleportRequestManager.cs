@@ -12,7 +12,7 @@ using OpenMod.Core.Helpers;
 using SDG.Unturned;
 using UnityEngine;
 
-namespace NewEssentials.Players
+namespace NewEssentials.Movement
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class TeleportRequestManager : ITeleportRequestManager, IAsyncDisposable

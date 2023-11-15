@@ -5,32 +5,32 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.Players;
-using NewEssentials.Extensions;
+using NewEssentials.Unturned;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
 using OpenMod.Core.Helpers;
 using SDG.Unturned;
 using UnityEngine;
 
-namespace NewEssentials.Players
+namespace NewEssentials.Movement
 {
     [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.Normal)]
     public class PlayerFreezer : IPlayerFreezer, IAsyncDisposable
     {
-        private readonly Dictionary<ulong, Vector3> m_FrozenPlayers;
+        private readonly Dictionary<SteamPlayer, Vector3> m_FrozenPlayers;
         private bool m_ServiceRunning;
         
         public PlayerFreezer()
         {
-            m_FrozenPlayers = new Dictionary<ulong, Vector3>();
+            m_FrozenPlayers = new Dictionary<SteamPlayer, Vector3>();
             m_ServiceRunning = true;
             AsyncHelper.Schedule("Freeze Update", () => FreezeUpdate().AsTask());
             Provider.onEnemyDisconnected += RemovePlayer;
         }
 
-        public void FreezePlayer(ulong player, Vector3 position) => m_FrozenPlayers.Add(player, position);
-        public void UnfreezePlayer(ulong player) => m_FrozenPlayers.Remove(player);
-        public bool IsPlayerFrozen(ulong player) => m_FrozenPlayers.ContainsKey(player);
+        public void FreezePlayer(SteamPlayer player, Vector3 position) => m_FrozenPlayers.Add(player, position);
+        public void UnfreezePlayer(SteamPlayer player) => m_FrozenPlayers.Remove(player);
+        public bool IsPlayerFrozen(SteamPlayer player) => m_FrozenPlayers.ContainsKey(player);
 
         public async ValueTask DisposeAsync()
         {
@@ -44,14 +44,14 @@ namespace NewEssentials.Players
             {
                 if (m_FrozenPlayers.Count > 0)
                 {
-                    ulong[] frozenPlayers = m_FrozenPlayers.Keys.ToArray();
+                    SteamPlayer[] frozenPlayers = m_FrozenPlayers.Keys.ToArray();
 
                     for (int i = frozenPlayers.Length - 1; i >= 0; i--)
                     {
-                        SteamPlayer player = PlayerTool.getSteamPlayer(frozenPlayers[i]);
-                        if (player == null)
+                        SteamPlayer player = frozenPlayers[i];
+                        if (player?.player == null)
                         {
-                            UnfreezePlayer(frozenPlayers[i]);
+                            RemovePlayer(player);
                             continue;
                         }
 
@@ -65,9 +65,8 @@ namespace NewEssentials.Players
 
         private void RemovePlayer(SteamPlayer gonePlayer)
         {
-            ulong steamID = gonePlayer.playerID.steamID.m_SteamID;
-            if (IsPlayerFrozen(steamID))
-                UnfreezePlayer(steamID);
+            if (IsPlayerFrozen(gonePlayer))
+                UnfreezePlayer(gonePlayer);
         }
     }
 }

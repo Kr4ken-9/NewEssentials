@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NewEssentials.Network;
-using NewEssentials.User;
 using OpenMod.API.Eventing;
 using OpenMod.API.Users;
+using OpenMod.Core.Eventing;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Players.Life.Events;
 using SDG.NetPak;
 using SDG.NetTransport;
 using SDG.Unturned;
 
-namespace NewEssentials.Events;
+namespace NewEssentials.Players;
 
 public class UnturnedPlayerSpawnedEventListener : IEventListener<UnturnedPlayerSpawnedEvent>
 {
@@ -32,7 +31,8 @@ public class UnturnedPlayerSpawnedEventListener : IEventListener<UnturnedPlayerS
     {
         m_UserDataStore = userDataStore;
     }
-
+    
+    [EventListener(Priority = EventListenerPriority.Normal)]
     public async Task HandleEventAsync(object sender, UnturnedPlayerSpawnedEvent @event)
     {
         //shut up resharper

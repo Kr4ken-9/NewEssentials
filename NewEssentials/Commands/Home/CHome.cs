@@ -2,9 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
-using NewEssentials.Extensions;
-using NewEssentials.Models;
-using NewEssentials.Options;
 using OpenMod.API.Commands;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
@@ -13,6 +10,9 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
 using System.Collections.Generic;
+using NewEssentials.Configuration;
+using NewEssentials.Configuration.Serializable;
+using NewEssentials.Unturned;
 
 namespace NewEssentials.Commands.Home
 {

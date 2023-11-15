@@ -2,14 +2,15 @@
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.User;
 using OpenMod.API.Commands;
 using OpenMod.API.Users;
-using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using CommandWrongUsageException = OpenMod.Core.Commands.CommandWrongUsageException;
 
 namespace NewEssentials.Commands
 {
@@ -19,12 +20,12 @@ namespace NewEssentials.Commands
     public class CInvestigate : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
-        private readonly IUserManager m_UserManager;
+        private readonly IUserParser m_UserParser;
 
-        public CInvestigate(IStringLocalizer stringLocalizer, IUserManager userManager, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CInvestigate(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
-            m_UserManager = userManager;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -36,7 +37,7 @@ namespace NewEssentials.Commands
             {
                 string searchTerm = Context.Parameters[0];
                 IUser potentialUser =
-                    await m_UserManager.FindUserAsync(KnownActorTypes.Player, searchTerm, UserSearchMode.FindByNameOrId);
+                    await m_UserParser.ParseUserAsync(searchTerm);
 
                 if (potentialUser == null)
                     throw new UserFriendlyException(m_StringLocalizer["general:invalid_player",
@@ -48,7 +49,7 @@ namespace NewEssentials.Commands
                 return;
             }
 
-            if (!(Context.Actor is UnturnedUser uPlayer))
+            if (Context.Actor is not UnturnedUser uPlayer)
                 throw new CommandWrongUsageException(Context);
 
             PlayerLook look = uPlayer.Player.Player.look;
@@ -75,6 +76,8 @@ namespace NewEssentials.Commands
             InteractableStorage storage = raycastTransform.GetComponentInChildren<InteractableStorage>();
             if (storage != null)
                 ownerSteamID = storage.owner;
+            
+            
 
             await uPlayer.PrintMessageAsync(GetObjectOwner(ownerSteamID));
         }

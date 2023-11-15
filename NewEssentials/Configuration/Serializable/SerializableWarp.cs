@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration.Serializable
 {
     [Serializable]
-    public class SerializableWarp
+    public class SerializableWarp : ISerializable
     {
         public int Cooldown { get; set; }
         

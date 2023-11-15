@@ -2,6 +2,8 @@
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.User;
+using NewEssentials.System;
 using OpenMod.API.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
@@ -16,10 +18,12 @@ namespace NewEssentials.Commands.Movement
     public class CVanish : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
-        public CVanish(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CVanish(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -53,9 +57,11 @@ namespace NewEssentials.Commands.Movement
             }
 
             string searchTerm = Context.Parameters[0];
-            if (!PlayerTool.tryGetSteamPlayer(searchTerm, out SteamPlayer target))
+            ReferenceBoolean b = new ReferenceBoolean();
+            UnturnedUser usr = await m_UserParser.TryParseUserAsync(searchTerm, b);
+            if (!b)
                 throw new UserFriendlyException(m_StringLocalizer["general:invalid_player", new {Player = searchTerm}]);
-
+            SteamPlayer target = usr.Player.SteamPlayer;
             await UniTask.SwitchToMainThread();
             
             string targetName = target.playerID.characterName;

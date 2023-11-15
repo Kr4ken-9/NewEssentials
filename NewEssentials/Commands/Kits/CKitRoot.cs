@@ -2,7 +2,9 @@
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
-using NewEssentials.Models;
+using NewEssentials.API.User;
+using NewEssentials.Configuration;
+using NewEssentials.Configuration.Serializable;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.API.Persistence;
@@ -27,6 +29,8 @@ namespace NewEssentials.Commands.Kits
         private readonly IPermissionChecker m_PermissionChecker;
         private readonly IItemSpawner m_ItemSpawner;
         private readonly ICooldownManager m_CooldownManager;
+        private readonly IUserParser m_UserParser;
+        
         private const string KitsKey = "kits";
 
         public CKitRoot(IDataStore dataStore,
@@ -34,13 +38,14 @@ namespace NewEssentials.Commands.Kits
             IPermissionChecker permissionChecker,
             IItemSpawner itemSpawner,
             ICooldownManager cooldownManager,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_DataStore = dataStore;
             m_StringLocalizer = stringLocalizer;
             m_PermissionChecker = permissionChecker;
             m_ItemSpawner = itemSpawner;
             m_CooldownManager = cooldownManager;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -68,7 +73,7 @@ namespace NewEssentials.Commands.Kits
 
             UnturnedUser recipient;
             if (Context.Parameters.Length == 2)
-                recipient = await Context.Parameters.GetAsync<UnturnedUser>(1);
+                recipient = await m_UserParser.ParseUserAsync(Context.Parameters[1]);
             else
                 recipient = Context.Actor as UnturnedUser;
 
@@ -86,7 +91,7 @@ namespace NewEssentials.Commands.Kits
                 await m_ItemSpawner.GiveItemAsync(
                     recipient.Player.Inventory,
                     item.ID,
-                    new SerializedItemState(item.Quality, item.Durability, item.Amount, item.State));
+                    new SerializableItemState(item.Quality, item.Durability, item.Amount, item.State));
             }
 
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:spawn:success",

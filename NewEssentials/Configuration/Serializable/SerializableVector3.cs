@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration.Serializable
 {
     [Serializable]
-    public class SerializableVector3
+    public class SerializableVector3 : ISerializable
     {
         public float X { get; set; }
 

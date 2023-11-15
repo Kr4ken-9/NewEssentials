@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Extensions;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Extensions.Games.Abstractions.Items;
@@ -9,6 +8,10 @@ using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using SDG.Unturned;
 using System;
+using NewEssentials.API.User;
+using NewEssentials.Configuration;
+using NewEssentials.Items;
+using NewEssentials.System;
 
 namespace NewEssentials.Commands.Items
 {
@@ -21,24 +24,27 @@ namespace NewEssentials.Commands.Items
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly IConfiguration m_Configuration;
         private readonly IItemDirectory m_ItemDirectory;
+        private readonly IUserParser m_UserParser;
 
         public CGiveItem(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider,
-            IConfiguration configuration, IItemDirectory itemDirectory) : base(serviceProvider)
+            IConfiguration configuration, IItemDirectory itemDirectory, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
             m_Configuration = configuration;
             m_ItemDirectory = itemDirectory;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
         {
             // User either didn't provide an item and player or provided too much information
-            if (Context.Parameters.Length < 2 || Context.Parameters.Length > 3)
+            if (Context.Parameters.Length is < 2 or > 3)
                 throw new CommandWrongUsageException(Context);
 
-            var user = await Context.Parameters.GetAsync<UnturnedUser>(0);
+            ReferenceBoolean b = new ReferenceBoolean();
+            var user = await m_UserParser.TryParseUserAsync(Context.Parameters[0], b);
 
-            if (user == null)
+            if (b)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new { Player = Context.Parameters[0] }]);
 
             string rawItem = Context.Parameters[1];

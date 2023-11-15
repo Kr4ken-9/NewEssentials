@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NewEssentials.API.Players;
-using NewEssentials.Options;
+using NewEssentials.Configuration;
 using OpenMod.API.Eventing;
 using OpenMod.API.Ioc;
 using OpenMod.Core.Helpers;
 using OpenMod.Extensions.Games.Abstractions.Players;
 using OpenMod.Unturned.Users;
 
-namespace NewEssentials.Players
+namespace NewEssentials.Movement
 {
     [ServiceImplementation]
     public class TeleportService : ITeleportService

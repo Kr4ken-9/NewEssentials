@@ -1,7 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using NewEssentials.Extensions;
-using NewEssentials.Models;
 using OpenMod.API.Commands;
 using OpenMod.API.Persistence;
 using OpenMod.API.Plugins;
@@ -9,6 +7,8 @@ using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
 using System;
+using NewEssentials.Configuration;
+using NewEssentials.Configuration.Serializable;
 
 namespace NewEssentials.Commands.Warps
 {

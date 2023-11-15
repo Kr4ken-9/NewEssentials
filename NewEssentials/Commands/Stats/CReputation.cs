@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.User;
 using OpenMod.API.Commands;
 using OpenMod.API.Permissions;
 using OpenMod.Core.Commands;
@@ -19,10 +20,12 @@ namespace NewEssentials.Commands.Stats
     public class CReputation : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
-        public CReputation(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider) : base(serviceProvider)
+        public CReputation(IStringLocalizer stringLocalizer, IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -51,9 +54,11 @@ namespace NewEssentials.Commands.Stats
                     throw new NotEnoughPermissionException(Context, nestedPermission);
                 
                 string searchTerm = Context.Parameters[1];
-                if (!PlayerTool.tryGetSteamPlayer(searchTerm, out SteamPlayer player))
+                UnturnedUser usr = await m_UserParser.ParseUserAsync(searchTerm);
+                if (usr == null)
                     throw new UserFriendlyException(m_StringLocalizer["general:invalid_player",
                         new {Player = searchTerm}]);
+                SteamPlayer player = usr.Player.SteamPlayer;
 
                 await UniTask.SwitchToMainThread();
                 player.player.skills.askRep(additionReputation);

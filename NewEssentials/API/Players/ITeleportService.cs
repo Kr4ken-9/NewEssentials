@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NewEssentials.Options;
+using NewEssentials.Configuration;
 using OpenMod.API.Ioc;
 using OpenMod.Unturned.Users;
 

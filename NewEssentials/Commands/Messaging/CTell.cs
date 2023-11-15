@@ -3,6 +3,8 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using OpenMod.Core.Commands;
 using Microsoft.Extensions.Localization;
+using NewEssentials.API.User;
+using NewEssentials.System;
 using OpenMod.API.Commands;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Commands;
@@ -17,11 +19,13 @@ namespace NewEssentials.Commands.Messaging
     public class CTell : UnturnedCommand
     {
         private readonly IStringLocalizer m_StringLocalizer;
+        private readonly IUserParser m_UserParser;
 
         public CTell(IStringLocalizer stringLocalizer,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            IServiceProvider serviceProvider, IUserParser userParser) : base(serviceProvider)
         {
             m_StringLocalizer = stringLocalizer;
+            m_UserParser = userParser;
         }
 
         protected override async UniTask OnExecuteAsync()
@@ -29,10 +33,11 @@ namespace NewEssentials.Commands.Messaging
             if (Context.Parameters.Length < 2)
                 throw new CommandWrongUsageException(Context);
 
+            ReferenceBoolean b = new ReferenceBoolean();
             string recipientName = Context.Parameters[0];
-            var recipient = await Context.Parameters.GetAsync<UnturnedUser>(0);
+            var recipient = await m_UserParser.TryParseUserAsync(recipientName, b);
 
-            if (recipient == null)
+            if (!b)
                 throw new UserFriendlyException(m_StringLocalizer["tell:invalid_recipient", new {Recipient = recipientName}]);
 
             recipient.Session.SessionData["lastMessager"] = Context.Actor.Type == KnownActorTypes.Player

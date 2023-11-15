@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewEssentials.Models
+namespace NewEssentials.Configuration.Serializable
 {
     [Serializable]
-    public class SerializableKit
+    public class SerializableKit : ISerializable
     {
         public SerializableItem[] SerializableItems { get; set; }
         public int Cooldown { get; set; }
