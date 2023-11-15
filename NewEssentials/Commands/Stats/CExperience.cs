@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
@@ -27,10 +27,11 @@ namespace NewEssentials.Commands.Stats
 
         protected override async UniTask OnExecuteAsync()
         {
-            if (Context.Parameters.Length > 2 || Context.Parameters.Length < 1)
-                throw new CommandWrongUsageException(Context);
-
-            //TODO: throw UserFriendlyException on bad input
+            if (Context.Parameters.Length > 2)
+                throw new UserFriendlyException(m_StringLocalizer["experience:toomanyargs"]);
+            if (Context.Parameters.Length < 1)
+                throw new UserFriendlyException(m_StringLocalizer["experience:no_amount"]);
+            
             uint additionalExperience = await Context.Parameters.GetAsync<uint>(0);
             if (Context.Parameters.Length == 1)
             {

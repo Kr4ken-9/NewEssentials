@@ -91,6 +91,8 @@ clear:
 experience:
   success: "Successfully added {Experience} experience."
   gave: "Successfully gave {Player} {Experience} experience."
+  no_amount: "You must specify an amount."
+  toomanyargs: "Too many arguments, you can only specify an amount and a player."
 reputation:
   success: "Successfully added {Reputation} reputation."
   gave: "Successfully gave {Player} {Reputation} reputation."
