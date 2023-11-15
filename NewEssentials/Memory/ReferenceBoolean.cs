@@ -1,6 +1,6 @@
 using System;
 
-namespace NewEssentials.System;
+namespace NewEssentials.Memory;
 
 public class ReferenceBoolean : IEquatable<bool>
 {

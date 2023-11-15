@@ -2,6 +2,8 @@ items:
   enableamountlimit: true
   silentamountlimit: true
   maxspawnamount: 20
+  itemBlacklist:
+    - 0
 tpa:
   expiration: 30
 broadcasting:

@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using NewEssentials.API.User;
-using NewEssentials.System;
+using NewEssentials.Memory;
 using OpenMod.API.Commands;
 using OpenMod.API.Localization;
 using OpenMod.Core.Commands;

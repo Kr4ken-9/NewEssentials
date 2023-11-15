@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NewEssentials.API.User;
-using NewEssentials.System;
+using NewEssentials.Memory;
 using OpenMod.API.Ioc;
 using OpenMod.API.Prioritization;
 using OpenMod.API.Users;
@@ -16,9 +16,9 @@ namespace NewEssentials.User;
 [ServiceImplementation(Lifetime = ServiceLifetime.Singleton, Priority = Priority.High)]
 public class UserParser : IUserParser
 {
-    private readonly IUserProvider m_UserProvider;
+    private readonly IUserManager m_UserProvider;
 
-    public UserParser(IUserProvider userProvider)
+    public UserParser(IUserManager userProvider)
     {
         m_UserProvider = userProvider;
     }

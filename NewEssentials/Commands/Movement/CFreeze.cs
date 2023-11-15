@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using NewEssentials.API.Players;
 using NewEssentials.API.User;
-using NewEssentials.System;
+using NewEssentials.Memory;
 using OpenMod.API.Commands;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;

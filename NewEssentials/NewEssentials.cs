@@ -73,6 +73,7 @@ namespace NewEssentials
             m_PermissionRegistry.RegisterPermission(this, "kits.cooldowns.exempt", "Bypass any kits-related cooldowns", PermissionGrantResult.Deny);
             
             m_PermissionRegistry.RegisterPermission(this, "keepskills", "Keep skills no matter the server configuration", PermissionGrantResult.Deny);
+            m_PermissionRegistry.RegisterPermission(this, "itemblacklist.exempt", "Bypass item blacklist", PermissionGrantResult.Deny);
         }
 
         private async Task RegisterDataStores()

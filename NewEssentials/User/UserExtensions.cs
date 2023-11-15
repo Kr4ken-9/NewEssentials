@@ -3,17 +3,26 @@ using System.Threading.Tasks;
 using OpenMod.API.Users;
 using OpenMod.Core.Users;
 using OpenMod.Unturned.Players;
+using OpenMod.Unturned.Users;
+using SDG.Unturned;
 
 namespace NewEssentials.User;
 
 public static class UserExtensions
 {
-    public static async Task<IUser> ToUserAsync(this IUserProvider prov, UnturnedPlayer pla)
+    public static async Task<UnturnedUser> ToUserAsync(this IUserManager prov, UnturnedPlayer pla)
     {
-        IUser usr = await prov.FindUserAsync(KnownActorTypes.Player,
-            pla.EntityInstanceId, UserSearchMode.FindById); //? i want to kms
-        if (usr == null)
-            throw new Exception($"Player {pla.SteamPlayer.playerID.playerName} not registered as a user");
+        if (await prov.FindUserAsync(KnownActorTypes.Player,
+                pla.EntityInstanceId, UserSearchMode.FindById) is not UnturnedUser usr)
+            throw new Exception($"Player {pla.SteamPlayer.playerID.characterName} not registered as a user");
+        return usr;
+    }
+    
+    public static async Task<UnturnedUser> ToUserAsync(this IUserManager prov, Player pla)
+    {
+        if (await prov.FindUserAsync(KnownActorTypes.Player,
+                pla.channel.owner.playerID.characterName, UserSearchMode.FindByName) is not UnturnedUser usr)
+            throw new Exception($"Player {pla.channel.owner.playerID.characterName} not registered as a user");
         return usr;
     }
 }

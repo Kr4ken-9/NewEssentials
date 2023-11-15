@@ -2,7 +2,9 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using NewEssentials.Items;
 using NewEssentials.Network;
+using NewEssentials.User;
 using OpenMod.API.Eventing;
 using OpenMod.API.Users;
 using OpenMod.Core.Eventing;
@@ -26,10 +28,14 @@ public class UnturnedPlayerSpawnedEventListener : IEventListener<UnturnedPlayerS
     #endregion
 
     private readonly IUserDataStore m_UserDataStore;
+    private readonly ItemBlacklistController m_ItemBlacklistController;
+    private readonly IUserManager m_UserManager;
 
-    public UnturnedPlayerSpawnedEventListener(IUserDataStore userDataStore)
+    public UnturnedPlayerSpawnedEventListener(IUserDataStore userDataStore, ItemBlacklistController itemBlacklistController, IUserManager userManager)
     {
         m_UserDataStore = userDataStore;
+        m_ItemBlacklistController = itemBlacklistController;
+        m_UserManager = userManager;
     }
     
     [EventListener(Priority = EventListenerPriority.Normal)]
@@ -49,6 +55,7 @@ public class UnturnedPlayerSpawnedEventListener : IEventListener<UnturnedPlayerS
             ENetReliability.Reliable,
             @event.Player.Player.channel.GetOwnerTransportConnection(),
             writer => WriteSkillLevels(writer, skillSet));
+        await m_ItemBlacklistController.CheckUserInventoryAsync(await m_UserManager.ToUserAsync(@event.Player));
     }
     
     //Reimplementation

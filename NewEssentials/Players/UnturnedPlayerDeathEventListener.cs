@@ -20,21 +20,21 @@ namespace NewEssentials.Players
         private readonly IUserDataStore m_UserDataStore;
         private readonly IUserDataSeeder m_UserDataSeeder;
         private readonly IPermissionChecker m_PermissionChecker;
-        private readonly IUserProvider m_UserProvider;
+        private readonly IUserManager m_UserManager;
 
-        public UnturnedPlayerDeathEventListener(IUserDataStore userDataStore, IUserDataSeeder userDataSeeder, IPermissionChecker permissionChecker, IUserProvider users)
+        public UnturnedPlayerDeathEventListener(IUserDataStore userDataStore, IUserDataSeeder userDataSeeder, IPermissionChecker permissionChecker, IUserManager users)
         {
             m_UserDataStore = userDataStore;
             m_UserDataSeeder = userDataSeeder;
             m_PermissionChecker = permissionChecker;
-            m_UserProvider = users;
+            m_UserManager = users;
         }
 
         [EventListener(Priority = EventListenerPriority.Normal)]
         public async Task HandleEventAsync(object sender, UnturnedPlayerDeathEvent @event)
         {
             await UniTask.SwitchToMainThread();
-            IUser usr = await m_UserProvider.ToUserAsync(@event.Player);
+            IUser usr = await m_UserManager.ToUserAsync(@event.Player);
             var id = @event.Player.EntityInstanceId;
             var position = @event.Player.Transform.Position.ToSerializableVector();
             Dictionary<string, object?> toSeed = new Dictionary<string, object>(){{"deathLocation", position}};

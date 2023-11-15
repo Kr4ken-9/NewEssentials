@@ -11,7 +11,7 @@ using System;
 using NewEssentials.API.User;
 using NewEssentials.Configuration;
 using NewEssentials.Items;
-using NewEssentials.System;
+using NewEssentials.Memory;
 
 namespace NewEssentials.Commands.Items
 {
