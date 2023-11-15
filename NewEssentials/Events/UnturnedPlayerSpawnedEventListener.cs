@@ -35,6 +35,10 @@ public class UnturnedPlayerSpawnedEventListener : IEventListener<UnturnedPlayerS
 
     public async Task HandleEventAsync(object sender, UnturnedPlayerSpawnedEvent @event)
     {
+        //shut up resharper
+        // ReSharper disable twice CompareOfFloatsByEqualityOperator
+        if (Provider.modeConfigData.Players.Lose_Skills_PvE == 1 && Provider.modeConfigData.Players.Lose_Skills_PvP == 1)
+            return;
         await UniTask.SwitchToMainThread();
         UserData data = await m_UserDataStore.GetUserDataAsync(@event.Player.EntityInstanceId, KnownActorTypes.Player);
         if (data?.Data == null || !data.Data.ContainsKey("skillSet"))

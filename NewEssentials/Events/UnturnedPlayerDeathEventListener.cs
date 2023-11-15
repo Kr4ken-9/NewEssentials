@@ -37,7 +37,8 @@ namespace NewEssentials.Events
             var id = @event.Player.EntityInstanceId;
             var position = @event.Player.Transform.Position.ToSerializableVector();
             Dictionary<string, object?> toSeed = new Dictionary<string, object>(){{"deathLocation", position}};
-            if (await m_PermissionChecker.CheckPermissionAsync(usr, "keepskills") ==
+            // ReSharper disable twice CompareOfFloatsByEqualityOperator
+            if (!(Provider.modeConfigData.Players.Lose_Skills_PvE == 1 && Provider.modeConfigData.Players.Lose_Skills_PvP == 1) && await m_PermissionChecker.CheckPermissionAsync(usr, "keepskills") ==
                 PermissionGrantResult.Grant)
             {
                 var skillSet = @event.Player.Player.skills.skills.ToArray();
