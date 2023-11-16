@@ -32,13 +32,13 @@ namespace NewEssentials.Commands.Kits
         {
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
 
-            if (kitsData.Kits.Count == 0)
+            if (kitsData.Count == 0)
                 throw new UserFriendlyException(m_StringLocalizer["kits:none"]);
 
             StringBuilder kitsBuilder = new StringBuilder();
             if (Context.Actor.Type == KnownActorTypes.Console)
             {
-                foreach (var pair in kitsData.Kits) 
+                foreach (var pair in kitsData) 
                     kitsBuilder.Append($"{pair.Key}, ");
 
                 // Remove trailing ", "
@@ -47,7 +47,7 @@ namespace NewEssentials.Commands.Kits
                 return;
             }
 
-            foreach (var pair in kitsData.Kits)
+            foreach (var pair in kitsData)
             {
                 if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"kits.kit.{pair.Key}") ==
                     PermissionGrantResult.Grant ||

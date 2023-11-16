@@ -56,7 +56,7 @@ namespace NewEssentials.Commands.Warps
             var warpsData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string searchTerm = Context.Parameters[0];
 
-            if (!warpsData.ContainsWarp(searchTerm))
+            if (!warpsData.ContainsKey(searchTerm))
                 throw new UserFriendlyException(m_StringLocalizer["warps:none", new {Warp = searchTerm}]);
 
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"warps.{searchTerm}") == PermissionGrantResult.Deny)

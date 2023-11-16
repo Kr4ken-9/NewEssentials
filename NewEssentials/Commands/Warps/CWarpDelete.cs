@@ -35,10 +35,10 @@ namespace NewEssentials.Commands.Warps
             var warpsData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string searchTerm = Context.Parameters[0];
 
-            if (!warpsData.Warps.ContainsKey(searchTerm))
+            if (!warpsData.ContainsKey(searchTerm))
                 throw new UserFriendlyException(m_StringLocalizer["warps:none", new {Warp = searchTerm}]);
 
-            warpsData.Warps.Remove(searchTerm);
+            warpsData.Remove(searchTerm);
             await m_DataStore.SaveAsync(WarpsKey, warpsData);
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["warps:deleted", new {Warp = searchTerm}]);
         }

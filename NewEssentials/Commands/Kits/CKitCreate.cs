@@ -45,7 +45,7 @@ namespace NewEssentials.Commands.Kits
             int kitCooldown = Context.Parameters.Length == 2 ? await Context.Parameters.GetAsync<int>(1) : 0;
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
 
-            if (kitsData.Kits.ContainsKey(kitName))
+            if (kitsData.ContainsKey(kitName))
                 throw new UserFriendlyException(m_StringLocalizer["kits:spawn:none", new {Kit = kitName}]);
 
             var unturnedUser = Context.Actor as UnturnedUser;
@@ -76,7 +76,7 @@ namespace NewEssentials.Commands.Kits
             if (serializableItems.Count == 0)
                 throw new UserFriendlyException(m_StringLocalizer["kits:create:none"]);
             
-            kitsData.Kits.Add(kitName, new SerializableKit(serializableItems.ToArray(), kitCooldown));
+            kitsData.Add(kitName, new SerializableKit(serializableItems.ToArray(), kitCooldown));
             await m_DataStore.SaveAsync(KitsKey, kitsData);
             m_PluginAccessor.Instance.RegisterNewKitPermission(kitName);
 

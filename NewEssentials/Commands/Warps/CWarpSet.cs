@@ -45,13 +45,13 @@ namespace NewEssentials.Commands.Warps
             var warpData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string newWarpName = Context.Parameters[0];
 
-            if (warpData.Warps.ContainsKey(newWarpName))
+            if (warpData.ContainsKey(newWarpName))
                 throw new UserFriendlyException(m_StringLocalizer["warps:set:exists", new { Warp = newWarpName }]);
 
             UnturnedUser uPlayer = (UnturnedUser)Context.Actor;
             var newWarpLocation = uPlayer.Player.Transform.Position.ToSerializableVector();
 
-            warpData.Warps.Add(newWarpName, new SerializableWarp(cooldown, newWarpLocation));
+            warpData.Add(newWarpName, new SerializableWarp(cooldown, newWarpLocation));
             await m_DataStore.SaveAsync(WarpsKey, warpData);
             m_PluginAccessor.Instance.RegisterNewWarpPermission(newWarpName);
 

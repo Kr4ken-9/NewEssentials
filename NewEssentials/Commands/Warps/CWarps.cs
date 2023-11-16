@@ -38,10 +38,10 @@ namespace NewEssentials.Commands.Warps
             var warpsData = await m_DataStore.LoadAsync<WarpsData>(WarpsKey);
             string warps = "none";
             
-            if (warpsData.Warps.Count != 0)
+            if (warpsData.Count != 0)
             {
                 StringBuilder warpsBuilder = new StringBuilder();
-                foreach (string warp in warpsData.Warps.Keys)
+                foreach (string warp in warpsData.Keys)
                 {
                     if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"warps.{warp}") ==
                         PermissionGrantResult.Grant)

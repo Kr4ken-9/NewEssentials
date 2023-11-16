@@ -33,10 +33,10 @@ namespace NewEssentials.Commands.Kits
             string kitName = Context.Parameters[0].ToUpperInvariant();
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
             
-            if (!kitsData.Kits.ContainsKey(kitName))
+            if (!kitsData.ContainsKey(kitName))
                 throw new UserFriendlyException(m_StringLocalizer["kits:create:exists", new {Kit = kitName}]);
 
-            kitsData.Kits.Remove(kitName);
+            kitsData.Remove(kitName);
             await m_DataStore.SaveAsync(KitsKey, kitsData);
             await Context.Actor.PrintMessageAsync(m_StringLocalizer["kits:removed", new {Kit = kitName}]);
         }

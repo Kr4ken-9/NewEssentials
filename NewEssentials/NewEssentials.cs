@@ -80,27 +80,21 @@ namespace NewEssentials
         {
             if (!await m_DataStore.ExistsAsync(WarpsKey))
             {
-                await m_DataStore.SaveAsync(WarpsKey, new WarpsData
-                {
-                    Warps = new Dictionary<string, SerializableWarp>()
-                });
+                await m_DataStore.SaveAsync(WarpsKey, new WarpsData());
             }
             else
             {
-                foreach (var warpPair in (await m_DataStore.LoadAsync<WarpsData>(WarpsKey)).Warps)
+                foreach (var warpPair in (await m_DataStore.LoadAsync<WarpsData>(WarpsKey)))
                     m_PermissionRegistry.RegisterPermission(this, $"warps.{warpPair.Key}", $"Permission to warp to {warpPair.Key}", PermissionGrantResult.Deny);
             }
 
             if (!await m_DataStore.ExistsAsync(KitsKey))
             {
-                await m_DataStore.SaveAsync(KitsKey, new KitsData
-                {
-                    Kits = new Dictionary<string, SerializableKit>()
-                });
+                await m_DataStore.SaveAsync(KitsKey, new KitsData(new Dictionary<string, SerializableKit>()));
             }
             else
             {
-                foreach (var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)).Kits)
+                foreach (var kitPair in (await m_DataStore.LoadAsync<KitsData>(KitsKey)))
                 {
                     // Outdated permissions but left for compatibility
                     m_PermissionRegistry.RegisterPermission(this, $"kits.kit.{kitPair.Key}", $"Migrate to kits.{kitPair.Key} when possible please", PermissionGrantResult.Deny);

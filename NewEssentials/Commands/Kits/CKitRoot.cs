@@ -61,7 +61,7 @@ namespace NewEssentials.Commands.Kits
 
             KitsData kitsData = await m_DataStore.LoadAsync<KitsData>(KitsKey);
 
-            if (!kitsData.Kits.ContainsKey(kitName))
+            if (!kitsData.ContainsKey(kitName))
                 throw new UserFriendlyException(m_StringLocalizer["kits:spawn:none", new {Kit = kitName}]);
 
             if (await m_PermissionChecker.CheckPermissionAsync(Context.Actor, $"kits.kit.{kitName}") == PermissionGrantResult.Deny)
@@ -80,7 +80,7 @@ namespace NewEssentials.Commands.Kits
             if (recipient == null)
                 throw new UserFriendlyException(m_StringLocalizer["commands:failed_player", new {Player = Context.Parameters[1]}]);
             
-            SerializableKit kit = kitsData.Kits[kitName];
+            SerializableKit kit = kitsData[kitName];
 
             double? cooldown = await m_CooldownManager.OnCooldownAsync(recipient, "kits", kitName, kit.Cooldown);
             if (cooldown.HasValue)
